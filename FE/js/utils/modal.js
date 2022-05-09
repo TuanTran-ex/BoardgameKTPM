@@ -1,12 +1,9 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const modals = $$(".modal");
-const modalOverlays = $$(".modal-overlay");
-const modalCloseBtnList = [];
-modals.forEach((mdl) => {
-  modalCloseBtnList.push(mdl.querySelectorAll(".modal-close-btn"));
-});
+let modals;
+let modalOverlays;
+let modalCloseBtnList;
 
 const modal = {
   showModal(index) {
@@ -27,6 +24,15 @@ const modal = {
         };
       });
     });
+  },
+  init() {
+    modals = $$(".modal");
+    modalOverlays = $$(".modal-overlay");
+    modalCloseBtnList = [];
+    modals.forEach((mdl) => {
+      modalCloseBtnList.push(mdl.querySelectorAll(".modal-close-btn"));
+    });
+    this.handleEvents();
   },
 };
 

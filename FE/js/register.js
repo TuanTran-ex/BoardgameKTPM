@@ -1,5 +1,6 @@
 import header from "./component/header.js";
-import modal from "./component/modal.js";
+
+import modal from "./utils/modal.js";
 
 const headerContainer = document.querySelector(".header");
 const contentContainer = document.querySelector(".center-container");
@@ -69,7 +70,6 @@ const app = {
             </div>
         </form>
     `;
-    // footerContainer.innerHTML = footer;
     Validator({
       form: "#form-register",
       formGroupSelector: ".form-group",
@@ -114,11 +114,10 @@ const app = {
                 </div>
             </div>
         `;
+        modal.init();
       },
     });
-
     this.handleEvents();
-    modal.handleEvents();
   },
 };
 

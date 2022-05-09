@@ -5,7 +5,43 @@ const apiUrl = `http://localhost:6000/api/v1/auth/signin`;
 const headerContainer = document.querySelector(".header");
 const contentContainer = document.querySelector(".center-container");
 
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = `${cname}=${cvalue};${expires};path=/`;
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 const app = {
+  async signIn(username, password) {
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    return res.json();
+  },
   handleEvents() {
     const pwd_inputs = document.querySelectorAll("input[type='password']");
     const pwd_icons = document.querySelectorAll(".form-icon");
@@ -26,8 +62,27 @@ const app = {
     if (loginBtn) {
       loginBtn.onclick = (e) => {
         e.preventDefault();
-
-        // Call Login API
+        const usernameInput = document.querySelector("input[name='username']");
+        const passwordInput = document.querySelector("input[name='password']");
+        this.signIn(usernameInput.value, passwordInput.value)
+          .then((data) => {
+            // console.log(data);
+            if (data.success) {
+              window.location.href = `${window.origin}/FE/index.html`;
+              setCookie("token", data.data.token, 1);
+              Object.keys(data.data.user).forEach((key) =>
+                setCookie(`${key}`, data.data.user[key])
+              );
+              console.log(getCookie("id"));
+            } else {
+              const pwdFormGroup = passwordInput.parentElement;
+              pwdFormGroup.classList.add("invalid");
+              pwdFormGroup.querySelector(
+                ".form-message"
+              ).innerText = `Mật khẩu không chính xác`;
+            }
+          })
+          .catch((err) => {});
       };
     }
   },
@@ -43,6 +98,7 @@ const app = {
         <div class="form-list">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Tên đăng nhập" name="username">
+                <span class="form-message"></span>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="Mật khẩu" name="password">
@@ -50,6 +106,7 @@ const app = {
                     <i class="fa-solid fa-eye active"></i>
                     <i class="fa-solid fa-eye-slash"></i>
                 </div>
+                <span class="form-message"></span>
             </div>
         </div>
         <button class="btn btn-primary btn-full login-btn">ĐĂNG NHẬP</button>

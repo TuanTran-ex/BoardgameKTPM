@@ -8,7 +8,28 @@ const product = {
 
 let productList = [];
 
-let user = document.cookie;
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+let user = getCookie("token")
+  ? {
+      username: getCookie("Username"),
+      avatar: getCookie("Avatar"),
+    }
+  : {};
 
 const header = {
   headerHtml: "",
@@ -70,7 +91,7 @@ const header = {
                                 ${html}
                             </ul>
                             <div class="header-cart-products-footer">
-                                <button class="btn btn-long btn-primary">Xem giỏ hàng</butt>
+                                <button class="btn btn-long btn-primary">Xem giỏ hàng</button>
                             </div>
                         `
                             : `
@@ -86,7 +107,9 @@ const header = {
                     ? `
                     <div class="header-user">
                         <span class="header-user-name">${user.username}</span>
-                        <img src="${originUrl}/img/${user.avatar}" class="header-user-avatar"></img>
+                        <img src="${originUrl}/img/${
+                        user.avatar != "null" ? user.avatar : "ava001.jpg"
+                      }" class="header-user-avatar"></img>
                         <ul class="header-user-list">
                             <li class="header-user-item">
                                 <a href="${originUrl}/pages/account.html" class="header-user-link">Tài khoản của tôi</a> 

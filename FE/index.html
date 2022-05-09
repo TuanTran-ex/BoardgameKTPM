@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comforter&family=Exo+2:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/background.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/slider.css">
+    <link rel="stylesheet" href="./css/home.css">
+    <title>Trang chủ</title>
+</head>
+
+<body>
+    <div class="background">
+        <div class="background-left"></div>
+        <div class="background-right"></div>
+        <header class="header">
+        </header>
+        <div class="banner">
+        </div>
+        <div class="content">
+            <div class="category">
+            </div>
+            <div class="products">
+                <div class="products-header">
+                    <div class="products-heading">
+                        <span>Sản phẩm</span>
+                        <span class="products-quantity">//89</span>
+                    </div>
+                    <div class="products-search">
+                        <input type="text" class="products-search-input">
+                        <i class="fa-solid fa-magnifying-glass products-search-icon"></i>
+                    </div>
+                </div>
+                <div class="products-sub-header">
+                    <div class="products-filter">
+                        <span class="products-filter-heading">Sắp xếp theo</span>
+                        <select name="" id="" class="products-filter-select">
+                            <option value="" class="products-filter-option">Mới nhất</option>
+                            <option value="" class="products-filter-option">Giá thấp</option>
+                            <option value="" class="products-filter-option">Giá cao</option>
+                        </select>
+                    </div>
+                    <div class="products-pagination">
+                        <button class="products-pagination-first products-pagination-btn">
+                            <i class="fa-solid fa-backward"></i>
+                        </button>
+                        <button class="products-pagination-previous products-pagination-btn">
+                            <i class="fa-solid fa-caret-left"></i>
+                        </button>
+                        <ul class="products-pagination-list">
+                        </ul>
+                        <button class="products-pagination-next products-pagination-btn">
+                            <i class="fa-solid fa-caret-right"></i>
+                        </button>
+                        <button class="products-pagination-last products-pagination-btn">
+                            <i class="fa-solid fa-forward"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="products-list">
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+    </footer>
+    <script type="module">
+        import app from './js/main.js'
+        app.init();
+    </script>
+</body>
+
+</html>
