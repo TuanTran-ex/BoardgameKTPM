@@ -27,7 +27,7 @@ async function jwtAuth(req, res, next) {
 function checkAdmin(req, res, next) {
   if (!req.user) next(new CustomError(3, 401, 'Auth Error'));
   // logger.info(req.user);
-  if (req.user.user.role != 0)
+  if (req.user.user.role != 1)
     next(new CustomError(4, 401, 'Authorization error'));
   next();
 }
