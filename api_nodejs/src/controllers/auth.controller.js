@@ -7,16 +7,15 @@ const query = require('../models/query');
 
 const { signInSchema, signUpSchema } = require('../utils/validation');
 
-// Cần thêm signIn cho admin
 async function signIn(req, res, next) {
   const validate = signInSchema.validate(req.body);
   if (validate.error) {
     next(new CustomError(1, 400, 'Username, Password not valid'));
   } else {
     const { username, password } = req.body;
-    const query = `SELECT * FROM [User] WHERE Username='${username}'`;
+    // const query = `SELECT * FROM [User] WHERE Username='${username}'`;
     try {
-      const findUser = await sql.query(query);
+      const findUser = await sql.query(query.qFindUserByUsername(username));
       if (findUser.recordset.length == 0) {
         throw new CustomError(6, 400, 'Username is not exists');
       }
@@ -25,11 +24,14 @@ async function signIn(req, res, next) {
         findUser.recordset[0].Password
       );
       if (!checkPass && password != findUser.recordset[0].Password)
-        throw new CustomError(4, 400, 'Username or password wrong');
+        throw new CustomError(3, 400, 'Username or password wrong');
       else {
         const resItem = findUser.recordset[0];
         delete resItem['Password'];
         delete resItem['IsDelete'];
+        delete resItem['isLock'];
+        delete resItem['CreatedBy'];
+        delete resItem['UpdatedBy'];
         const token = jwt.sign(
           {
             user: {
@@ -65,8 +67,6 @@ async function signUp(req, res, next) {
         throw new CustomError(2, 400, 'User is exists');
       }
       const encryptPass = await bcrypt.hash(password, 10);
-      // const addQuery = `INSERT INTO [User] (Username, Password, Email, [Role])
-      // VALUES ('${username}', '${encryptPass}', '${email}', 1)`;
       const result = await sql.query(
         query.qSignIn(username, email, encryptPass)
       );

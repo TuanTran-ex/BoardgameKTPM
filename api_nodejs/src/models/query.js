@@ -1,5 +1,9 @@
-exports.qFindAllUser = () => {
-  return `SELECT * FROM [User]`;
+exports.qFindAllUser = (page, pageSize) => {
+  if (page && pageSize) {
+    return `EXECUTE proc_User_Getall ${page}, ${pageSize}`;
+  } else
+    return `SELECT Id, FullName, Email, Address, DOB, Gender, Phone, Avatar, CreatedAt
+    ,CreatedBy, UpdatedAt, UpdatedBy, Role, IsLock FROM [User]`;
 };
 exports.qFindUser = (username, email) => {
   if (email)
@@ -9,14 +13,12 @@ exports.qFindUser = (username, email) => {
 exports.qFindUserById = (id) => {
   return `SELECT * FROM [User] WHERE Id='${id}'`;
 };
-exports.qSignIn = (username, email, password) => {
-  return `INSERT INTO [User] (Username, Password, Email, [Role]) 
-  VALUES ('${username}', '${password}', '${email}', 1)`;
+exports.qFindUserByUsername = (username) => {
+  return `SELECT * FROM [User] WHERE Username='${username}'`;
 };
 exports.qLockUser = (id) => {
   return `EXECUTE proc_User_Lock ${id}`;
 };
-
 exports.qUpdateUser = (
   id,
   fullName,
@@ -32,4 +34,15 @@ exports.qUpdateUser = (
   }, '${dob || 'NULL'}', '${gender || 'NULL'}', '${email || 'NULL'}', '${
     avatar || 'NULL'
   }', '${address || 'NULL'}'`;
+};
+
+// Address
+exports.qFindListAddrByUserId = (userId) => {
+  return `SELECT * FROM UserAddress WHERE UserId = ${userId}`;
+};
+
+// Auth
+exports.qSignIn = (username, email, password) => {
+  return `INSERT INTO [User] (Username, Password, Email, [Role]) 
+  VALUES ('${username}', '${password}', '${email}', 0)`;
 };

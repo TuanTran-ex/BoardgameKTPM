@@ -12,7 +12,6 @@ async function jwtAuth(req, res, next) {
     token = token.replace('Bearer ', '');
     try {
       const decode = jwt.verify(token, process.env.PRIVATE_KEY);
-      logger.info(decode);
       const findUser = await sql.query(query.qFindUser(decode.user.username));
       if (findUser.recordset.length == 0)
         throw new CustomError(3, 401, 'Auth error');
@@ -26,9 +25,7 @@ async function jwtAuth(req, res, next) {
 
 function checkAdmin(req, res, next) {
   if (!req.user) next(new CustomError(3, 401, 'Auth Error'));
-  // logger.info(req.user);
-  if (req.user.user.role != 1)
-    next(new CustomError(4, 401, 'Authorization error'));
+  if (!req.user.user.role) next(new CustomError(4, 401, 'Authorization error'));
   next();
 }
 
