@@ -27,12 +27,15 @@ const productList = {
     const html = this.productLst
       .map((product, index) => {
         if (index >= (this.pageActive - 1) * 10 && index < this.pageActive * 10)
-          return `<div class="product-item">
+          return `
+              <a href="./pages/product_detail.html?product-id=${product.name}">
+                <div class="product-item">
                 <img class="product-img" src="./img/${product.image}"></img>
                 <span class="product-name">${product.name} ${index}</span>
                 <span class="product-description">${product.description}</span>
                 <span class="product-price">${product.price}</span>
-                </div>`;
+                </div>
+              </a>`;
       })
       .join("");
 

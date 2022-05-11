@@ -119,3 +119,39 @@
     background-color: #ccc;
     color: var(--black);
 }
+
+/* ------Slider main and slider sub-------- */
+.slider-main .slider-control,
+.slider-sub .slider-control {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+}
+
+.slider-main .slider-control .slider-button {
+    /* width: 40px;
+    height: 40px; */
+    margin-left: 0;
+}
+
+.slider-sub .slider-control .slider-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.slider-sub .slider-control .slider-button {
+    margin-left: 0;
+}
+
+.slider-sub .slider-item {
+    cursor: pointer;
+}
+
+.slider-sub .slider-control {
+    height: 0;
+    align-items: center;
+}

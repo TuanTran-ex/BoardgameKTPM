@@ -77,7 +77,7 @@ const header = {
             </ul>
         </div>
         <div class="header-btn">
-            <a href="cart.html">
+            <a href="${originUrl}/pages/cart.html">
                 <div class="header-cart">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <div class="header-cart-products">

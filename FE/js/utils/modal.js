@@ -7,9 +7,11 @@ let modalCloseBtnList;
 
 const modal = {
   showModal(index) {
+    $("body").style.overflow = "hidden";
     $$(`.modal`)[index].classList.add("active");
   },
   hiddenModal(index) {
+    $("body").style.overflow = "auto";
     $$(`.modal`)[index].classList.remove("active");
   },
   handleEvents() {

@@ -37,14 +37,22 @@ const slider = {
       ) {
         this.currentItem[index] =
           this.sliderLength[index] - this.sliderCol[index];
-        this.sliderNexts[index].classList.add("disabled");
+        this.sliderNexts[index] &&
+          this.sliderNexts[index].classList.add("disabled");
+        this.sliderPreviouss[index] &&
+          this.sliderPreviouss[index].classList.remove("disabled");
       } else {
         this.currentItem[index] = 0;
-        this.sliderPreviouss[index].classList.add("disabled");
+        this.sliderPreviouss[index] &&
+          this.sliderPreviouss[index].classList.add("disabled");
+        this.sliderNexts[index] &&
+          this.sliderNexts[index].classList.remove("disabled");
       }
     } else {
-      this.sliderPreviouss[index].classList.remove("disabled");
-      this.sliderNexts[index].classList.remove("disabled");
+      this.sliderPreviouss[index] &&
+        this.sliderPreviouss[index].classList.remove("disabled");
+      this.sliderNexts[index] &&
+        this.sliderNexts[index].classList.remove("disabled");
     }
     this.currentPosition[
       index
@@ -54,22 +62,26 @@ const slider = {
   handleEvents() {
     // next event
     this.sliderNexts.forEach((sliderNext, index) => {
-      sliderNext.onclick = () => {
-        if (!sliderNext.classList.contains("disabled")) {
-          this.currentItem[index]++;
-          this.switchImage(index);
-        }
-      };
+      if (sliderNext) {
+        sliderNext.onclick = () => {
+          if (!sliderNext.classList.contains("disabled")) {
+            this.currentItem[index]++;
+            this.switchImage(index);
+          }
+        };
+      }
     });
 
     // previous event
     this.sliderPreviouss.forEach((sliderPrevious, index) => {
-      sliderPrevious.onclick = () => {
-        if (!sliderPrevious.classList.contains("disabled")) {
-          this.currentItem[index]--;
-          this.switchImage(index);
-        }
-      };
+      if (sliderPrevious) {
+        sliderPrevious.onclick = () => {
+          if (!sliderPrevious.classList.contains("disabled")) {
+            this.currentItem[index]--;
+            this.switchImage(index);
+          }
+        };
+      }
     });
 
     // slider sub event
@@ -89,17 +101,19 @@ const slider = {
 
     // Create previous and next button
     this.wrappers.forEach((wrapper) => {
-      const htmls = `
-                <div class="slider-control">
-                    <div class="slider-button slider-previous">
-                        <i class="fas fa-chevron-left"></i>
-                    </div>
-                    <div class="slider-button slider-next">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-            `;
-      wrapper.innerHTML += htmls;
+      if (!wrapper.classList.contains("n-btn")) {
+        const htmls = `
+                  <div class="slider-control">
+                      <div class="slider-button slider-previous">
+                          <i class="fas fa-chevron-left"></i>
+                      </div>
+                      <div class="slider-button slider-next">
+                          <i class="fas fa-chevron-right"></i>
+                      </div>
+                  </div>
+              `;
+        wrapper.innerHTML += htmls;
+      }
     });
 
     // Get slider
@@ -107,11 +121,21 @@ const slider = {
     this.sliderSubs = Array.from($$(".slider.slider-sub"));
     this.sliderRows = Array.from($$(".slider-row"));
     this.sliderLists = Array.from($$(".slider-list"));
-    this.sliderNexts = Array.from($$(".slider-next"));
-    this.sliderPreviouss = Array.from($$(".slider-previous"));
 
     // Get items in slider list
     this.sliderLists.forEach((sliderList, index) => {
+      if (!this.wrappers[index].classList.contains("n-btn")) {
+        this.sliderNexts.push(
+          this.wrappers[index].querySelector(".slider-next")
+        );
+        this.sliderPreviouss.push(
+          this.wrappers[index].querySelector(".slider-previous")
+        );
+      } else {
+        this.sliderNexts.push(null);
+        this.sliderPreviouss.push(null);
+      }
+
       const currentSliderItems = Array.from(
         sliderList.querySelectorAll(".slider-item")
       );
@@ -131,9 +155,13 @@ const slider = {
       });
 
       // Set disabled for previous and next button
-      this.sliderPreviouss[index].classList.add("disabled");
-      if (this.sliderLength[index] <= this.sliderCol[index]) {
-        this.sliderNexts[index].classList.add("disabled");
+      if (this.sliderPreviouss[index]) {
+        this.sliderPreviouss[index].classList.add("disabled");
+      }
+      if (this.sliderNexts[index]) {
+        if (this.sliderLength[index] <= this.sliderCol[index]) {
+          this.sliderNexts[index].classList.add("disabled");
+        }
       }
     });
     this.setDataIndex();

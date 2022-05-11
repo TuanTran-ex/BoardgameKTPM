@@ -27,6 +27,7 @@
     font-size: 1.6rem;
     line-height: 24px;
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .category-item::after {
@@ -127,7 +128,7 @@
 }
 
 .products-quantity {
-    color: #c4c4c4;
+    color: var(--light-color);
     font-weight: 400;
 }
 
@@ -137,7 +138,7 @@
 
 .products-search-input {
     background-color: #F8F8F8;
-    border: 0.05rem solid #666666;
+    border: 0.05rem solid var(--border-color);
     border-radius: 0.8rem;
     outline: none;
     padding: 0.8rem 1.6rem;
@@ -167,7 +168,7 @@
 .products-filter-heading {
     font-size: 2rem;
     line-height: 2rem;
-    color: #484848;
+    color: var(--border-color);
     font-weight: 600;
     margin-right: 2.8rem;
 }
@@ -191,7 +192,7 @@
     height: 4rem;
     background-color: #F8F8F8;
     border-radius: 0.4rem;
-    border: 0.05rem solid #666;
+    border: 0.05rem solid var(--border-color);
     font-size: 2rem;
     color: #484848;
     margin-left: 1rem;
@@ -208,7 +209,7 @@
     display: flex;
     background-color: #F8F8F8;
     border-radius: 0.4rem;
-    border: 0.05rem solid #666;
+    border: 0.05rem solid var(--border-color);
     height: 4rem;
     display: flex;
     justify-content: center;
@@ -261,6 +262,7 @@
 }
 
 .product-name {
+    color: var(--text-color);
     font-size: 2rem;
     font-weight: 700;
     margin-top: 2.1rem;
@@ -283,7 +285,7 @@
 }
 
 .product-price {
-    color: #E51819;
+    color: var(--primary-color);
     font-size: 1.6rem;
     margin-top: auto;
     font-weight: 600;
