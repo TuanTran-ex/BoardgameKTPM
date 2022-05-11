@@ -1,3 +1,5 @@
+const logger = require('../utils/logger');
+
 exports.qFindAllUser = (page, pageSize) => {
   if (page && pageSize) {
     return `EXECUTE proc_User_Getall ${page}, ${pageSize}`;
@@ -42,7 +44,49 @@ exports.qFindListAddrByUserId = (userId) => {
 };
 
 // Auth
-exports.qSignIn = (username, email, password) => {
+exports.qSignUp = (username, email, password) => {
   return `INSERT INTO [User] (Username, Password, Email, [Role]) 
   VALUES ('${username}', '${password}', '${email}', 0)`;
+};
+
+// Voucher
+exports.qGetAllVoucher = (page, pageSize, status) => {
+  if (page && pageSize) {
+    return `EXECUTE proc_Voucher_Getall ${page}, ${pageSize}, ${
+      status || 'NULL'
+    }`;
+  } else {
+    return `SELECT * FROM Voucher WHERE IsDelete = 0`;
+  }
+};
+
+exports.qFindVoucherById = (id) => {
+  if (/^\d+$/.test(id)) return `SELECT * FROM Voucher WHERE Id = ${id}`;
+  else return `SELECT * FROM Voucher WHERE Code = '${id}'`;
+};
+
+exports.qFindVoucherByCode = (code) => {
+  return `SELECT * FROM Voucher WHERE Code = '${code}'`;
+};
+
+exports.qAddVoucher = (code, expired, amount, value, createBy) => {
+  return `EXECUTE proc_Voucher_Add '${code}', '${expired}', ${amount}, ${value}, ${createBy}`;
+};
+
+exports.qUpdateVoucher = (
+  id,
+  status,
+  value,
+  amount,
+  expired,
+  type,
+  updateBy
+) => {
+  return `EXECUTE proc_Voucher_Update ${id}, ${status || 'NULL'}, ${
+    value || 'NULL'
+  }, ${amount || 'NULL'}, ${expired || 'NULL'}, ${type || 'NULL'}, ${updateBy}`;
+};
+
+exports.qDeleteVoucher = (id) => {
+  return `EXECUTE proc_Voucher_Delete ${id}`;
 };

@@ -7,8 +7,6 @@ exports.getAllUser = async (req, res, next) => {
   const { page, pageSize } = req.body;
   try {
     const listUser = await sql.query(query.qFindAllUser(page, pageSize));
-    // logger.info(listUser.recordset);
-    console.log(listUser.recordset);
     res.status(200).json({
       success: true,
       message: 'Success get all user info',
@@ -52,14 +50,12 @@ exports.updateUser = async (req, res, next) => {
     next(new CustomError(6, 400, 'User not exists'));
   if (isLock) {
     const result = await sql.query(query.qLockUser(id));
-    logger.info(result);
     return res.json({ data: result });
   } else {
     const { fullName, phone, dob, gender, email, avatar, address } = req.body;
     const result = await sql.query(
       query.qUpdateUser(fullName, phone, dob, gender, email, avatar, address)
     );
-    logger.info(result);
     return res.json({ data: result });
   }
 };

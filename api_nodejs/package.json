@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon ./src/app.js"
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon ./src/app.js"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -15,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "mssql": "^8.1.0",
     "passport": "^0.5.2",
+    "query-string": "^7.1.1",
     "winston": "^3.7.2"
   },
   "devDependencies": {

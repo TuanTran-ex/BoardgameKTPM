@@ -68,7 +68,7 @@ async function signUp(req, res, next) {
       }
       const encryptPass = await bcrypt.hash(password, 10);
       const result = await sql.query(
-        query.qSignIn(username, email, encryptPass)
+        query.qSignUp(username, email, encryptPass)
       );
       res.json({ success: true, message: 'Signup successful' });
     } catch (err) {
