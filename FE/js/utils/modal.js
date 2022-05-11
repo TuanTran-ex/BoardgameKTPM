@@ -21,7 +21,9 @@ const modal = {
     });
     modalCloseBtnList.forEach((closeBtns, index) => {
       closeBtns.forEach((closeBtn) => {
-        closeBtn.onclick = () => {
+        closeBtn.onclick = (e) => {
+          e.preventDefault();
+          console.log(e.target);
           this.hiddenModal(index);
         };
       });

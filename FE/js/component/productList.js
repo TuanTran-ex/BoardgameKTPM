@@ -7,10 +7,51 @@ const product = {
 };
 
 const productList = {
-  productListHtml: "",
   pageActive: 1,
   totalPage: 1,
   productLst: [],
+  renderHtml() {
+    document.querySelector(".products").innerHTML = `
+      <div class="products-header">
+            <div class="products-heading">
+                <span>Sản phẩm</span>
+                <span class="products-quantity">//89</span>
+            </div>
+            <div class="products-search">
+                <input type="text" class="products-search-input">
+                <i class="fa-solid fa-magnifying-glass products-search-icon"></i>
+            </div>
+        </div>
+        <div class="products-sub-header">
+            <div class="products-filter">
+                <span class="products-filter-heading">Sắp xếp theo</span>
+                <select name="" id="" class="products-filter-select">
+                    <option value="" class="products-filter-option">Mới nhất</option>
+                    <option value="" class="products-filter-option">Giá thấp</option>
+                    <option value="" class="products-filter-option">Giá cao</option>
+                </select>
+            </div>
+            <div class="products-pagination">
+                <button class="products-pagination-first products-pagination-btn">
+                    <i class="fa-solid fa-backward"></i>
+                </button>
+                <button class="products-pagination-previous products-pagination-btn">
+                    <i class="fa-solid fa-caret-left"></i>
+                </button>
+                <ul class="products-pagination-list">
+                </ul>
+                <button class="products-pagination-next products-pagination-btn">
+                    <i class="fa-solid fa-caret-right"></i>
+                </button>
+                <button class="products-pagination-last products-pagination-btn">
+                    <i class="fa-solid fa-forward"></i>
+                </button>
+            </div>
+        </div>
+        <div class="products-list">
+        </div>
+    `
+  },
   getItem() {
     return {
       firstPageBtn: document.querySelector(".products-pagination-first"),
@@ -118,46 +159,6 @@ const productList = {
     };
   },
   init() {
-    this.productListHtml = `
-        <div class="products-header">
-            <div class="products-heading">
-                <span>Sản phẩm</span>
-                <span class="products-quantity">//89</span>
-            </div>
-            <div class="products-search">
-                <input type="text" class="products-search-input">
-                <i class="fa-solid fa-magnifying-glass products-search-icon"></i>
-            </div>
-        </div>
-        <div class="products-sub-header">
-            <div class="products-filter">
-                <span class="products-filter-heading">Sắp xếp theo</span>
-                <select name="" id="" class="products-filter-select">
-                    <option value="" class="products-filter-option">Mới nhất</option>
-                    <option value="" class="products-filter-option">Giá thấp</option>
-                    <option value="" class="products-filter-option">Giá cao</option>
-                </select>
-            </div>
-            <div class="products-pagination">
-                <button class="products-pagination-first products-pagination-btn">
-                    <i class="fa-solid fa-backward"></i>
-                </button>
-                <button class="products-pagination-previous products-pagination-btn">
-                    <i class="fa-solid fa-caret-left"></i>
-                </button>
-                <ul class="products-pagination-list">
-                </ul>
-                <button class="products-pagination-next products-pagination-btn">
-                    <i class="fa-solid fa-caret-right"></i>
-                </button>
-                <button class="products-pagination-last products-pagination-btn">
-                    <i class="fa-solid fa-forward"></i>
-                </button>
-            </div>
-        </div>
-        <div class="products-list">
-        </div>
-    `;
     for (let i = 0; i < 61; i++) {
       this.productLst.push(product);
     }
@@ -165,6 +166,7 @@ const productList = {
       this.productLst.length % 10
         ? Math.floor(this.productLst.length / 10) + 1
         : this.productLst.length / 10;
+    this.renderHtml();
   },
 };
 

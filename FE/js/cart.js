@@ -1,11 +1,10 @@
 import header from "./component/header.js";
 import footer from "./component/footer.js";
-import modal from "./utils/modal.js";
 import voucher from "./component/voucher.js"
+import modal from "./utils/modal.js";
+import utils from "./utils/utils.js"
 
-const headerContainer = document.querySelector(".header");
 const footerContainer = document.querySelector(".footer");
-const cartContainer = document.querySelector(".cart");
 
 const productSelected = [];
 
@@ -17,6 +16,7 @@ let cartProductDecs;
 let cartProductIncs;
 let cartProductQuantitys;
 let cartProductsVoucherBtn;
+let cartPaymentBtn;
 
 const product = {
   image: "pd001.jpg",
@@ -86,7 +86,7 @@ const app = {
                                     }</span>
                                 </div>
                                 <span class="cart-product-price">${
-                                  item.price
+                                  utils.formatMoney(item.price)
                                 } VNĐ</span>
                                 <div class="cart-product-quantity">
                                     <div class="cart-product-quantity-dec">
@@ -100,7 +100,7 @@ const app = {
                                     </div>
                                 </div>
                                 <span class="cart-product-price">${
-                                  item.price * item.quantity
+                                  utils.formatMoney(item.price * item.quantity)
                                 } VNĐ</span>
                                 <div class="cart-product-action">
                                     <span class="cart-product-delete">Xóa</span>
@@ -125,7 +125,7 @@ const app = {
                               this.voucher
                             }%</div>
                             ` : ""}
-                        <span>-${this.price.savingPrice} VNĐ</span>
+                        <span>-${utils.formatMoney(this.price.savingPrice)} VNĐ</span>
                     </div>
                 </div>
                 <div class="cart-products-footer-action">
@@ -148,14 +148,14 @@ const app = {
                             </div>
                             <div>
                                 <span class="text-middle"> ${
-                                  this.price.lastPrice
+                                  utils.formatMoney(this.price.lastPrice)
                                 } VNĐ</span>
                                 <span class="text-small">${
-                                  this.price.savingPrice
+                                  utils.formatMoney(this.price.savingPrice)
                                 } VNĐ</span>
                             </div>
                         </div>
-                        <a href="payment.html" class="btn btn-m-long btn-primary">Thanh toán</a>
+                        <a href="payment.html" class="btn btn-m-long btn-primary cart-payment-btn">Thanh toán</a>
                     </div>
                 </div>
             </div>
@@ -174,6 +174,7 @@ const app = {
     cartProductIncs = document.querySelectorAll(".cart-product-quantity-inc");
     cartProductQuantitys = document.querySelectorAll(".cart-product-quantity-number");
     cartProductsVoucherBtn = document.querySelector(".cart-products-voucher-select");
+    cartPaymentBtn = document.querySelector(".cart-payment-btn");
 
     this.handleEvents();
   },
@@ -200,11 +201,10 @@ const app = {
       totalPrice += item.price * item.quantity;
     });
     this.price = {
-      savingPrice: (totalPrice * this.voucher) / 100,
+      totalPrice: totalPrice,
+      savingPrice: Math.floor((totalPrice * this.voucher) / 100),
       lastPrice: Math.floor(totalPrice * (1 - this.voucher / 100)),
     };
-
-    // document.querySelector(".cart-products-saving span").innerText = `-${this.price.savingPrice} VNĐ`
   },
   cartTotalHandler() {
     cartProductChecks.forEach((cartProductCheck) => {
@@ -234,8 +234,14 @@ const app = {
         const index2 = productSelected.indexOf(product);
         if (index != -1) productList.splice(index, 1);
         if (index2 != -1) productSelected.splice(index2, 1);
+
+        // Call delete cart item API
+
+        // Set cart session
+        window.sessionStorage.cart = JSON.stringify(productList);
       }
     });
+    header.renderHtml();
     app.renderHtml();
   },
   productDeleteSelectedHandler() {
@@ -307,6 +313,45 @@ const app = {
     }
     app.renderHtml();
   },
+  cartPaymentHandler (e) {
+    if (productSelected.length === 0) {
+      e.preventDefault();
+      if (document.querySelector(".notification")) {
+        const modals = Array.from(document.querySelectorAll(".modal"));
+        const notifyModal = document.querySelector(".modal .notification").closest(".modal");
+        const index = modals.indexOf(notifyModal);
+        modal.showModal(index);
+      } else {
+        const modalHtml = `
+          <div class="modal active">
+          <div class="modal-overlay"></div>
+            <div class="modal-body">
+              <div class="notification">
+                <span>Bạn chưa chọn sản phẩm nào để mua</span>
+              </div>
+            </div>
+          </div>
+        `;
+        document.querySelector("body").innerHTML += modalHtml;
+      }
+      if (document.querySelector(".voucher")) {
+        voucher.init();
+      }
+      else {
+        modal.init();
+      }
+      app.renderHtml();
+    } else {
+      e.preventDefault();
+      window.sessionStorage.cartSelected = JSON.stringify({
+        productList: productSelected,
+        voucher: app.voucher,
+        price: app.price,
+        quantity: productSelected.length
+      })
+      window.location.href = `${window.location.origin}/FE/pages/payment.html`;
+    }
+  },
   removeEvents() {
     if (cartTotalCheck)
       cartTotalCheck.removeEventListener("change", this.cartTotalHandler);
@@ -353,6 +398,9 @@ const app = {
         this.cartVoucherBtnHandler
       );
     }
+    if (cartPaymentBtn) {
+      cartPaymentBtn.removeEventListener("click", this.cartPaymentHandler);
+    }
   },
   handleEvents() {
     if (cartTotalCheck) {
@@ -392,12 +440,15 @@ const app = {
     if (cartProductsVoucherBtn) {
       cartProductsVoucherBtn.addEventListener("click", this.cartVoucherBtnHandler);
     }
+    if(cartPaymentBtn) {
+      cartPaymentBtn.addEventListener("click", this.cartPaymentHandler);
+    }
   },
   init() {
-    header.init();
-    headerContainer.innerHTML = header.headerHtml;
     footerContainer.innerHTML = footer;
     this.renderHtml();
+    window.sessionStorage.cart = JSON.stringify(productList);
+    header.init();
   },
 };
 

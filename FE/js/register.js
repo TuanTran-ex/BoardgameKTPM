@@ -2,7 +2,6 @@ import header from "./component/header.js";
 
 import modal from "./utils/modal.js";
 
-const headerContainer = document.querySelector(".header");
 const contentContainer = document.querySelector(".center-container");
 
 const app = {
@@ -26,7 +25,6 @@ const app = {
 
   init() {
     header.init();
-    headerContainer.innerHTML = header.headerHtml;
     contentContainer.innerHTML = `
         <form action="" class="form-authentication" id="form-register">
             <div class="form-title">

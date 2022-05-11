@@ -1,3 +1,5 @@
+import utils from "../utils/utils.js";
+
 const originUrl = `${window.origin}/FE`;
 
 const product = {
@@ -6,64 +8,26 @@ const product = {
   price: "1.600.000 VNĐ",
 };
 
-let productList = [];
+let cartBtn;
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
-let user = getCookie("token")
-  ? {
-      username: getCookie("Username"),
-      avatar: getCookie("Avatar"),
-    }
-  : {};
+let user = utils.getCookie("token") ? 
+  {
+    username: utils.getCookie("Username"),
+    avatar: utils.getCookie("Avatar"),
+  } : {};
 
 const header = {
-  headerHtml: "",
-  handleEvents() {
-    const headerContainer = document.querySelector("header");
-    headerContainer.onclick = (e) => {
-      const cartProductBtn = e.target.closest(
-        ".header-cart-products-footer button"
-      );
-      if (cartProductBtn) {
-        e.preventDefault();
-        window.location.href = `${originUrl}/pages/cart.html`;
-      }
-    };
-  },
-  init() {
-    //   Create product List data
-    for (let i = 0; i < 3; i++) productList.push(product);
-    const html = productList
-      .map((item) => {
-        return `
-            <li class="header-cart-products-item">
-                <div class="header-cart-products-item-left">
-                    <img src="${originUrl}/img/${item.image}" alt="" class="header-cart-products-image">
-                    <span class="header-cart-products-name">${item.name}</span>
-                </div>
-                <span class="header-cart-products-price">${item.price}</span>
-            </li>`;
-      })
-      .join("");
+  productList: [],
+  renderHtml() {
+    // Get cart from session
+    if (!window.sessionStorage.cart) {
+      window.sessionStorage.cart = JSON.stringify([]);
+    } else {
+      this.productList = [...JSON.parse(window.sessionStorage.cart)];
+    }
 
-    // Add html to header
-    this.headerHtml = `
-        <div class="header-nav">
+    document.querySelector(".header").innerHTML = `
+      <div class="header-nav">
             <a href="${originUrl}/index.html" class="header-logo-link">
                 <img src="${originUrl}/img/logo.png" alt="" class="logo">
             </a>
@@ -82,18 +46,27 @@ const header = {
                     <i class="fa-solid fa-cart-shopping"></i>
                     <div class="header-cart-products">
                         ${
-                          productList.length > 0
+                          this.productList.length > 0
                             ? `
-                            <div class="header-cart-products-header">
-                                <span>Sản phẩm mới thêm</span>
-                            </div>
-                            <ul class="header-cart-products-list">
-                                ${html}
-                            </ul>
-                            <div class="header-cart-products-footer">
-                                <button class="btn btn-long btn-primary">Xem giỏ hàng</button>
-                            </div>
-                        `
+                                <div class="header-cart-products-header">
+                                    <span>Sản phẩm mới thêm</span>
+                                </div>
+                                <ul class="header-cart-products-list">
+                                    ${this.productList.map((item) => {
+                                      return `
+                                        <li class="header-cart-products-item">
+                                            <div class="header-cart-products-item-left">
+                                                <img src="${originUrl}/img/${item.image}" alt="" class="header-cart-products-image">
+                                                <span class="header-cart-products-name">${item.name}</span>
+                                            </div>
+                                            <span class="header-cart-products-price">${utils.formatMoney(item.price)} VNĐ</span>
+                                        </li>`;
+                                    }).join("")}
+                                </ul>
+                                <div class="header-cart-products-footer">
+                                    <button class="btn btn-long btn-primary">Xem giỏ hàng</button>
+                                </div>
+                            `
                             : `
                             <div class="header-cart-products-text">Chưa có sản phẩm</div>
                         `
@@ -130,8 +103,30 @@ const header = {
                 }
             </div>
         </div>
-    `;
+    `
+
+    this.removeEvents();
+
+    cartBtn = document.querySelector(".header-cart-products-footer button");
+
     this.handleEvents();
+  },
+  cartBtnHandler(e) {
+    e.preventDefault();
+    window.location.href = `${originUrl}/pages/cart.html`;
+  },
+  removeEvents() {
+    if (cartBtn) {
+      cartBtn.removeEventListener("click", this.cartBtnHandler);
+    }
+  },
+  handleEvents() {
+    if (cartBtn) {
+      cartBtn.addEventListener("click", this.cartBtnHandler);
+    }
+  },
+  init() {
+    this.renderHtml();
   },
 };
 

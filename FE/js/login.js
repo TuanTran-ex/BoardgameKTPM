@@ -1,8 +1,7 @@
 import header from "./component/header.js";
 
-const apiUrl = `http://localhost:6000/api/v1/auth/signin`;
+const apiUrl = `http://localhost:3000/api/v1/auth/signin`;
 
-const headerContainer = document.querySelector(".header");
 const contentContainer = document.querySelector(".center-container");
 
 function setCookie(cname, cvalue, exdays) {
@@ -34,6 +33,7 @@ const app = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         username,
@@ -69,7 +69,7 @@ const app = {
             // console.log(data);
             if (data.success) {
               window.location.href = `${window.origin}/FE/index.html`;
-              setCookie("token", data.data.token, 1);
+              setCookie("token", data.data.token);
               Object.keys(data.data.user).forEach((key) =>
                 setCookie(`${key}`, data.data.user[key])
               );
@@ -89,7 +89,6 @@ const app = {
 
   init() {
     header.init();
-    headerContainer.innerHTML = header.headerHtml;
     contentContainer.innerHTML = `
       <form action="" class="form-authentication" id="form-login">
         <div class="form-title">

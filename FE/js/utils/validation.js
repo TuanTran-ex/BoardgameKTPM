@@ -51,7 +51,7 @@ function Validator(options) {
 
   //Lấy element của form cần validate
   var formElement = document.querySelector(options.form);
-  var submitButton = formElement.querySelector(".btn");
+  var submitButton = formElement.querySelector("button");
 
   if (formElement) {
     // Khi submit form

@@ -303,7 +303,7 @@ button {
     display: flex;
     opacity: 0;
     visibility: hidden;
-    overflow: scroll;
+    overflow: auto;
     transition: all 0.3s;
     z-index: 9999;
 }
