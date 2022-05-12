@@ -26,37 +26,21 @@ const slider = {
     });
   },
   switchImage(index) {
-    if (
-      this.currentItem[index] >=
-        this.sliderLength[index] - this.sliderCol[index] ||
-      this.currentItem[index] <= 0
-    ) {
-      if (
-        this.currentItem[index] >=
-        this.sliderLength[index] - this.sliderCol[index]
-      ) {
-        this.currentItem[index] =
-          this.sliderLength[index] - this.sliderCol[index];
-        this.sliderNexts[index] &&
-          this.sliderNexts[index].classList.add("disabled");
-        this.sliderPreviouss[index] &&
-          this.sliderPreviouss[index].classList.remove("disabled");
+    if (this.currentItem[index] >= this.sliderLength[index] - this.sliderCol[index] || this.currentItem[index] <= 0) {
+      if (this.currentItem[index] >= this.sliderLength[index] - this.sliderCol[index]) {
+        this.currentItem[index] = this.sliderLength[index] - this.sliderCol[index];
+        this.sliderNexts[index] && this.sliderNexts[index].classList.add("disabled");
+        this.sliderPreviouss[index] && this.sliderPreviouss[index].classList.remove("disabled");
       } else {
         this.currentItem[index] = 0;
-        this.sliderPreviouss[index] &&
-          this.sliderPreviouss[index].classList.add("disabled");
-        this.sliderNexts[index] &&
-          this.sliderNexts[index].classList.remove("disabled");
+        this.sliderPreviouss[index] && this.sliderPreviouss[index].classList.add("disabled");
+        this.sliderNexts[index] && this.sliderNexts[index].classList.remove("disabled");
       }
     } else {
-      this.sliderPreviouss[index] &&
-        this.sliderPreviouss[index].classList.remove("disabled");
-      this.sliderNexts[index] &&
-        this.sliderNexts[index].classList.remove("disabled");
+      this.sliderPreviouss[index] && this.sliderPreviouss[index].classList.remove("disabled");
+      this.sliderNexts[index] && this.sliderNexts[index].classList.remove("disabled");
     }
-    this.currentPosition[
-      index
-    ] = `calc(((100% / ${this.sliderCol[index]}) + (${this.sliderGap[index]} / ${this.sliderCol[index]}))*${this.currentItem[index]}*(-1))`;
+    this.currentPosition[index] = `calc(((100% / ${this.sliderCol[index]}) + (${this.sliderGap[index]} / ${this.sliderCol[index]}))*${this.currentItem[index]}*(-1))`;
     this.sliderLists[index].style.left = `${this.currentPosition[index]}`;
   },
   handleEvents() {
@@ -123,22 +107,20 @@ const slider = {
     this.sliderLists = Array.from($$(".slider-list"));
 
     // Get items in slider list
+    this.sliderItems = []
+    this.sliderNexts = []
+    this.sliderPreviouss = []
+    
     this.sliderLists.forEach((sliderList, index) => {
       if (!this.wrappers[index].classList.contains("n-btn")) {
-        this.sliderNexts.push(
-          this.wrappers[index].querySelector(".slider-next")
-        );
-        this.sliderPreviouss.push(
-          this.wrappers[index].querySelector(".slider-previous")
-        );
+        this.sliderNexts.push(this.wrappers[index].querySelector(".slider-next"));
+        this.sliderPreviouss.push(this.wrappers[index].querySelector(".slider-previous"));
       } else {
         this.sliderNexts.push(null);
         this.sliderPreviouss.push(null);
       }
 
-      const currentSliderItems = Array.from(
-        sliderList.querySelectorAll(".slider-item")
-      );
+      const currentSliderItems = Array.from(sliderList.querySelectorAll(".slider-item"));
       this.sliderItems = [...this.sliderItems, currentSliderItems];
       this.sliderLength[index] = currentSliderItems.length;
       this.sliderCol[index] = Number(sliderList.dataset.col) || 1;

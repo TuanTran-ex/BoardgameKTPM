@@ -427,18 +427,34 @@
     min-width: 44.4rem;
 }
 
-.voucher-header,
-.voucher-list {
-    padding-bottom: 3rem;
+.voucher-header {
+    padding-bottom: 1.6rem;
+}
+
+.voucher-back-btn {
+    font-size: 1.6rem;
+    margin-right: 3rem;
+    cursor: pointer;
 }
 
 .voucher-list {
+    padding-bottom: 3rem;
     max-height: 30rem;
     overflow: auto;
 }
 
 .voucher-list::-webkit-scrollbar {
     display: none;
+}
+
+.voucher-text {
+    font-size: 1.6rem;
+    opacity: 0.65;
+    height: 6rem;
+    margin-bottom: -3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .voucher-heading {
@@ -480,10 +496,6 @@
     padding: 3rem 0 0 0;
 }
 
-.voucher-item:not(:first-child) {
-    padding: 3rem 0;
-}
-
 .voucher-info {
     display: flex;
     align-items: center;
@@ -510,14 +522,30 @@
     height: 1.8rem;
 }
 
+.voucher-get-btn {
+    font-size: 1.6rem;
+    color: #0500FF;
+    cursor: pointer;
+}
+
 .voucher-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 3rem 0 1rem 0;
 }
 
-.voucher-footer>* {
+.voucher-footer-btn>* {
     margin-left: 2rem;
+}
+
+.voucher-add-text {
+    font-size: 1.6rem;
+}
+
+.voucher-add-btn {
+    color: #0500FF;
+    cursor: pointer;
 }
 
 /*------------- Address -------------- */

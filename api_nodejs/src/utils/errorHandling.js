@@ -48,7 +48,7 @@ module.exports = function errorHandling(error, res) {
     }
   } else {
     return res.status(500).json({
-      code: 7,
+      code: 9,
       error: 'server_error',
       message: 'Error from server ' + error,
     });

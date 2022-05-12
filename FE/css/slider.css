@@ -82,8 +82,11 @@
 
 .slider-img {
     width: 100%;
-    height: 38.6rem;
     object-fit: contain;
+}
+
+.banner .slider-img {
+    height: 38.6rem;
 }
 
 .slider-heading {

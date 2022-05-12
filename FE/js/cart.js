@@ -26,16 +26,7 @@ const product = {
   //   quantity: 1,
 };
 
-const productList = [];
-
-for (let i = 0; i < 3; i++) {
-  productList.push({
-    id: i,
-    price: Math.floor(Math.random() * (2000 - 1 + 1)) + 1,
-    quantity: Math.floor(Math.random() * (10 - 1 + 1)) + 1,
-    ...product,
-  });
-}
+const productList = JSON.parse(window.sessionStorage.cart);
 
 const app = {
   voucher: 0,
@@ -54,7 +45,7 @@ const app = {
             <div class="cart-empty">
                 <img src="../img/cart001.png" alt="" class="cart-empty-image">
                 <span>Giỏ hàng của bạn còn trống</span>
-                <button class="btn btn-m-long btn-primary">Mua hàng</button>
+                <a href="../index.html" class="btn btn-m-long btn-primary">Mua hàng</a>
             </div>        
         `
             : `
@@ -426,7 +417,6 @@ const app = {
   init() {
     footerContainer.innerHTML = footer;
     this.renderHtml();
-    window.sessionStorage.cart = JSON.stringify(productList);
     header.init();
   },
 };
