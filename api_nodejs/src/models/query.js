@@ -4,7 +4,7 @@ exports.qFindAllUser = (page, pageSize) => {
   if (page && pageSize) {
     return `EXECUTE proc_User_Getall ${page}, ${pageSize}`;
   } else
-    return `SELECT Id, FullName, Email, Address, DOB, Gender, Phone, Avatar, CreatedAt
+    return `SELECT Id, FullName, Email, DOB, Gender, Phone, Avatar, CreatedAt
     ,CreatedBy, UpdatedAt, UpdatedBy, Role, IsLock FROM [User]`;
 };
 exports.qFindUser = (username, email) => {
@@ -36,6 +36,10 @@ exports.qUpdateUser = (
   }, '${dob || 'NULL'}', '${gender || 'NULL'}', '${email || 'NULL'}', '${
     avatar || 'NULL'
   }', '${address || 'NULL'}'`;
+};
+
+exports.qChangePass = (id, newPass) => {
+  return `EXECUTE proc_User_ChangePass ${id}, '${newPass}'`;
 };
 
 // Address
