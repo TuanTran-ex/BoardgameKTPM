@@ -159,7 +159,7 @@ Validator.isEmail = function (selector, message) {
     selector: selector,
     test: function (value) {
       var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      return regex.test(value)
+      return value.length === 0 || regex.test(value)
         ? undefined
         : message || "Trường này phải là email";
     },
@@ -170,7 +170,7 @@ Validator.minLength = function (selector, length, message) {
   return {
     selector: selector,
     test: function (value) {
-      return value.length == 0 || value.length >= length
+      return value.length === 0 || value.length >= length
         ? undefined
         : message || `Vui lòng nhập tối thiểu ${length} kí tự`;
     },

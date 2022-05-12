@@ -23,7 +23,6 @@ const modal = {
       closeBtns.forEach((closeBtn) => {
         closeBtn.onclick = (e) => {
           e.preventDefault();
-          console.log(e.target);
           this.hiddenModal(index);
         };
       });

@@ -1,6 +1,7 @@
 import header from "./component/header.js";
 import footer from "./component/footer.js";
 import voucher from "./component/voucher.js"
+import notifyModal from "./component/notifyModal.js";
 import modal from "./utils/modal.js";
 import utils from "./utils/utils.js"
 
@@ -316,30 +317,8 @@ const app = {
   cartPaymentHandler (e) {
     if (productSelected.length === 0) {
       e.preventDefault();
-      if (document.querySelector(".notification")) {
-        const modals = Array.from(document.querySelectorAll(".modal"));
-        const notifyModal = document.querySelector(".modal .notification").closest(".modal");
-        const index = modals.indexOf(notifyModal);
-        modal.showModal(index);
-      } else {
-        const modalHtml = `
-          <div class="modal active">
-          <div class="modal-overlay"></div>
-            <div class="modal-body">
-              <div class="notification">
-                <span>Bạn chưa chọn sản phẩm nào để mua</span>
-              </div>
-            </div>
-          </div>
-        `;
-        document.querySelector("body").innerHTML += modalHtml;
-      }
-      if (document.querySelector(".voucher")) {
-        voucher.init();
-      }
-      else {
-        modal.init();
-      }
+      notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", 1);
+      notifyModal.showModal();
       app.renderHtml();
     } else {
       e.preventDefault();
