@@ -1,5 +1,6 @@
 import header from "./component/header.js";
 import footer from "./component/footer.js";
+import notifyModal from "./component/notifyModal.js";
 import slider from "./utils/slider.js";
 import utils from "./utils/utils.js";
 
@@ -18,23 +19,23 @@ const product = {
         },
         {
             id: 1,
-            path: "pd001.jpg",
+            path: "pd002.png",
         },
         {
             id: 2,
-            path: "pd001.jpg",
+            path: "pd003.png",
         },
         {
             id: 3,
-            path: "pd001.jpg",
+            path: "pd004.png",
         },
         {
             id: 4,
-            path: "pd001.jpg",
+            path: "pd001.png",
         },
         {
             id: 5,
-            path: "pd001.jpg",
+            path: "pd002.png",
         }
     ],
     players: "2-5 người",
@@ -296,16 +297,32 @@ const app = {
         // Call Update cart API
 
         const cart = JSON.parse(window.sessionStorage.cart);
-        cart.push(app.product);
+        const productItem = cart.find(item => item.id == app.product.id);
+        if (productItem) {
+            const index = cart.indexOf(productItem);
+            cart[index].quantity += app.product.quantity;
+        } else {
+            cart.push(app.product);
+        }
         window.sessionStorage.cart = JSON.stringify(cart);
+        notifyModal.init("Thêm vào giỏ hàng thành công");
+        notifyModal.showModal();
+        
         app.renderHtml();
         header.renderHtml();
+
     },
     cartPageHandler() {
         // Call Update cart API
-        
+
         const cart = JSON.parse(window.sessionStorage.cart);
-        cart.push(app.product);
+        const productItem = cart.find(item => item.id == app.product.id);
+        if (productItem) {
+            const index = cart.indexOf(productItem);
+            cart[index].quantity += app.product.quantity;
+        } else {
+            cart.push(app.product);
+        }
         window.sessionStorage.cart = JSON.stringify(cart);
         window.location.href = `${window.location.origin}/FE/pages/cart.html`;
     },

@@ -415,9 +415,9 @@ const app = {
     }
   },
   init() {
+    header.init();
     footerContainer.innerHTML = footer;
     this.renderHtml();
-    header.init();
   },
 };
 

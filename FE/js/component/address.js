@@ -6,6 +6,9 @@ const apiUrl = "https://provinces.open-api.vn/api/?depth=3"
 let addressProvince;
 let addressDistrict;
 let addressWard;
+let addressFullname;
+let addressPhone;
+let addressAddressDetail;
 
 let id = 4;
 
@@ -14,6 +17,9 @@ const address = {
     provinceSelected: {},
     districtSelected: {},
     wardSelected: {},
+    fullname: "",
+    phone: "",
+    addressDetail: "",
     async getProvince() {
         const res = await fetch(apiUrl);
         return res.json();
@@ -29,17 +35,17 @@ const address = {
                         <form class="address-form">
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Họ và tên</label>
-                                <input type="text" class="address-form-control" name="address-name">
+                                <input type="text" class="address-form-control" name="addressFullname" value="${this.fullname}">
                                 <span class="address-form-message primary-text"></span>
                             </div>
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Số điện thoại</label>
-                                <input type="text" class="address-form-control" placeholder="(+84)" name="address-phone">
+                                <input type="text" class="address-form-control" placeholder="(+84)" name="addressPhone" value="${this.phone}">
                                 <span class="address-form-message primary-text"></span>
                             </div>
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Tỉnh/Thành phố</label>
-                                <select name="address-province" id="" class="address-form-control address-province">
+                                <select name="addressProvince" id="" class="address-form-control address-province">
                                     ${this.provinces.map(province => {
                                         return `
                                             <option value="${province.code}" 
@@ -53,7 +59,7 @@ const address = {
                             </div>
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Quận/Huyện</label>
-                                <select name="address-district" id="" class="address-form-control address-district">
+                                <select name="addressDistrict" id="" class="address-form-control address-district">
                                     ${this.provinces.find(item => {
                                         return item.code === this.provinceSelected.code
                                     }).districts.map(district => {
@@ -69,7 +75,7 @@ const address = {
                             </div>
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Phường/Xã</label>
-                                <select name="address-ward" id="" class="address-form-control address-ward">
+                                <select name="addressWard" id="" class="address-form-control address-ward">
                                     ${this.provinces.find(item => {
                                         return item.code === this.provinceSelected.code
                                     }).districts.find(item => {
@@ -87,7 +93,7 @@ const address = {
                             </div>
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Địa chỉ cụ thể</label>
-                                <input type="text" class="address-form-control" name="address-address">
+                                <input type="text" class="address-form-control" name="addressAddress" value="${this.addressDetail}">
                                 <span class="address-form-message primary-text"></span>
                             </div>
                             <div class="address-form-group checkbox">
@@ -109,6 +115,9 @@ const address = {
             addressProvince = document.querySelector(".address-province");
             addressDistrict = document.querySelector(".address-district");
             addressWard = document.querySelector(".address-ward");
+            addressFullname = document.querySelector("input[name='addressFullname']");
+            addressPhone = document.querySelector("input[name='addressPhone']");
+            addressAddressDetail = document.querySelector("input[name='addressAddress']");
     
             this.handleEvents();
 
@@ -117,12 +126,12 @@ const address = {
                 formGroupSelector: ".address-form-group",
                 errorSelector: ".address-form-message",
                 rules: [
-                    Validator.isRequired('input[name="address-name"]',"Vui lòng nhập họ và tên"),
-                    Validator.isRequired('input[name="address-phone"]', "Vui lòng nhập email"),
-                    Validator.isOnlyNumber('input[name="address-phone"]', "Vui lòng chỉ nhập số"),
-                    Validator.minLength('input[name="address-phone"]', 10),
-                    Validator.maxLength('input[name="address-phone"]', 11),
-                    Validator.isRequired('input[name="address-address"]', "Vui lòng nhập địa chỉ"),
+                    Validator.isRequired('input[name="addressName"]',"Vui lòng nhập họ và tên"),
+                    Validator.isRequired('input[name="addressPhone"]', "Vui lòng nhập email"),
+                    Validator.isOnlyNumber('input[name="addressPhone"]', "Vui lòng chỉ nhập số"),
+                    Validator.minLength('input[name="addressPhone"]', 10),
+                    Validator.maxLength('input[name="addressPhone"]', 11),
+                    Validator.isRequired('input[name="addressAddress"]', "Vui lòng nhập địa chỉ"),
                 ],
                 onSubmit: function (data) {
                     console.log(data);
@@ -149,17 +158,43 @@ const address = {
         address.wardSelected = {...address.districtSelected.wards[0]};
         address.renderHtml();
     },
+    infoChangeHandler(e) {
+        const input = e.target.closest("input");
+        switch (input.name) {
+            case "addressFullname":
+                address.fullname = input.value;
+                break;
+            case "addressPhone":
+                address.phone = input.value;
+                break;
+            case "addressAddress":
+                address.addressDetail = input.value;
+                break;
+        }
+    },
     removeEvents() {
         if (addressProvince)
-            addressProvince.removeEventListener("change", this.voucherApplyHandler);
+            addressProvince.removeEventListener("change", this.addressProvinceHandler);
         if (addressDistrict) 
             addressDistrict.addEventListener("change", this.addressDistrictHandler);
+         if (addressFullname) 
+            addressFullname.removeEventListener("change", this.infoChangeHandler);
+        if (addressPhone) 
+            addressPhone.removeEventListener("change", this.infoChangeHandler);
+        if (addressAddressDetail) 
+            addressAddressDetail.removeEventListener("change", this.infoChangeHandler);
     },
     handleEvents() {
         if (addressProvince) 
             addressProvince.addEventListener("change", this.addressProvinceHandler);
         if (addressDistrict) 
             addressDistrict.addEventListener("change", this.addressDistrictHandler);
+        if (addressFullname) 
+            addressFullname.addEventListener("change", this.infoChangeHandler);
+        if (addressPhone) 
+            addressPhone.addEventListener("change", this.infoChangeHandler);
+        if (addressAddressDetail) 
+            addressAddressDetail.addEventListener("change", this.infoChangeHandler);
     },
     async init() {    
         if (this.provinces.length === 0) {
@@ -173,6 +208,10 @@ const address = {
                 .catch(err => {
                     
                 })
+            
+            this.fullname = "";
+            this.phone = "";
+            this.addressDetail = "";
         }
         this.renderHtml();
     }

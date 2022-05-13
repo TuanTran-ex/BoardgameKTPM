@@ -69,7 +69,7 @@ const productList = {
       .map((product, index) => {
         if (index >= (this.pageActive - 1) * 10 && index < this.pageActive * 10)
           return `
-              <a href="./pages/product_detail.html?product-id=${product.name}">
+              <a href="./pages/product_detail.html?product-id=${product.id}">
                 <div class="product-item">
                 <img class="product-img" src="./img/${product.image}"></img>
                 <span class="product-name">${product.name} ${index}</span>
@@ -160,7 +160,7 @@ const productList = {
   },
   init() {
     for (let i = 0; i < 61; i++) {
-      this.productLst.push(product);
+      this.productLst.push({id: i, ...product});
     }
     this.totalPage =
       this.productLst.length % 10

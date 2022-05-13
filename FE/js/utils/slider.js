@@ -126,7 +126,8 @@ const slider = {
       this.sliderCol[index] = Number(sliderList.dataset.col) || 1;
       this.sliderGap[index] = sliderList.dataset.gap || "0px";
       this.currentPosition[index] = "0";
-      this.currentItem[index] = 0;
+      this.currentItem[index] = this.currentItem[index] ? this.currentItem[index] : 0;
+      
       sliderList.style.marginLeft = `-${this.sliderGap[index]}`;
 
       // Setup for slider item
@@ -148,6 +149,11 @@ const slider = {
     });
     this.setDataIndex();
     this.handleEvents();
+    for (let index = 0; index < this.sliderLists.length; index++) {
+      if (this.currentItem[index]) {
+        this.switchImage(index);
+      } 
+    }
   },
 };
 
