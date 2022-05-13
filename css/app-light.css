@@ -48,7 +48,9 @@
 *::before,
 *::after {
   box-sizing: border-box; }
-
+.fe-trash-2 {
+    color: #1b68ff !important;
+}
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -3552,6 +3554,7 @@ input[type="button"].btn-block {
   border-bottom-right-radius: 0.2rem; }
 
 .badge {
+  width: 150px;
   display: inline-block;
   padding: 0.25em 0.4em;
   font-size: 75%;
@@ -3591,20 +3594,24 @@ input[type="button"].btn-block {
 
 .badge-secondary {
   color: #ffffff;
-  background-color: #6c757d; }
+  border: 1px solid #666;
+  background: #c4c4c4;
+  }
   a.badge-secondary:hover, a.badge-secondary:focus {
     color: #ffffff;
-    background-color: #545b62; }
+ }
   a.badge-secondary:focus, a.badge-secondary.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5); }
 
 .badge-success {
+  border: 1px solid green;
+  background: #9AE66E;
   color: #212529;
-  background-color: #3ad29f; }
+   }
   a.badge-success:hover, a.badge-success:focus {
     color: #212529;
-    background-color: #28b183; }
+   }
   a.badge-success:focus, a.badge-success.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(58, 210, 159, 0.5); }
@@ -3620,21 +3627,23 @@ input[type="button"].btn-block {
     box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5); }
 
 .badge-warning {
-  color: #212529;
-  background-color: #eea303; }
+  color: #ffffff;
+  background-color: #FFBC26; }
   a.badge-warning:hover, a.badge-warning:focus {
-    color: #212529;
-    background-color: #bc8102; }
+    color: #ffffff;
+    background-color: #FFBC26; }
   a.badge-warning:focus, a.badge-warning.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(238, 163, 3, 0.5); }
 
 .badge-danger {
   color: #ffffff;
-  background-color: #dc3545; }
+  border: 1px solid #F90716;
+  background: #FED2AA;
+   }
   a.badge-danger:hover, a.badge-danger:focus {
     color: #ffffff;
-    background-color: #bd2130; }
+   }
   a.badge-danger:focus, a.badge-danger.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5); }
@@ -6941,7 +6950,8 @@ button.bg-dark:focus {
   text-align: right !important; }
 
 .text-center {
-  text-align: center !important; }
+  text-align: center !important;
+  padding-top: 0.7rem; }
 
 @media (min-width: 576px) {
   .text-sm-left {
@@ -8049,7 +8059,9 @@ select {
 .h1, .h2, .h3, .h4, .h5, .h6,
 h1, h2, h3, h4, h5, h6, strong {
   color: #001a4e; }
-
+.order-unconfirm .h6{
+  color: #ffffff;
+}
 .text-muted {
   color: #adb5bd !important; }
 

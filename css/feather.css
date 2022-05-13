@@ -24,7 +24,9 @@
   font-size: 32px; }
 
 .fe-24 {
-  font-size: 24px; }
+  font-size: 24px; 
+  color: #1b68ff !important;
+}
 
 .fe-16 {
   font-size: 16px; }

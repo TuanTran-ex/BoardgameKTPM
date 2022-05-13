@@ -28,11 +28,9 @@
   <link rel="stylesheet" href="css/app-light.css" id="lightTheme" disabled>
   <link rel="stylesheet" href="css/app-dark.css" id="darkTheme">
 
-
-
 </head>
 
-<body class="vertical  dark  ">
+<body class="vertical dark ">
   <div class="wrapper">
     <nav class="topnav navbar navbar-light">
       <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
@@ -48,8 +46,8 @@
             <i class="fe fe-sun fe-16"></i>
           </a>
         </li>
-
-
+        
+        
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -78,7 +76,7 @@
           <span><strong>DASHBOARD</strong></span>
         </p>
         <ul class="navbar-nav flex-fill w-100 mb-2">
-
+    
           <li class="nav-item w-100">
             <a class="nav-link" href="Productions.html">
               <i class="fe fe-layers fe-16"></i>
@@ -111,14 +109,13 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="sastistical">
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="statistical-count.html"><span class="ml-1 item-text">Số
-                      Lượng</span></a>
+                  <a class="nav-link pl-3" href="statistical-count.html"><span class="ml-1 item-text">Số Lượng</span></a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link pl-3" href="statistical-turnover.html"><span class="ml-1 item-text">Doanh
                       Thu</span></a>
                 </li>
-
+    
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -154,7 +151,7 @@
           <div class="col-md-12">
             <div class="row align-items-center mb-2">
               <div class="col-md-10">
-                <h3 class="h2 page-title">QUẢN LÝ VOUCHER</h2>
+                <h3 class="h2 page-title">QUẢN LÝ ĐƠN HÀNG</h2>
               </div>
               <!-- <div class="col">
                 <button type="button" class="btn mb-2 btn-outline-secondary">Secondary</button>
@@ -162,79 +159,10 @@
               <div class="col">
                 <button type="button" class="btn mb-2 btn-outline-secondary">Secondary</button>
               </div> -->
-              <div class="col-md-2">
-                <button type="button" class="btn mb-2 btn-outline-secondary float-right" data-toggle="modal"
-                  data-target="#varyModal" data-whatever="@mdo">Thêm mới Voucher</button>
-                <div class="modal fade" id="varyModal" tabindex="-1" role="dialog" aria-labelledby="varyModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="varyModalLabel">Thêm mới Voucher</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <form>
-                          <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Tên</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Mã giảm giá</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6 mb-3">
-                              <label for="date-input1">Ngày bắt đầu</label>
-                              <div class="input-group">
-                                <input type="text" class="form-control drgpicker" id="date-input1" value="04/24/2020"
-                                  aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                  <div class="input-group-text" id="button-addon-date"><span
-                                      class="fe fe-calendar fe-16 mx-2"></span></div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                              <label for="date-input1">Ngày kết thúc</label>
-                              <div class="input-group">
-                                <input type="text" class="form-control drgpicker" id="date-input1" value="04/24/2020"
-                                  aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                  <div class="input-group-text" id="button-addon-date"><span
-                                      class="fe fe-calendar fe-16 mx-2"></span></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Số lượng</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Loại</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Trị giá</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="form-group">
-                            <label for="message-text" class="col-form-label">Mô tả</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                          </div>
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Trở lại</button>
-                        <button type="button" class="btn mb-2 btn-primary">Thêm</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+              <div class="col-md-12">
+                <span class="badge badge-warning text-center">
+                    <h6>Chưa triển khai</h7>
+                  </span> 
               </div>
             </div>
             <div class="row">
@@ -243,174 +171,34 @@
               <div class="col-md-12 ">
                 <div class="card shadow">
                   <div class="card-header">
-                    <strong class="card-title">Mã Giảm Giá</strong>
+                    <strong class="card-title">Đơn hàng</strong>`
                     <a class="float-right small text-muted" href="#!">View all</a>
                   </div>
                   <div class="card-body my-n2">
                     <table class="table table-striped table-hover table-borderless">
                       <thead>
                         <tr>
-                          <th>Tên</th>
-                          <th>Loại</th>
-                          <th>Hạn sử dụng</th>
-                          <th>Mã </th>
-                          <th>Trị giá</th>
-                          <th>số lượng</th>
-                          <th>Trạng thái</th>
-                          <th>Chi tiết</th>
+                          <th>Mã đơn hàng</th>
+                          <th>Ngày đặt</th>
+                          <th>Người đặt</th>
+                          <th>Số điện thoại</th>
+                          <th>Thành tiền</th>
+                          <th>Chi Tiết</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <th scope="col">Giảm giá khai trương</th>
-                          <td>Phần trăm</td>
-                          <td>01/01/2022 - 31/12/2022</td>
-                          <td>Deptraicogisai</td>
-                          <td>10%</td>
-                          <td>100</td>
-                          <td>
-                            <span class="badge badge-success text-center">
-                              <h6>Đang triển khai</h7>
-                            </span>
-                          </td>
+                          <th scope="col">Brown, Asher D.</th>
+                          <td>Ap #331-7123 Lobortis Avenue</td>
+                          <td>Huế</td>
+                          <td>100.000VND</td>
+                          <td>100.000VND</td>
                           <td>
                             <div>
-                              <a data-toggle="modal" data-target="#changevoucher" data-whatever="@mdo"> <span class="fe fe-24 fe-edit"></span></a>
-                              <div class="modal fade" id="changevoucher" tabindex="-1" role="dialog"
-                                aria-labelledby="varyModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h5 class="modal-title" id="varyModalLabel">Chỉnh sửa Voucher</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <form>
-                                        <div class="form-group">
-                                          <label for="recipient-name" class="col-form-label">Tên</label>
-                                          <input type="text" class="form-control" id="recipient-name" value="something">
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="recipient-name" class="col-form-label">Mã giảm giá</label>
-                                          <input type="text" class="form-control" id="recipient-name" value="something">
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-md-6 mb-3">
-                                            <label for="date-input1">Ngày bắt đầu</label>
-                                            <div class="input-group">
-                                              <input type="text" class="form-control drgpicker" id="date-input1"
-                                                value="04/24/2020" aria-describedby="button-addon2">
-                                              <div class="input-group-append">
-                                                <div class="input-group-text" id="button-addon-date"><span
-                                                    class="fe fe-calendar fe-16 mx-2"></span></div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div class="col-md-6 mb-3">
-                                            <label for="date-input1">Ngày kết thúc</label>
-                                            <div class="input-group">
-                                              <input type="text" class="form-control drgpicker" id="date-input1"
-                                                value="04/24/2020" aria-describedby="button-addon2">
-                                              <div class="input-group-append">
-                                                <div class="input-group-text" id="button-addon-date"><span
-                                                    class="fe fe-calendar fe-16 mx-2"></span></div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="recipient-name" class="col-form-label">Số lượng</label>
-                                          <input type="text" class="form-control" id="recipient-name" value="something">
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="recipient-name" class="col-form-label">Loại</label>
-                                          <input type="text" class="form-control" id="recipient-name" value="something">
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="recipient-name" class="col-form-label">Trị giá</label>
-                                          <input type="text" class="form-control" id="recipient-name"value="something">
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="message-text" class="col-form-label">Mô tả</label>
-                                          <textarea class="form-control" id="message-text">something</textarea>
-                                        </div>
-                                      </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Trở
-                                        lại</button>
-                                      <button type="button" class="btn mb-2 btn-primary">Thêm</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <a data-toggle="modal" data-target="#deleteVoucher"> <span class="fe fe-24 fe-trash-2"></span></a>
-                              <div class="modal fade" id="deleteVoucher" tabindex="-1" role="dialog" aria-labelledby="deletevoucherlabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h5 class="modal-title" id="deletevoucherlabel">Xóa Voucher</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <div class="modal-body"> Bạn có chắc chắn muốn xóa Voucher này không </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Không</button>
-                                      <button type="button" class="btn mb-2 btn-primary">Đồng ý</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                               <a href="order-unconfirm-detail.html"><button  type="button" class="btn mb-2 btn-outline-dark">Xem chi tiết</button></a> 
                             </div>
                           </td>
                         </tr>
-                        
-                        <tr>
-                          <th scope="col">Giảm giá khai trương</th>
-                          <td>Giá trị</td>
-                          <td>01/01/2022 - 31/12/2022</td>
-                          <td>Deptraicogisai</td>
-                          <td>20000</td>
-                          <td>100</td>
-                          <td>
-                            <span class="badge badge-danger text-center">
-                              <h6>Ngừng triển khai</h7>
-                            </span>
-                          </td>
-                          <td>
-                            <div>
-                              <a > <span class="fe fe-24 fe-edit"></span></a>
-                              <a ><span class="fe fe-24 fe-trash-2"></span></a>
-                            </div>
-                          </td>
-                        </tr>
-                        
-                        
-                        <tr>
-                          <th scope="col">Giảm giá khai trương</th>
-                          <td>Giá trị</td>
-                          <td>01/01/2022 - 31/12/2022</td>
-                          <td>Deptraicogisai</td>
-                          <td>20000</td>
-                          <td>100</td>
-                          <td>
-                            <span class="badge badge-secondary text-center">
-                              <h6>Chưa triển khai</h7>
-                            </span>
-                          </td>
-                          <td>
-                            <div>
-                              <a > <span class="fe fe-24 fe-edit"></span></a>
-                              <a><span class="fe fe-24 fe-trash-2"></span></a>
-                            </div>
-                          </td>
-                        </tr>
-                        
-
-
                       </tbody>
                     </table>
                     <nav aria-label="Table Paging" class="my-3">
@@ -435,7 +223,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" data-dismiss="modal" aria-label=  "Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

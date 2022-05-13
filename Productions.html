@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="favicon.ico">
-  <title>Tiny Dashboard - A Bootstrap Dashboard Template</title>
+  <title>Boargame 3S</title>
   <!-- Simple bar CSS -->
   <link rel="stylesheet" href="css/simplebar.css">
   <!-- Fonts CSS -->
@@ -28,11 +28,9 @@
   <link rel="stylesheet" href="css/app-light.css" id="lightTheme" disabled>
   <link rel="stylesheet" href="css/app-dark.css" id="darkTheme">
 
-
-
 </head>
 
-<body class="vertical  dark  ">
+<body class="vertical dark ">
   <div class="wrapper">
     <nav class="topnav navbar navbar-light">
       <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
@@ -72,26 +70,15 @@
       <nav class="vertnav navbar navbar-light">
         <!-- nav bar -->
         <div class="w-100 mb-4 d-flex">
-          <!-- <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./index.html"> -->
-            <!-- <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
-              <g>
-                <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
-                <polygon class="st0" points="96,69 33,69 42,51 105,51 	" />
-                <polygon class="st0" points="78,33 15,33 24,15 87,15 	" />
-              </g>
-            </svg> -->
-            <img  id="logo" src="logo.png" width="167" height="76">
-
-          <!-- </a> -->
+          <img id="logo" src="./assets/images/logo.png" width="167" height="76">
         </div>
         <p>
           <span><strong>DASHBOARD</strong></span>
         </p>
         <ul class="navbar-nav flex-fill w-100 mb-2">
-
+    
           <li class="nav-item w-100">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="Productions.html">
               <i class="fe fe-layers fe-16"></i>
               <span class="ml-3 item-text">Sản phẩm</span>
             </a>
@@ -128,7 +115,7 @@
                   <a class="nav-link pl-3" href="statistical-turnover.html"><span class="ml-1 item-text">Doanh
                       Thu</span></a>
                 </li>
-
+    
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -138,19 +125,19 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="order">
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./chart-inline.html"><span class="ml-1 item-text">Chưa Xác
+                  <a class="nav-link pl-3" href="order-unconfirm.html"><span class="ml-1 item-text">Chưa Xác
                       Nhận</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./chart-chartjs.html"><span class="ml-1 item-text">Đã Xác
+                  <a class="nav-link pl-3" href="order-confirmed.html"><span class="ml-1 item-text">Đã Xác
                       Nhận</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./chart-apexcharts.html"><span class="ml-1 item-text">Đã Thanh
+                  <a class="nav-link pl-3" href="order-paid.html"><span class="ml-1 item-text">Đã Thanh
                       Toán</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./datamaps.html"><span class="ml-1 item-text">Đã Hủy Đơn</span></a>
+                  <a class="nav-link pl-3" href="order-canceled.html"><span class="ml-1 item-text">Đã Hủy Đơn</span></a>
                 </li>
               </ul>
             </li>
@@ -161,10 +148,19 @@
     <main role="main" class="main-content">
       <div class="container-fluid">
         <div class="row justify-content-center">
-          <div class="col-12">
+          <div class="col-md-12">
             <div class="row align-items-center mb-2">
-              <div class="col">
+              <div class="col-md-10">
                 <h3 class="h2 page-title">QUẢN LÝ SẢN PHẨM</h2>
+              </div>
+              <!-- <div class="col">
+                <button type="button" class="btn mb-2 btn-outline-secondary">Secondary</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn mb-2 btn-outline-secondary">Secondary</button>
+              </div> -->
+              <div class="col-md-2">
+                <a href="Production-AddNew.html"><button type="button"  class="btn mb-2 btn-outline-secondary float-right">Thêm mới sản phẩm</button> </a>
               </div>
             </div>
             <div class="row">
@@ -173,7 +169,7 @@
               <div class="col-md-12 ">
                 <div class="card shadow">
                   <div class="card-header">
-                    <strong class="card-title">Recent Data</strong>
+                    <strong class="card-title">Sản phẩm</strong>
                     <a class="float-right small text-muted" href="#!">View all</a>
                   </div>
                   <div class="card-body my-n2">
@@ -198,7 +194,24 @@
                           <td>
                             <div>
                              <a href="./Production-editing.html"> <span class="fe fe-24 fe-edit"></span></a>
-                              <a href="./chart-apexcharts.html"><span class="fe fe-24 fe-trash-2"></span></a>
+                              <a data-toggle="modal" data-target="#deleteproduction"><span class="fe fe-24 fe-trash-2"></span></a>
+                              <div class="modal fade" id="deleteproduction" tabindex="-1" role="dialog" aria-labelledby="deleteproductionlabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="deleteproductionlabel">Xóa sản phẩm</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body"> Bạn có chắc chắn muốn xóa sản phẩm này không </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Không</button>
+                                      <button type="button" class="btn mb-2 btn-primary">Đồng ý</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -299,14 +312,13 @@
           </div> <!-- .col-12 -->
         </div> <!-- .row -->
       </div> <!-- .container-fluid -->
-      <img src="logo.png" alt="Smiley face" width="167", height="76">
       <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" data-dismiss="modal" aria-label=  "Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
