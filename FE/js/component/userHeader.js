@@ -1,4 +1,5 @@
 import account from "../account.js";
+import userHistory from "./userHistory.js"
 
 let userInfoBtn;
 let userEditBtn;
@@ -10,7 +11,7 @@ const userHeader = {
             ${page.code === 0 || page.code === 1 || page.code === 2 ? `
                 <span class="user-info-header-heading info-btn ${page.code !== 1 ? "active" : ""}">Hồ sơ của tôi`
                 :
-                `<span class="user-info-header-heading history-btn">Lịch sử mua hàng`}
+                `<span class="user-info-header-heading active history-btn">Lịch sử mua hàng`}
             </span>
             ${page.code === 0 || page.code === 1 ? `
                 <div class="user-info-header-action ${page.code === 1 ? "active" : ""}">
@@ -18,7 +19,9 @@ const userHeader = {
                     <span>Sửa hồ sơ</span>
                 </div>
             `
-            : ``}
+            : page.code === 3 && userHistory.isFeedback == true ? `
+                <span class="user-info-header-sub">// Đánh giá</span>
+            ` : ``}
         `
 
         this.removeEvents();

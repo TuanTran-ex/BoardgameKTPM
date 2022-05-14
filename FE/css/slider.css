@@ -32,7 +32,7 @@
 }
 
 .banner-right {
-    padding: 4.7rem;
+    padding: 4.7rem 8rem 4.7rem 4.7rem;
     background-color: #fff;
 }
 
@@ -100,6 +100,7 @@
     top: 50%;
     left: 0;
     right: 0;
+    height: 1px;
     display: flex;
     justify-content: space-between;
     transform: translateY(-50%);

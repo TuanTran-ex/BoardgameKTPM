@@ -10,32 +10,33 @@ const modal = {
     $("body").style.overflow = "hidden";
     $$(`.modal`)[index].classList.add("active");
   },
-  hiddenModal(index) {
+  hiddenModal(index, closeFunc) {
     $("body").style.overflow = "auto";
     $$(`.modal`)[index].classList.remove("active");
+    closeFunc();
   },
-  handleEvents() {
+  handleEvents(closeFunc) {
     // Handle modal display/hidden
     modalOverlays.forEach((modalOverlay, index) => {
-      modalOverlay.onclick = () => this.hiddenModal(index);
+      modalOverlay.onclick = () => this.hiddenModal(index, closeFunc);
     });
     modalCloseBtnList.forEach((closeBtns, index) => {
       closeBtns.forEach((closeBtn) => {
         closeBtn.onclick = (e) => {
           e.preventDefault();
-          this.hiddenModal(index);
+          this.hiddenModal(index, closeFunc);
         };
       });
     });
   },
-  init() {
+  init(closeFunc = () => {}) {
     modals = $$(".modal");
     modalOverlays = $$(".modal-overlay");
     modalCloseBtnList = [];
     modals.forEach((mdl) => {
       modalCloseBtnList.push(mdl.querySelectorAll(".modal-close-btn"));
     });
-    this.handleEvents();
+    this.handleEvents(closeFunc);
   },
 };
 

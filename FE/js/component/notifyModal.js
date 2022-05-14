@@ -1,7 +1,7 @@
 import modal from "../utils/modal.js"
 
 const notifyModal = {
-    renderHtml(content, type) {
+    renderHtml(content, closeFunc, type) {
         if (!document.querySelector(".modal .notification")) {
             document.querySelector("body").innerHTML += `
                 <div class="modal">
@@ -9,7 +9,9 @@ const notifyModal = {
                     <div class="modal-body">
                         <div class="notification">
                             ${type === 0 ? `
-                                <i class="fa-regular fa-circle-check"></i>
+                                <i class="fa-regular fa-circle-check success-icon"></i>
+                            ` : type === 1 ? `
+                                <i class="fa-regular fa-circle-xmark fail-icon"></i>
                             ` : ``}
                             <span>${content}</span>
                         </div>
@@ -17,13 +19,13 @@ const notifyModal = {
                 </div>
             `
         }
-        modal.init();
+        modal.init(closeFunc);
     },
-    hiddenModal() {
+    hiddenModal(closeFunc = () => {}) {
         const modals = document.querySelectorAll(".modal");
         const notifyModal = document.querySelector(".modal .notification").closest(".modal");
         const index = Array.from(modals).indexOf(notifyModal);
-        modal.hiddenModal(index);
+        modal.hiddenModal(index, closeFunc);
     },
     showModal() {
         const modals = document.querySelectorAll(".modal");
@@ -31,8 +33,8 @@ const notifyModal = {
         const index = Array.from(modals).indexOf(notifyModal);
         modal.showModal(index);
     },
-    init(content, type = 0) {
-        this.renderHtml(content, type);
+    init(content, closeFunc = () => {}, type = 0) {
+        this.renderHtml(content, closeFunc, type);
     }
 }
 

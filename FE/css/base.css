@@ -17,6 +17,7 @@
     --light-color: #c4c4c4;
     --error-background-color: #FFE3E3;
     --input-background-color: #FCFCFC;
+    --success-color: #37D300;
 }
 
 html,
@@ -152,6 +153,7 @@ ul {
 }
 
 a {
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -207,47 +209,64 @@ button {
     cursor: pointer;
 }
 
-.btn:hover {
+.btn.view {
+    cursor: default;
+}
+
+.btn:hover:not(.view) {
     filter: brightness(0.85);
 }
 
-.btn-primary {
+
+.btn.btn-primary {
     background-color: var(--primary-color);
     color: #fff;
 }
 
-.btn-sub-primary {
+.btn.btn-sub-primary {
     background-color: var(--error-background-color);
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
 }
 
-.btn-black {
+.btn.btn-black {
     background-color: var(--text-color);
     color: #fff;
 }
 
-.btn-transparent {
+.btn.btn-transparent {
     background-color: transparent;
     color: var(--text-color);
 }
 
-.btn-white {
+.btn.btn-white {
     background-color: #fcfcfc;
     color: var(--black);
     border: 1px solid var(--border-color);
 }
 
-.btn-full {
+.btn.btn-success {
+    background-color: var(--success-color);
+    color: var(--text-color);
+}
+
+.btn.btn-full {
     width: 100%;
 }
 
-.btn-long {
-    padding: 1.3rem 2.6rem;
+.btn.btn-long {
+    padding-left: 2.6rem;
+    padding-right: 2.6rem;
 }
 
-.btn-m-long {
-    padding: 1.3rem 4.6rem;
+.btn.btn-m-long {
+    padding-left: 4.6rem;
+    padding-right: 4.6rem;
+}
+
+.btn.btn-small {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
 }
 
 .primary-link,
@@ -354,9 +373,16 @@ button {
 }
 
 .notification i {
-    color: #37D300;
     font-size: 8rem;
     margin-bottom: 1rem;
+}
+
+.notification .success-icon {
+    color: var(--success-color);
+}
+
+.notification .fail-icon {
+    color: var(--primary-color);
 }
 
 .confirm-dialog {

@@ -11,52 +11,47 @@ const userEdit = {
             <form class="user-info-form">
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Tên đăng nhập</label>
-                    <span class="user-info-content">${user.username}</span>
+                    <span class="user-info-content">${user.Username}</span>
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Họ và tên</label>
-                    <input type="text" class="user-info-form-control" name="fullname" value="${user.fullname}">
+                    <input type="text" class="user-info-form-control" placholder="Chưa có" name="fullname" value="${user.FullName ? user.FullName : ""}">
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Email</label>
-                    <input type="text" class="user-info-form-control" value="${user.email}" name="email">
+                    <input type="email" class="user-info-form-control" value="${user.Email}" name="email">
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Số điện thoại</label>
-                    <input type="text" class="user-info-form-control" name="phone" value="${user.phone}">
-                    <span class="user-info-form-message"></span>
-                </div>
-                <div class="user-info-form-group">
-                    <label class="user-info-form-label">Địa chỉ</label>
-                    <input type="text" class="user-info-form-control" name="address" value="${user.address}">
+                    <input type="text" class="user-info-form-control" placeholder="Chưa có" name="phone" value="${user.Phone ? user.Phone : ""}">
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Giới tính</label>
                     <div class="user-info-form-radio">
                         <div class="user-info-option-form-group">
-                            <input type="radio" value="0" name="gender" id="user-gender-0" ${user.gender == 0 ? "checked" : ""}>
+                            <input type="radio" value="0" name="gender" id="user-gender-0" ${user.Gender == 0 ? "checked" : ""}>
                             <label for="user-gender-0">Nam</label>
                         </div>
                         <div class="user-info-option-form-group">
-                            <input type="radio" value="1" name="gender" id="user-gender-1" ${user.gender == 1 ? "checked" : ""}>
+                            <input type="radio" value="1" name="gender" id="user-gender-1" ${user.Gender == 1 ? "checked" : ""}>
                             <label for="user-gender-1">Nữ</label>
                         </div>
                         <div class="user-info-option-form-group">
-                            <input type="radio" value="2" name="gender" id="user-gender-2" ${user.gender == "null" ? "checked" : ""}>
+                            <input type="radio" value="2" name="gender" id="user-gender-2" ${!user.Gender ? "checked" : ""}>
                             <label for="user-gender-2">Khác</label>
                         </div>
                     </div>
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Ngày sinh</label>
-                    <input type="date" class="user-info-form-control" value="${user.birthday}" name="birthday">
+                    <input type="date" class="user-info-form-control" value="${user.DOB ? user.DOB : ""}" name="birthday">
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-avatar">
-                    <img src="../img/${user.avatar != "null" ? user.avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
+                    <img src="../img/${user.Avatar ? user.Avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
                     <input type="file" id="user-avatar-input" accept="image/png, image/gif, image/jpeg" hidden>
                     <label for="user-avatar-input" class="btn btn-white">Chọn ảnh</label>
                 </div>

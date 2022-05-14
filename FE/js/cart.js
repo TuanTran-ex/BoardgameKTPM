@@ -22,18 +22,18 @@ let cartPaymentBtn;
 const product = {
   image: "pd001.jpg",
   name: "Catan US",
-  //   price: 100,
-  //   quantity: 1,
+  // price: 100,
+  // quantity: 1,
 };
 
-const productList = JSON.parse(window.sessionStorage.cart);
+const productList = utils.getSession("cart");
 
 const app = {
   voucher: 0,
   price: {},
   renderHtml() {
     this.voucher = voucher.voucherSelected.value ? voucher.voucherSelected.value : 0;
-    this.calculatePrice();
+    this.price = utils.calculationPrice(productSelected, this.voucher);
     document.querySelector(".cart").innerHTML = `
         <div class="cart-header border-b-solid">
             <span>Giỏ hàng</span>
@@ -187,17 +187,6 @@ const app = {
       }
     });
   },
-  calculatePrice() {
-    let totalPrice = 0;
-    productSelected.forEach((item) => {
-      totalPrice += item.price * item.quantity;
-    });
-    this.price = {
-      totalPrice: totalPrice,
-      savingPrice: Math.floor((totalPrice * this.voucher) / 100),
-      lastPrice: Math.floor(totalPrice * (1 - this.voucher / 100)),
-    };
-  },
   cartTotalHandler() {
     cartProductChecks.forEach((cartProductCheck) => {
       const productItem = cartProductCheck.closest(".cart-products-item");
@@ -230,7 +219,7 @@ const app = {
         // Call delete cart item API
 
         // Set cart session
-        window.sessionStorage.cart = JSON.stringify(productList);
+        utils.setSession("cart", productList);
       }
     });
     header.renderHtml();
@@ -308,12 +297,12 @@ const app = {
   cartPaymentHandler (e) {
     if (productSelected.length === 0) {
       e.preventDefault();
-      notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", 1);
+      notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", () => {}, 2);
       notifyModal.showModal();
       app.renderHtml();
     } else {
       e.preventDefault();
-      window.sessionStorage.cartSelected = JSON.stringify({
+      utils.setSession("cartSelected", {
         productList: productSelected,
         voucher: app.voucher,
         price: app.price,

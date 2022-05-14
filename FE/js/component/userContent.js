@@ -1,5 +1,6 @@
 import userEdit from "./userEdit.js";
 import userEditPwd from "./userEditPwd.js";
+import userHistory from "./userHistory.js";
 import userInfo from "./userInfo.js";
 
 const userContent = {
@@ -11,6 +12,8 @@ const userContent = {
             userEdit.init(user);
         } else if (page.code === 2) {
             userEditPwd.init(user);
+        } else if (page.code === 3) {
+            userHistory.init();
         }
     },
     init(user, page) {

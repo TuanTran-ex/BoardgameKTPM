@@ -4,44 +4,38 @@ const userInfo = {
             <ul class="user-info-list">
                 <li class="user-info-item">
                     <span class="user-info-label">Tên đăng nhập</span>
-                    <span class="user-info-content">${user.username}</span>
+                    <span class="user-info-content">${user.Username}</span>
                 </li>
                 <li class="user-info-item">
                     <span class="user-info-label">Họ và tên</span>
                     <span class="user-info-content none">
-                        ${user.fullname != "null" ? user.fullname : "Chưa có"}
+                        ${user.Fullname ? user.Fullname : "Chưa có"}
                     </span>
                 </li>
                 <li class="user-info-item">
                     <span class="user-info-label">Email</span>
                     <span class="user-info-content">
-                        ${user.email != "null" ? user.email : "Chưa có"}
+                        ${user.Email ? user.Email : "Chưa có"}
                     </span>
                 </li>
                 <li class="user-info-item">
                     <span class="user-info-label">Số điện thoại</span>
                     <span class="user-info-content none">
-                        ${user.phone != "null" ? user.phone : "Chưa có"}
-                    </span>
-                </li>
-                <li class="user-info-item">
-                    <span class="user-info-label">Địa chỉ</span>
-                    <span class="user-info-content none">
-                        ${user.address != "null" ? user.address : "Chưa có"}
+                        ${user.Phone ? user.Phone : "Chưa có"}
                     </span>
                 </li>
                 <li class="user-info-item">
                     <span class="user-info-label">Giới tính</span>
                     <ul class="user-info-option-list">
-                        <li class="user-info-option-item ${user.gender == 0 ? "active" : ""}">
+                        <li class="user-info-option-item ${user.Gender == 0 ? "active" : ""}">
                             <div class="user-info-option-icon"></div>
                             <span>Nam</span>
                         </li>
-                        <li class="user-info-option-item ${user.gender == 1 ? "active" : ""}">
+                        <li class="user-info-option-item ${user.Gender == 1 ? "active" : ""}">
                             <div class="user-info-option-icon"></div>
                             <span>Nữ</span>
                         </li>
-                        <li class="user-info-option-item ${user.gender == "null" ? "active" : ""}">
+                        <li class="user-info-option-item ${!user.Gender ? "active" : ""}">
                             <div class="user-info-option-icon"></div>
                             <span>Khác</span>
                         </li>
@@ -50,12 +44,12 @@ const userInfo = {
                 <li class="user-info-item">
                     <span class="user-info-label">Ngày sinh</span>
                     <span class="user-info-content">
-                        ${user.birthdate != "null" ? user.birthdate : "Chưa có"}
+                        ${user.DOB ? user.DOB : "Chưa có"}
                     </span>
                 </li>
             </ul>
             <div class="user-info-avatar">
-                <img src="../img/${user.avatar != "null" ? user.avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
+                <img src="../img/${user.avatar ? user.avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
             </div>
         `
     },

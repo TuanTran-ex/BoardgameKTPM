@@ -8,21 +8,7 @@ import utils from "./utils/utils.js";
 const footerContainer = document.querySelector(".footer");
 const userContainer = document.querySelector(".user");
 
-const user = {
-    avatar: utils.getCookie("Avatar"),
-    username: utils.getCookie("Username"),
-    fullname: utils.getCookie("FullName"),
-    email: utils.getCookie("Email"),
-    phone: utils.getCookie("Phone"),
-    address: utils.getCookie("Address"),
-    gender: utils.getCookie("Gender"),
-    birthdate: utils.getCookie("DOB")
-}
-
-let accountBtn;
-let accountPwdBtn;
-let accountEditBtn;
-let accountHistoryBtn;
+let user;
 
 const app = {
     page: {},
@@ -42,9 +28,10 @@ const app = {
     },
     init() {
         if (utils.getCookie("token")) {
+            user = utils.getSession("user")
             header.init();
             footerContainer.innerHTML = footer;
-            this.page.code = 2;
+            this.page.code = Number(new URL(window.location.href).searchParams.get("page"));
             this.renderHtml();
         } else {
             window.location.href = `${window.location.origin}/FE/index.html`
@@ -59,3 +46,4 @@ export default app;
 //      1: Sửa hồ sơ
 //      2: Đổi mật khẩu
 //      3: Lịch sử mua hàng
+//      4: Đánh giá

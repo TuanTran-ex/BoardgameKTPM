@@ -30,6 +30,10 @@
     cursor: pointer;
 }
 
+.category-item * {
+    cursor: default;
+}
+
 .category-item::after {
     content: "";
     position: absolute;
@@ -77,7 +81,7 @@
     margin: 1rem 0;
 }
 
-.category-products-item span {
+.category-products-item a {
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -86,7 +90,7 @@
     cursor: pointer;
 }
 
-.category-products-item span:hover {
+.category-products-item a:hover {
     color: var(--primary-color);
     transform: translateX(1rem);
 }

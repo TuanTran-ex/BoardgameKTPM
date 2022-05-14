@@ -30,6 +30,29 @@ const utils = {
             }
         }
         return "";
+    },
+    removeCookie(cname) {
+        this.setCookie(cname, "", -1);
+    },
+    setSession(name, value) {
+        window.sessionStorage[name] = JSON.stringify(value);
+    },
+    getSession(name) {
+        return JSON.parse(window.sessionStorage[name]);
+    },
+    removeItemSession(name) {
+        window.sessionStorage.removeItem(name);
+    },
+    calculationPrice(productList, voucher) {
+        let totalPrice = 0;
+        productList.forEach((item) => {
+            totalPrice += item.price * item.quantity;
+        });
+        return {
+            totalPrice: totalPrice,
+            savingPrice: Math.floor((totalPrice * voucher) / 100),
+            lastPrice: Math.floor(totalPrice * (1 - voucher / 100)),
+        };
     }
 
 }

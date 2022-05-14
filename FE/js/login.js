@@ -1,31 +1,9 @@
+import utils from "./utils/utils.js";
 import header from "./component/header.js";
 
 const apiUrl = `http://localhost:3000/api/v1/auth/signin`;
 
 const contentContainer = document.querySelector(".center-container");
-
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = `${cname}=${cvalue};${expires};path=/`;
-}
-
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
 const app = {
   async signIn(username, password) {
@@ -69,11 +47,8 @@ const app = {
             // console.log(data);
             if (data.success) {
               window.location.href = `${window.origin}/FE/index.html`;
-              setCookie("token", data.data.token);
-              Object.keys(data.data.user).forEach((key) =>
-                setCookie(`${key}`, data.data.user[key])
-              );
-              console.log(getCookie("id"));
+              utils.setCookie("token", data.data.token);
+              utils.setSession("user", data.data.user);
             } else {
               const pwdFormGroup = passwordInput.parentElement;
               pwdFormGroup.classList.add("invalid");

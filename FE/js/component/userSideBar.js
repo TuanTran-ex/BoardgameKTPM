@@ -8,8 +8,8 @@ const userSideBar = {
     renderHtml(user, page) {
         document.querySelector(".user-sidebar").innerHTML = `
             <div class="user-sidebar-header">
-                <img src="../img/${user.avatar != "null" ? user.avatar : "ava001.jpg"}" class="user-sidebar-avatar"></img>
-                <span class="user-sidebar-name">${user.username}</span>
+                <img src="../img/${user.Avatar ? user.Avatar : "ava001.jpg"}" class="user-sidebar-avatar"></img>
+                <span class="user-sidebar-name">${user.Username}</span>
             </div>
             <ul class="user-sidebar-list">
                 <li class="user-sidebar-item">
@@ -38,7 +38,7 @@ const userSideBar = {
         this.removeEvents();
 
         userInfoBtn = document.querySelector(".user-sidebar .account-btn");
-        userHistoryBtn = document.querySelector(".user-sidebar .account-history");
+        userHistoryBtn = document.querySelector(".user-sidebar .account-history-btn");
         userPwdBtn = document.querySelector(".user-sidebar .account-pwd-btn");
 
         this.handleEvents();
