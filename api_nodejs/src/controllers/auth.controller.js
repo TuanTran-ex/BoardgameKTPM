@@ -30,7 +30,17 @@ async function signIn(req, res, next) {
       if (!checkPass && password != findUser.recordset[0].Password)
         throw new CustomError(3, 400, 'Username or password wrong');
       else {
-        const resItem = findUser.recordset[0];
+        const cart = await sql.query(
+          query.qGetCartByUserId(findUser.recordset[0].Id)
+        );
+        const cartId = await sql.query(
+          query.qGetCartId(findUser.recordset[0].Id)
+        );
+        const resItem = {
+          ...findUser.recordset[0],
+          cardId: cartId.recordset[0].Id,
+          cart: cart.recordset,
+        };
         delete resItem['Password'];
         delete resItem['IsDelete'];
         delete resItem['isLock'];
@@ -59,6 +69,7 @@ async function signIn(req, res, next) {
     }
   }
 }
+
 async function signUp(req, res, next) {
   const validate = signUpSchema.validate(req.body);
   if (validate.error) {
