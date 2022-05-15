@@ -78,11 +78,13 @@
 .cart-address-info {
     display: flex;
     align-items: center;
+    margin-right: 3rem;
 }
 
 .cart-address-info>div:first-of-type {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     font-weight: 600;
     margin-right: 1.8rem;
     margin-left: 0.5rem;

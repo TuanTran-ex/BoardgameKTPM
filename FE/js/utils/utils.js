@@ -53,8 +53,16 @@ const utils = {
             savingPrice: Math.floor((totalPrice * voucher) / 100),
             lastPrice: Math.floor(totalPrice * (1 - voucher / 100)),
         };
+    },
+    detachAddress(address) {
+        const item = address.split(", ");
+        return {
+            province: item[3],
+            district: item[2],
+            ward: item[1],
+            addressDetail: item[0],
+        }
     }
-
 }
 
 export default utils

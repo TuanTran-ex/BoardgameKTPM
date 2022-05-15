@@ -17,10 +17,10 @@ const header = {
   productList: [],
   renderHtml() {
     // Get cart from session
-    if (!window.sessionStorage.cart) {
-      window.sessionStorage.cart = JSON.stringify([]);
+    if (!utils.getSession("cart")) {
+      utils.setSession("cart", []);
     } else {
-      this.productList = [...JSON.parse(window.sessionStorage.cart)];
+      this.productList = [...utils.getSession("cart")];
     }
 
     document.querySelector(".header").innerHTML = `
@@ -108,7 +108,7 @@ const header = {
 
     this.handleEvents();
   },
-  logoutHandler(e) {
+  logoutHandler() {
     utils.removeCookie("token");
     utils.removeItemSession("user");
   },
@@ -139,6 +139,7 @@ const header = {
     }
   },
   init() {
+    this.productList = [];
     this.renderHtml();
   },
 };

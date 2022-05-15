@@ -77,7 +77,7 @@ const app = {
                                             <input type="checkbox" class="cart-address-check" ${item.id == this.addressSelected.id ? "checked" : ""}>
                                             <div>
                                                 <span class="cart-address-name">${item.name}</span>
-                                                <span>${item.phone}</span>
+                                                <span>(+84) ${item.phone}</span>
                                             </div>
                                             <span class="cart-address-address">${item.address}</span>
                                         </div>
@@ -105,7 +105,7 @@ const app = {
                                         <div class="cart-address-info">
                                             <div>
                                                 <span class="cart-address-name">${this.addressSelected.name}</span>
-                                                <span>${this.addressSelected.phone}</span>
+                                                <span>(+84) ${this.addressSelected.phone}</span>
                                             </div>
                                             <span class="cart-address-address">${this.addressSelected.address}</span>
                                         </div>
@@ -255,6 +255,25 @@ const app = {
     },
     cartAddressUpdateHandler(e) {
         const addressItem = e.target.closest(".cart-address-item");
+        const item = addressList.find(item => item.id == addressItem.id);
+        if (document.querySelector(".address")) {
+            const modals = Array.from(document.querySelectorAll(".modal"));
+            const addressModal = document.querySelector(".modal .address").closest(".modal");
+            const index = modals.indexOf(addressModal);
+            modal.showModal(index);
+        } else {
+            const modalHtml = `
+                <div class="modal active">
+                <div class="modal-overlay"></div>
+                <div class="modal-body">
+                    <div class="address"></div>
+                </div>
+                </div>
+            `;
+            document.querySelector("body").innerHTML += modalHtml;
+        }
+        address.init(item.id, item.name, item.phone, item.address, item.isDefault);
+        app.renderHtml();
     },
     cartAddressNewHandler() {
         if (document.querySelector(".address")) {
@@ -393,22 +412,22 @@ const app = {
                 {
                     id: 0,
                     name: "Ricasdo Công Đạt  Công Đạt Công Đạt Công Đạt Công Đạt",
-                    phone: "(+84) 0123456789",
-                    address: "72 Phạm Văn Đồng",
+                    phone: "0123456789",
+                    address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Thành phố Huế, Tỉnh Thừa Thiên Huế",
                     isDefault: true,
                 },
                 {
                     id: 1,
                     name: "Ricasdo ",
-                    phone: "(+84) 01234522289",
-                    address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Tp Huế, Thừa Thiên Huế",
+                    phone: "01234522289",
+                    address: "72 Phạm Văn Đồng, Phường Phú Thuận, Thành phố Huế, Tỉnh Thừa Thiên Huế",
                     isDefault: false
                 },
                 {
                     id: 2,
                     name: "Ricasdo Đạt",
-                    phone: "(+84) 0121236789",
-                    address: "72 Phạm Văn Đồng, Thừa Thiên Huế",
+                    phone: "0121236789",
+                    address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Thành phố Huế, Tỉnh Thừa Thiên Huế",
                     isDefault: false
                 }
             ]

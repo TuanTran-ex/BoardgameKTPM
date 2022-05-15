@@ -1,5 +1,6 @@
 import modal from "../utils/modal.js"
 import cart from "../cart.js"
+import header from "./header.js";
 
 let voucherInput;
 let voucherApplyBtn;
@@ -99,7 +100,7 @@ const voucher = {
                     </div>
                 </div>
             `
-            modal.init();
+            modal.init(() => header.renderHtml());
             this.removeEvents();
     
             voucherInput = document.querySelector(".voucher-input");
@@ -143,7 +144,7 @@ const voucher = {
         cart.renderHtml();
         const voucherModal = document.querySelector(".voucher").closest(".modal");
         const index = Array.from(document.querySelectorAll(".modal")).indexOf(voucherModal);
-        modal.hiddenModal(index);
+        modal.hiddenModal(index, () => header.renderHtml());
     },
     voucherGetHandler() {
         voucher.isGet = true;

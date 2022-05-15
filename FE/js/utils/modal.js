@@ -10,12 +10,12 @@ const modal = {
     $("body").style.overflow = "hidden";
     $$(`.modal`)[index].classList.add("active");
   },
-  hiddenModal(index, closeFunc) {
+  hiddenModal(index, closeFunc = () => {}) {
     $("body").style.overflow = "auto";
     $$(`.modal`)[index].classList.remove("active");
     closeFunc();
   },
-  handleEvents(closeFunc) {
+  handleEvents(closeFunc = () => {}) {
     // Handle modal display/hidden
     modalOverlays.forEach((modalOverlay, index) => {
       modalOverlay.onclick = () => this.hiddenModal(index, closeFunc);

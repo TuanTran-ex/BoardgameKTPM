@@ -1,5 +1,6 @@
 import modal from "../utils/modal.js"
 import payment from "../payment.js"
+import utils from "../utils/utils.js";
 
 const apiUrl = "https://provinces.open-api.vn/api/?depth=3"
 
@@ -20,6 +21,9 @@ const address = {
     fullname: "",
     phone: "",
     addressDetail: "",
+    isDefault: false,
+    isUpdate: false,
+    addressId: "",
     async getProvince() {
         const res = await fetch(apiUrl);
         return res.json();
@@ -31,7 +35,11 @@ const address = {
                 <div class="modal-overlay"></div>
                 <div class="modal-body">
                     <div class="address">
-                        <span class="address-header">Địa chỉ mới</span>
+                        ${this.isUpdate ? `
+                            <span class="address-header">Sửa địa chỉ</span>
+                        ` : `
+                            <span class="address-header">Địa chỉ mới</span>
+                        `}
                         <form class="address-form">
                             <div class="address-form-group">
                                 <label for="" class="address-form-label">Họ và tên</label>
@@ -97,7 +105,7 @@ const address = {
                                 <span class="address-form-message primary-text"></span>
                             </div>
                             <div class="address-form-group checkbox">
-                                <input type="checkbox" class="address-checkbox" id="address-checkbox" name="address-default">
+                                <input type="checkbox" class="address-checkbox" id="address-checkbox" name="address-default" ${this.isDefault ? "checked" : ""}>
                                 <label for="address-checkbox">Đặt làm mặc định</label>
                             </div>
                             <div class="address-form-footer">
@@ -126,7 +134,7 @@ const address = {
                 formGroupSelector: ".address-form-group",
                 errorSelector: ".address-form-message",
                 rules: [
-                    Validator.isRequired('input[name="addressName"]',"Vui lòng nhập họ và tên"),
+                    Validator.isRequired('input[name="addressFullname"]',"Vui lòng nhập họ và tên"),
                     Validator.isRequired('input[name="addressPhone"]', "Vui lòng nhập email"),
                     Validator.isOnlyNumber('input[name="addressPhone"]', "Vui lòng chỉ nhập số"),
                     Validator.minLength('input[name="addressPhone"]', 10),
@@ -138,11 +146,12 @@ const address = {
 
                     // Call address new API
 
-                    payment.init();
                     const modals = Array.from(document.querySelectorAll(".modal"));
                     const addressModal = document.querySelector(".modal .address").closest(".modal");
                     const index = modals.indexOf(addressModal);
-                    modal.hiddenModal(index);
+                    modal.hiddenModal(index, () => {
+                        payment.renderHtml();
+                    });
                 }
             })
         }
@@ -196,7 +205,7 @@ const address = {
         if (addressAddressDetail) 
             addressAddressDetail.addEventListener("change", this.infoChangeHandler);
     },
-    async init() {    
+    async init(addressId = "", fullname = "", phone = "", addressDetail = "", isDefault = false) {    
         if (this.provinces.length === 0) {
             await this.getProvince()
                 .then(data => {
@@ -209,9 +218,33 @@ const address = {
                     
                 })
             
-            this.fullname = "";
-            this.phone = "";
-            this.addressDetail = "";
+            }
+        this.fullname = fullname;
+        this.phone = phone;
+        if (addressDetail) {
+            const detachedAddress = utils.detachAddress(addressDetail);
+            const tmpProvince = this.provinces.find(item => item.name === detachedAddress.province);
+            if (tmpProvince) {
+                this.provinceSelected = {...tmpProvince};
+                const tmpDistrict = tmpProvince.districts.find(item => item.name === detachedAddress.district);
+                if (tmpDistrict) {
+                    this.districtSelected = {...tmpDistrict};
+                    const tmpWard = tmpDistrict.wards.find(item => item.name === detachedAddress.ward);
+                    if (tmpWard) {
+                        this.wardSelected = {...tmpWard};
+                    } else {
+                        this.wardSelected = {...this.districtSelected.ward[0]};
+                    }
+                } else {
+                    this.districtSelected = {...tmpProvince.districts[0]};
+                    this.wardSelected = {...this.districtSelected.wards[0]};
+                }
+            }
+            this.addressDetail = detachedAddress.addressDetail;
+            this.isDefault = isDefault;
+            this.isUpdate = true;
+            this.addressId = addressId;
+
         }
         this.renderHtml();
     }

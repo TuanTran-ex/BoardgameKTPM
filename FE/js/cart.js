@@ -297,7 +297,7 @@ const app = {
   cartPaymentHandler (e) {
     if (productSelected.length === 0) {
       e.preventDefault();
-      notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", () => {}, 2);
+      notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", () => header.renderHtml(), 2);
       notifyModal.showModal();
       app.renderHtml();
     } else {

@@ -35,7 +35,7 @@ const feedback = {
                                 </div>
                             </div>
                             <div class="feedback-content">
-                                <textarea class="feedback-comment" placeholder="Bình luận"></textarea>
+                                <textarea class="feedback-comment" placeholder="Bình luận">${this.comments[index] ? this.comments[index] : ``}</textarea>
                                 <div class="feedback-image">
                                     <ul class="feedback-image-list">
                                     ${this.virtualURL.length > 0 ? this.virtualURL[index].files.map(file => {
@@ -47,7 +47,7 @@ const feedback = {
                                         `
                                     }).join("") : ``}
                                     <label for="feedback-file-${item.id}" class="btn btn-white btn-small feedback-image-btn">Thêm ảnh</label>
-                                    <input type="file" id="feedback-file-${item.id}" name="feedback-file" multiple hidden> 
+                                    <input type="file" id="feedback-file-${item.id}" name="feedback-file"  accept="image/png, image/gif, image/jpeg" multiple hidden> 
                                     </ul>
                                 </div>
                             </div>
@@ -82,6 +82,11 @@ const feedback = {
 
         this.handleEvents();
     },
+    getCommentValue(){
+        feedbackItems.forEach((item, index) => {
+            feedback.comments[index] = item.querySelector(".feedback-comment").value;
+        })
+    },
     feedbackRateHandler(e) {
         const feedbackItem = e.target.closest(".feedback-item");
         const iconItem = e.target.closest(".feedback-rate-icon");
@@ -94,6 +99,7 @@ const feedback = {
         } else {
             feedback.rate[itemIndex] = iconIndex + 1;
         }
+        feedback.getCommentValue();
         feedback.renderHtml(feedback.order);
     },
     feedbackImageHandler(e) {
@@ -106,10 +112,12 @@ const feedback = {
                 Array.from(fileItem.files).forEach(file => {
                     feedback.virtualURL[itemIndex].files.push(URL.createObjectURL(file));
                 })
+                feedback.getCommentValue();
                 feedback.renderHtml(feedback.order);
             } else {
                 notifyModal.init("Vui lòng chọn tối đa 7 ảnh", () => {}, 1);
                 notifyModal.showModal();
+                feedback.getCommentValue();
                 feedback.renderHtml();
             }
         }
@@ -130,6 +138,7 @@ const feedback = {
         });
         notifyModal.showModal();
         window.scrollTo(0, 0);
+        feedback.getCommentValue();
         feedback.renderHtml();
     },
     feedbackImageDeleteHandler(e) {
@@ -137,6 +146,7 @@ const feedback = {
         const productItem = e.target.closest(".feedback-item");
         const index = Array.from(feedbackItems).indexOf(productItem);
         feedback.virtualURL[index].files = feedback.virtualURL[index].files.filter(item => item != imageItem.src);
+        feedback.getCommentValue();
         feedback.renderHtml();
     },
     removeEvents() {
