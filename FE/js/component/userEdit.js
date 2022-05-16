@@ -1,5 +1,6 @@
 import notifyModal from "./notifyModal.js";
-import account from "../account.js"
+import account from "../account.js";
+import header from "./header.js"
 
 let userAvatarInput;
 let userAvatar;
@@ -78,8 +79,7 @@ const userEdit = {
                 Validator.isEmail('input[name="email"]'),
                 Validator.minLength('input[name="phone"]', 10),
                 Validator.maxLength('input[name="phone"]', 11),
-                Validator.isOnlyNumber('input[name="phone"]'),
-                Validator.maxLength('input[name="address"]', 150),
+                Validator.isOnlyNumber('input[name="phone"]')
             ],
             onSubmit: function (data) {
                 console.log(data);
@@ -89,6 +89,7 @@ const userEdit = {
                 // Pop up modal
                 notifyModal.init("Cập nhật hồ sơ");
                 notifyModal.showModal();
+                header.renderHtml();
                 account.renderHtml();
             },
         });

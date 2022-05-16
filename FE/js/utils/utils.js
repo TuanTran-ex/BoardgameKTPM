@@ -38,7 +38,10 @@ const utils = {
         window.sessionStorage[name] = JSON.stringify(value);
     },
     getSession(name) {
-        return JSON.parse(window.sessionStorage[name]);
+        if (window.sessionStorage[name]) {
+            return JSON.parse(window.sessionStorage[name]);
+        } else 
+            return null;
     },
     removeItemSession(name) {
         window.sessionStorage.removeItem(name);

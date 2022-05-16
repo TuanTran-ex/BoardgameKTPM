@@ -1,6 +1,7 @@
 import confirmModal from "../component/confirmModal.js"
 import notifyModal from "../component/notifyModal.js"
 import account from "../account.js"
+import header from "./header.js"
 
 let pwdIcons;
 
@@ -71,6 +72,7 @@ const userEditPwd = {
                 confirmModal.init("Xác nhận thay đổi mật khẩu", userEditPwd.submitChangeHandler);
                 confirmModal.showModal();
                 account.renderHtml();
+                header.renderHtml();
             },
         });
 

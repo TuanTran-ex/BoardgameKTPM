@@ -229,9 +229,11 @@ const app = {
     productSelected.forEach((product) => {
       const index = productList.indexOf(product);
       if (index != -1) productList.splice(index, 1);
+      utils.setSession("cart", productList);
     });
     productSelected.splice(0, productSelected.length);
     app.renderHtml();
+    header.renderHtml();
   },
   productDecHandler(e) {
     const productItem = e.target.closest(".cart-products-item");
@@ -241,6 +243,7 @@ const app = {
         if (index != -1) {
           if (productList[index].quantity > 1) {
             productList[index].quantity--;
+            utils.setSession("cart", productList);
             return;
           }
         }
@@ -253,7 +256,10 @@ const app = {
     productList.forEach((product) => {
       if (product.id == productItem.dataset.id) {
         const index = productList.indexOf(product);
-        if (index != -1) productList[index].quantity++;
+        if (index != -1) {
+          productList[index].quantity++;
+          utils.setSession("cart", productList);
+        } 
       }
     });
     app.renderHtml();
@@ -267,7 +273,10 @@ const app = {
     productList.forEach((product) => {
       if (product.id == productItem.dataset.id) {
         const index = productList.indexOf(product);
-        if (index != -1) productList[index].quantity = e.target.value;
+        if (index != -1) {
+          productList[index].quantity = e.target.value;
+          utils.setSession("cart", productList);
+        } 
       }
     });
     app.renderHtml();

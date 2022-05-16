@@ -19,6 +19,14 @@ const confirmModal = {
                     </div>
                 </div>
             `
+        } else {
+            document.querySelector(".confirm-dialog").innerHTML = `
+                <span class="confirm-dialog-content">${content}</span>
+                <div class="confirm-dialog-footer">
+                    <span class="btn btn-long btn-white modal-close-btn">Trở lại</span>
+                    <button class="btn btn-long btn-primary modal-submit-btn">Xác nhận</button>
+                </div>
+            `
         }
         modal.init();
 

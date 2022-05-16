@@ -1,5 +1,6 @@
 import userHistory from "./userHistory.js"
 import notifyModal from "./notifyModal.js"
+import header from "./header.js"
 
 let feedbackItems = [];
 let feedbackRateIcons = [];
@@ -135,6 +136,7 @@ const feedback = {
         notifyModal.init("Đánh giá thành công", () => {
             userHistory.isFeedback = false;
             userHistory.renderHtml();
+            header.renderHtml();
         });
         notifyModal.showModal();
         window.scrollTo(0, 0);

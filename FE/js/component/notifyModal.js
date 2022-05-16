@@ -18,6 +18,15 @@ const notifyModal = {
                     </div>
                 </div>
             `
+        } else {
+            document.querySelector(".notification").innerHTML = `
+                ${type === 0 ? `
+                    <i class="fa-regular fa-circle-check success-icon"></i>
+                ` : type === 1 ? `
+                    <i class="fa-regular fa-circle-xmark fail-icon"></i>
+                ` : ``}
+                <span>${content}</span>
+            `
         }
         modal.init(closeFunc);
     },
