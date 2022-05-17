@@ -105,7 +105,7 @@ exports.qGetAllVoucher = (page, pageSize, status) => {
       status || 'NULL'
     }`;
   } else {
-    return `SELECT * FROM Voucher WHERE IsDelete = 0`;
+    return `SELECT * FROM Voucher WHERE IsDelete = 0 AND status =1`;
   }
 };
 
