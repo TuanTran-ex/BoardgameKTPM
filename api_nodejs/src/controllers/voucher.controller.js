@@ -4,7 +4,7 @@ const query = require('../models/query');
 const logger = require('../utils/logger');
 const { voucherSchema, voucherUpdateSchema } = require('../utils/validation');
 async function getAllVoucher(req, res, next) {
-  const { page, pageSize, status } = req.body;
+  const { page, pageSize, status } = req.query;
   try {
     const listVoucher = await sql.query(
       query.qGetAllVoucher(page, pageSize, status)

@@ -1,18 +1,33 @@
+const sql = require('mssql');
 const {
   servGetAllProduct,
   servDeleteProduct,
   servGetProduct,
 } = require('../services/product.services');
+const query = require('../models/query');
 const logger = require('../utils/logger');
 
+// List Product(mainImg, subScr, name, price), countAll
 async function getAllProduct(req, res, next) {
+  const { category, filter, key, page, pageSize } = req.query;
   try {
-    const result = await servGetAllProduct();
+    const listProduct = await sql.query(
+      query.qGetAllProduct(category, filter, key, page, pageSize)
+    );
+    let totalCount;
+    if (key) totalCount = listProduct.recordset.length;
+    else {
+      const resCount = await sql.query(query.qCountProduct(category));
+      if (resCount.recordset.length > 0)
+        totalCount = resCount.recordset[0].CountProduct;
+      else totalCount = 0;
+    }
     res.status(200).json({
       success: true,
-      message: 'Get data list products success',
+      message: 'Get all product success',
       data: {
-        products: result.data,
+        count: totalCount,
+        products: listProduct.recordset,
       },
     });
   } catch (err) {
@@ -40,7 +55,6 @@ async function addProduct() {}
 async function deleteProduct(req, res, next) {
   const { id } = req.params;
   try {
-    const result = await servDeleteProduct(id);
     // console.log(result);
     res.status(200).json({
       success: true,
