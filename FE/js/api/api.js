@@ -10,19 +10,29 @@ const api = {
             document.body.appendChild(loading);
         }
 
-        const headers = token ? {
-            "Content-Type" : file ? "multipart/form-data" : "application/json",
-            "Authorization" : `Bearer ${token}`
-        } : {
-            "Content-Type" : file ? "multipart/form-data" : "application/json",
+        const headers  = {};
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
         }
+        if (!file) {
+            headers["Content-Type"] = "application/json"
+        } else {
+            headers["Enctype"] = "multipart/form-data";
+            headers["Content-Type"] = false;
+            headers["Process-Data"] = false;
+        }
+        // const headers = token ? {
+        //     "Authorization" : `Bearer ${token}`
+        // } : {
+        //     "Content-Type" : file ? "multipart/form-data" : "application/json",
+        // }
         const obj = method === "GET" ? {
             method: method,
-            headers: headers
+            headers: headers,
         } : {
             method: method,
             headers: headers,
-            body: JSON.stringify(req)
+            body: file ? req : JSON.stringify(req),
         }
         await fetch(url, obj)
         .then(res => res.json())

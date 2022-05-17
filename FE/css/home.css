@@ -1,4 +1,8 @@
 /* ------ Category ---------- */
+.category {
+    margin-bottom: 40rem;
+}
+
 .category-heading {
     font-size: 2rem;
     font-weight: 700;
@@ -156,11 +160,13 @@
     right: 1.6rem;
     transform: translateY(-50%);
     font-size: 2.2rem;
+    cursor: pointer;
 }
 
 .products-sub-header {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1.6rem;
 }
 
 .products-filter {
@@ -243,7 +249,15 @@
     grid-template-columns: repeat(5, 1fr);
     grid-column-gap: 3.8rem;
     grid-row-gap: 3.8rem;
-    margin-bottom: 3rem;
+    margin-bottom: 6rem;
+}
+
+.products-text {
+    font-size: 2.4rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
 }
 
 .product-item {
@@ -259,6 +273,7 @@
 
 .product-img {
     width: 100%;
+    aspect-ratio: 1;
     border-radius: 1.5rem;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
         rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;

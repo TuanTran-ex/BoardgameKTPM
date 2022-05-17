@@ -78,7 +78,7 @@ const voucher = {
                                                     <span class="voucher-name">${item.Code}</span>
                                                     <span class="voucher-discount">( Giảm ${item.Value}% )</span>
                                                 </div>
-                                                <span class="primary-text">Sắp hết hạn: ${item.Expired}</span>
+                                                <span class="primary-text">Sắp hết hạn: ${utils.formatDate(item.Expired)}</span>
                                             </div>
                                         </div>
                                         ${this.voucherList.find(vch => vch.Id == item.Id) ? `
@@ -133,9 +133,14 @@ const voucher = {
         await voucherAPI.getVoucher(req, token, (res) => {
             console.log(res)
             if (res.success) {
-                voucher.message = "";
-                voucher.voucherList.push(res.data.voucher);
-                voucher.voucherSelected = {...res.data.voucher};
+                const vch = voucher.voucherList.find(item => item.Id === res.data.voucher.Id);
+                if (!vch) { 
+                    voucher.message = "";
+                    voucher.voucherList.push(res.data.voucher);
+                    voucher.voucherSelected = {...res.data.voucher};
+                } else {
+                    voucher.message = "Voucher đã có";
+                }
             } else {
                 voucher.message = "Voucher không hợp lệ";
             }
@@ -218,29 +223,14 @@ const voucher = {
             })
         }
     },
-    init() {    
+    async init() {    
         // Call Get All voucher API
+        const token = utils.getCookie("token");
+        await voucherAPI.getListVoucher(token, (res) => {
+            console.log(res);
+            this.voucherAllList = res.data.voucher;
+        }, this.errHandler);
 
-        this.voucherAllList = [
-            {
-                Id: 0,
-                Code: "ancbcs",
-                Value: 10,
-                Expired: "25-02-2022"
-            },
-            {
-                Id: 1,
-                Code: "uias",
-                Value: 23,
-                Expired: "25-02-2022"
-            },
-            {
-                Id: 2,
-                Code: "kuro",
-                Value: 40,
-                Expired: "25-02-2022"
-            }
-        ]
         this.renderHtml();
     }
 }

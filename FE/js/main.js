@@ -17,8 +17,8 @@ const app = {
     category.init();
 
     slider.init();
-    productList.pagination();
-    productList.handleEvents();
+    // productList.pagination();
+    // productList.handleEvents();
   },
 };
 

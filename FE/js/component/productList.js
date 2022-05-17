@@ -1,21 +1,52 @@
-const product = {
-  image: "pd001.jpg",
-  name: "Catan US",
-  description:
-    "Chuyển thể từ bộ truyện tranh nổi tiếng cùng tên TOP 1 Best Seller Fahasa 2016-2018",
-  price: "1.600.000 VNĐ",
-};
+import productAPI from "../api/productAPI.js";
+import notifyModal from "./notifyModal.js";
+import app from "../main.js"
+import header from "./header.js";
+import utils from "../utils/utils.js"
+
+let firstPageBtn;
+let lastPageBtn;
+let previousPageBtn;
+let nextPageBtn;
+let productPaginationList;
+let searchInput;
+let searchIcon;
+let filterSelect;
 
 const productList = {
+  count: 0,
   pageActive: 1,
   totalPage: 1,
+  key: "",
+  filter: 0,
+  category: "",
   productLst: [],
-  renderHtml() {
+  async renderHtml() {
+    const req = {
+      filter: this.filter,
+      key: this.key,
+      page: this.pageActive,
+      pageSize: 10
+    }
+    await productAPI.getListProduct(req, (res) => {
+      console.log(res)
+      if (res.success) {
+          productList.productLst = [...res.data.products];
+          productList.totalPage = res.data.count % req.pageSize 
+              ? Math.floor(res.data.count / req.pageSize) + 1
+              : res.data.count / req.pageSize ;
+          productList.count = res.data.count;
+      } else {
+          productList.errHandler();
+      }
+      header.renderHtml();
+    }, this.errHandler);
+
     document.querySelector(".products").innerHTML = `
       <div class="products-header">
             <div class="products-heading">
                 <span>Sản phẩm</span>
-                <span class="products-quantity">//89</span>
+                <span class="products-quantity">//${this.count}</span>
             </div>
             <div class="products-search">
                 <input type="text" class="products-search-input">
@@ -26,9 +57,9 @@ const productList = {
             <div class="products-filter">
                 <span class="products-filter-heading">Sắp xếp theo</span>
                 <select name="" id="" class="products-filter-select">
-                    <option value="" class="products-filter-option">Mới nhất</option>
-                    <option value="" class="products-filter-option">Giá thấp</option>
-                    <option value="" class="products-filter-option">Giá cao</option>
+                    <option value="0" class="products-filter-option">Mới nhất</option>
+                    <option value="1" class="products-filter-option">Giá thấp</option>
+                    <option value="2" class="products-filter-option">Giá cao</option>
                 </select>
             </div>
             <div class="products-pagination">
@@ -48,55 +79,60 @@ const productList = {
                 </button>
             </div>
         </div>
-        <div class="products-list">
-        </div>
+        ${this.productLst.length > 0 ? 
+          `<div class="products-list">
+            ${this.productLst.map(product => {
+              return `
+                <a href="./pages/product_detail.html?product-id=${product.Id}">
+                  <div class="product-item">
+                  <img class="product-img" src="${product.MainImage}"></img>
+                  <span class="product-name">${product.Name}</span>
+                  <span class="product-description">${product.ShortDesc}</span>
+                  <span class="product-price">${utils.formatMoney(product.Price)} VNĐ</span>
+                  </div>
+                </a>`;
+            }).join("")}
+            </div>` : `
+              <span class="products-text">Không tìm thấy sản phẩm</span>
+        `}
     `
+
+    this.remvoveEvents();
+
+    firstPageBtn = document.querySelector(".products-pagination-first");
+    lastPageBtn = document.querySelector(".products-pagination-last");
+    previousPageBtn = document.querySelector(".products-pagination-previous");
+    nextPageBtn = document.querySelector(".products-pagination-next");
+    productPaginationList = document.querySelector(".products-pagination-list");
+    searchInput = document.querySelector(".products-search-input");
+    searchIcon = document.querySelector(".products-search-icon");
+    filterSelect = document.querySelector(".products-filter-select"); 
+
+    this.pagination();
+
+    this.handleEvents();
   },
-  getItem() {
-    return {
-      firstPageBtn: document.querySelector(".products-pagination-first"),
-      lastPageBtn: document.querySelector(".products-pagination-last"),
-      previousPageBtn: document.querySelector(".products-pagination-previous"),
-      nextPageBtn: document.querySelector(".products-pagination-next"),
-      productPaginationList: document.querySelector(
-        ".products-pagination-list"
-      ),
-    };
+  errHandler() {
+    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+    notifyModal.showModal();
+    header.renderHtml();
   },
   pagination() {
-    const obj = this.getItem();
-    const html = this.productLst
-      .map((product, index) => {
-        if (index >= (this.pageActive - 1) * 10 && index < this.pageActive * 10)
-          return `
-              <a href="./pages/product_detail.html?product-id=${product.id}">
-                <div class="product-item">
-                <img class="product-img" src="./img/${product.image}"></img>
-                <span class="product-name">${product.name} ${index}</span>
-                <span class="product-description">${product.description}</span>
-                <span class="product-price">${product.price}</span>
-                </div>
-              </a>`;
-      })
-      .join("");
-
-    document.querySelector(".products-list").innerHTML = html;
-
     if (this.pageActive <= 1) {
-      obj.firstPageBtn.classList.add("disabled");
-      obj.previousPageBtn.classList.add("disabled");
-      obj.lastPageBtn.classList.remove("disabled");
-      obj.nextPageBtn.classList.remove("disabled");
+      firstPageBtn.classList.add("disabled");
+      previousPageBtn.classList.add("disabled");
+      lastPageBtn.classList.remove("disabled");
+      nextPageBtn.classList.remove("disabled");
     } else if (this.pageActive >= this.totalPage) {
-      obj.lastPageBtn.classList.add("disabled");
-      obj.nextPageBtn.classList.add("disabled");
-      obj.firstPageBtn.classList.remove("disabled");
-      obj.previousPageBtn.classList.remove("disabled");
+      lastPageBtn.classList.add("disabled");
+      nextPageBtn.classList.add("disabled");
+      firstPageBtn.classList.remove("disabled");
+      previousPageBtn.classList.remove("disabled");
     } else {
-      obj.firstPageBtn.classList.remove("disabled");
-      obj.previousPageBtn.classList.remove("disabled");
-      obj.lastPageBtn.classList.remove("disabled");
-      obj.nextPageBtn.classList.remove("disabled");
+      firstPageBtn.classList.remove("disabled");
+      previousPageBtn.classList.remove("disabled");
+      lastPageBtn.classList.remove("disabled");
+      nextPageBtn.classList.remove("disabled");
     }
 
     let paginationHtml = "";
@@ -115,57 +151,109 @@ const productList = {
       firstNumber = this.pageActive - 2;
       lastNumber = this.pageActive + 2;
     }
+    if (firstNumber > lastNumber)
+      lastNumber = firstNumber;
     for (let i = firstNumber; i <= lastNumber; i++) {
       paginationHtml +=
         i == this.pageActive
           ? `<li class="products-pagination-item active" data-index=${i}>${i}</li>`
           : `<li class="products-pagination-item" data-index=${i}>${i}</li>`;
     }
-    obj.productPaginationList.innerHTML = paginationHtml;
+    productPaginationList.innerHTML = paginationHtml;
+  },
+  firstPageHandler() {
+    if (!firstPageBtn.classList.contains("disabled")) {
+      productList.pageActive = 1;
+      productList.renderHtml();
+    }
+  },
+  lastPageHandler() {
+    if (!lastPageBtn.classList.contains("disabled")) {
+      productList.pageActive = productList.totalPage;
+      productList.renderHtml();
+    }
+  },
+  previousPageHandler() {
+    if (!previousPageBtn.classList.contains("disabled")) {
+      productList.pageActive--;
+      productList.renderHtml();
+    }
+  },
+  nextPageHandler() {
+    if (!nextPageBtn.classList.contains("disabled")) {
+      productList.pageActive++;
+      productList.renderHtml();
+    }
+  },
+  pageHandler(e) {
+    const item = e.target.closest(".products-pagination-item");
+    if (item) {
+      productList.pageActive = Number(item.dataset.index);
+      productList.renderHtml();
+    }
+  },
+  searchHandler(e) {
+    if (e.target.matches(".products-search-icon") || e.key === "Enter") {
+      productList.key = searchInput.value;
+      productList.pageActive = 1;
+      productList.renderHtml();
+    }
+  },
+  filterHandler() {
+    productList.filter = Number(filterSelect.value);
+    productList.renderHtml();
+  },
+  remvoveEvents() {
+    if (firstPageBtn) {
+      firstPageBtn.removeEventListener("click", this.firstPageHandler);
+    }
+    if (lastPageBtn) {
+      lastPageBtn.removeEventListener("click", this.lastPageHandler);
+    }
+    if (previousPageBtn) {
+      previousPageBtn.removeEventListener("click", this.previousPageHandler);
+    }
+    if (nextPageBtn) {
+      nextPageBtn.removeEventListener("click", this.nextPageHandler);
+    }
+    if (searchInput) {
+      searchInput.removeEventListener("keypress", this.searchHandler);
+    }
+    if (searchIcon) {
+      searchIcon.removeEventListener("click", this.searchHandler);
+    }
+    if (filterSelect) {
+      filterSelect.removeEventListener("change", this.filterHandler);
+    }
   },
   handleEvents() {
-    const obj = this.getItem();
-    obj.firstPageBtn.onclick = () => {
-      if (!obj.firstPageBtn.classList.contains("disabled")) {
-        this.pageActive = 1;
-        this.pagination();
-      }
-    };
-    obj.lastPageBtn.onclick = () => {
-      if (!obj.lastPageBtn.classList.contains("disabled")) {
-        this.pageActive = this.totalPage;
-        this.pagination();
-      }
-    };
-    obj.previousPageBtn.onclick = () => {
-      if (!obj.previousPageBtn.classList.contains("disabled")) {
-        this.pageActive--;
-        this.pagination();
-      }
-    };
-    obj.nextPageBtn.onclick = () => {
-      if (!obj.nextPageBtn.classList.contains("disabled")) {
-        this.pageActive++;
-        this.pagination();
-      }
-    };
-
-    obj.productPaginationList.onclick = (e) => {
-      const item = e.target.closest(".products-pagination-item");
-      if (item) {
-        this.pageActive = Number(item.dataset.index);
-        this.pagination();
-      }
-    };
+    if (firstPageBtn) {
+      firstPageBtn.addEventListener("click", this.firstPageHandler);
+    }
+    if (lastPageBtn) {
+      lastPageBtn.addEventListener("click", this.lastPageHandler);
+    }
+    if (previousPageBtn) {
+      previousPageBtn.addEventListener("click", this.previousPageHandler);
+    }
+    if (nextPageBtn) {
+      nextPageBtn.addEventListener("click", this.nextPageHandler);
+    }
+    if (productPaginationList) {
+      productPaginationList.addEventListener("click", this.pageHandler);
+    }
+    if (searchInput) {
+      searchInput.addEventListener("keypress", this.searchHandler);
+    }
+    if (searchIcon) {
+      searchIcon.addEventListener("click", this.searchHandler);
+    }
+    if (filterSelect) {
+      filterSelect.addEventListener("change", this.filterHandler);
+    }
   },
   init() {
-    for (let i = 0; i < 61; i++) {
-      this.productLst.push({id: i, ...product});
-    }
-    this.totalPage =
-      this.productLst.length % 10
-        ? Math.floor(this.productLst.length / 10) + 1
-        : this.productLst.length / 10;
+    this.pageActive = 1;
     this.renderHtml();
   },
 };
