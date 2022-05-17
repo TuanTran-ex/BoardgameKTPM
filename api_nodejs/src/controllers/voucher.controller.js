@@ -64,22 +64,15 @@ async function addVoucher(req, res, next) {
       if (findUser.recordset.length == 0) {
         return next(new CustomError(6, 400, 'UserId (createBy) is not exists'));
       }
-<<<<<<< HEAD
-      await sql.query(
-=======
       const newVoucher = await sql.query(
->>>>>>> api/nodejs
         query.qAddVoucher(code, expired, amount, value, createBy)
       );
       return res.status(200).json({
         success: true,
         message: 'Add voucher successful',
-<<<<<<< HEAD
-=======
         data: {
           voucher: { id: newVoucher.recordset[0].ID },
         },
->>>>>>> api/nodejs
       });
     } catch (err) {
       next(err);

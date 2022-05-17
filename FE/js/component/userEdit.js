@@ -1,12 +1,16 @@
 import notifyModal from "./notifyModal.js";
 import account from "../account.js";
 import header from "./header.js"
+import userAPI from "../api/userAPI.js";
+import app from "../account.js";
+import utils from "../utils/utils.js";
 
 let userAvatarInput;
 let userAvatar;
 
 const userEdit = {
     virtualURL: "",
+    message: "",
     renderHtml(user) {
         document.querySelector(".user-info-container").innerHTML = `
             <form class="user-info-form">
@@ -41,7 +45,7 @@ const userEdit = {
                             <label for="user-gender-1">Nữ</label>
                         </div>
                         <div class="user-info-option-form-group">
-                            <input type="radio" value="2" name="gender" id="user-gender-2" ${!user.Gender ? "checked" : ""}>
+                            <input type="radio" value="" name="gender" id="user-gender-2" ${!user.Gender ? "checked" : ""}>
                             <label for="user-gender-2">Khác</label>
                         </div>
                     </div>
@@ -82,17 +86,39 @@ const userEdit = {
                 Validator.isOnlyNumber('input[name="phone"]')
             ],
             onSubmit: function (data) {
-                console.log(data);
-
-                // Call User Upadate API
-
-                // Pop up modal
-                notifyModal.init("Cập nhật hồ sơ");
-                notifyModal.showModal();
-                header.renderHtml();
-                account.renderHtml();
+                userEdit.updateUserHandler(data);
             },
         });
+    },
+    errHandler() {
+        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+        notifyModal.showModal();
+        account.renderHtml();
+        header.renderHtml();
+    },
+    async updateUserHandler(data) {
+        const form = new FormData();
+        form.append("id", utils.getSession("user").Id);
+        form.append("fullName", data.fullName);
+        form.append("phone", data.phone);
+        form.append("dob", data.birthday);
+        form.append("gender", data.gender);
+        form.append("email", data.email);
+        form.append("address", "");
+        form.append("avatar", userAvatarInput.files[0]);
+        const token = utils.getCookie("token");
+        await userAPI.updateUser(form, token, (res) => {
+            console.log(res)
+            if (res.success) {
+                notifyModal.init("Cập nhật hồ sơ");
+                notifyModal.showModal();
+                app.message = "";
+            } else {
+                userEdit.errHandler();
+            }
+            header.renderHtml();
+            account.renderHtml();
+        }, userEdit.errHandler);
     },
     avatarChangeHandler(e) {
         if (e.target.files[0]) {

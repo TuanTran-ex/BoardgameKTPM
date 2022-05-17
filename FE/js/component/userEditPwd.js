@@ -3,16 +3,20 @@ import notifyModal from "../component/notifyModal.js"
 import account from "../account.js"
 import header from "./header.js"
 
+import userAPI from "../api/userAPI.js"
+import utils from "../utils/utils.js";
+
 let pwdIcons;
 
 const userEditPwd = {
+    message: "",
     renderHtml(user) {
         document.querySelector(".user-info-container").innerHTML = `
             <form class="user-info-form">
-                <div class="user-info-form-group">
+                <div class="user-info-form-group ${this.message ? "invalid" : ""}">
                     <label class="user-info-form-label">Mật khẩu cũ</label>
                     <input type="password" class="user-info-form-control" name="oldPassword">
-                    <span class="user-info-form-message"></span>
+                    <span class="user-info-form-message">${this.message}</span>
                     <div class="user-info-form-icon">
                         <i class="fa-solid fa-eye active"></i>
                         <i class="fa-solid fa-eye-slash"></i>
@@ -69,25 +73,46 @@ const userEditPwd = {
             onSubmit: function (data) {
                 console.log(data);
                 // Pop up confirm modal
-                confirmModal.init("Xác nhận thay đổi mật khẩu", userEditPwd.submitChangeHandler);
+                confirmModal.init("Xác nhận thay đổi mật khẩu", () => userEditPwd.submitChangeHandler(data));
                 confirmModal.showModal();
-                account.renderHtml();
-                header.renderHtml();
             },
         });
 
         this.handleEvents();
     },
-    submitChangeHandler() {
-        // Call User Upadate API
-
-        // Close confirm modal
-        confirmModal.hiddenModal();
-
-        // Pop up notify modal
-        notifyModal.init("Thay đổi thành công");
+    errHandler() {
+        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
         notifyModal.showModal();
         account.renderHtml();
+        header.renderHtml();
+    },
+    async changePwdHandler(data) {
+        const req = {
+            pass: data.oldPassword,
+            newPass: data.newPassword,
+            confirmNewPass: data.rePassword,
+        }
+        const token = utils.getCookie("token");
+        await userAPI.changePwd(req, token, (res) => {
+            console.log(res)
+            if (res.success) {
+                notifyModal.init("Thay đổi thành công");
+                notifyModal.showModal();
+                userEditPwd.message = "";
+            } else if (res.code === 3) {
+                userEditPwd.message = "Mật khẩu không chính xác";
+            } else {
+                userEditPwd.errHandler();
+            }
+        }, userEditPwd.errHandler);
+        account.renderHtml();
+        header.renderHtml();
+    },
+    submitChangeHandler(data) {
+        confirmModal.hiddenModal();
+        userEditPwd.message = "";
+
+        userEditPwd.changePwdHandler(data);
     },
     hiddenDisplayPwdHandler(e) {
         const pwdInput = e.target.closest(".user-info-form-group").querySelector("input");

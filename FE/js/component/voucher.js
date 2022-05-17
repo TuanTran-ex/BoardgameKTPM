@@ -1,6 +1,9 @@
-import modal from "../utils/modal.js"
-import cart from "../cart.js"
+import modal from "../utils/modal.js";
+import cart from "../cart.js";
 import header from "./header.js";
+import voucherAPI from "../api/voucherAPI.js";
+import notifyModal from "./notifyModal.js"
+import utils from "../utils/utils.js";
 
 let voucherInput;
 let voucherApplyBtn;
@@ -9,10 +12,9 @@ let voucherGetBtn;
 let voucherAddBtns;
 let voucherBackBtn;
 let modalSelectBtn;
-let id = 0;
-
 
 const voucher = {
+    message: "",
     isGet: false,
     voucherAllList: [],
     voucherList: [],
@@ -28,8 +30,8 @@ const voucher = {
                 ${!this.isGet ? `
                 <span class="voucher-heading">Nhập mã Voucher</span>
                                 <div class="voucher-action">
-                                    <input type="text" class="voucher-input">
-                                    <span class="voucher-message primary-text text-small"></span>
+                                    <input type="text" class="voucher-input ${this.message ? "invalid" : ""}">
+                                    <span class="voucher-message primary-text text-small">${this.message}</span>
                                     <button class="btn btn-white voucher-apply-btn">Áp dụng</button>
                                 </div>
                             ` : `
@@ -43,21 +45,21 @@ const voucher = {
                                 `<div class="voucher-text">
                                     <span>Bạn chưa có voucher nào</span>
                                 </div>` :
-                                this.voucherList.map((item, index) => {
+                                this.voucherList.map(item => {
                                     return `
-                                        <li class="voucher-item" data-id=${item.id || index}>
+                                        <li class="voucher-item" data-id=${item.Id}>
                                             <div class="voucher-info">
                                                 <img src="../img/icon_voucher.png" alt="">
                                                 <div class="voucher-content">
                                                     <div class="voucher-content-header">
-                                                        <span class="voucher-name">${item.name}</span>
-                                                        <span class="voucher-discount">( Giảm ${item.value}% )</span>
+                                                        <span class="voucher-name">${item.Code}</span>
+                                                        <span class="voucher-discount">( Giảm ${item.Value}% )</span>
                                                     </div>
-                                                    <span class="primary-text">Sắp hết hạn: ${item.dateExpire}</span>
+                                                    <span class="primary-text">Sắp hết hạn: ${utils.formatDate(item.Expired)}</span>
                                                 </div>
                                             </div>
                                             <input type="checkbox" class="voucher-check" ${
-                                                this.voucherSelected.id == item.id ? "checked" : ""
+                                                this.voucherSelected.Id == item.Id ? "checked" : ""
                                             }>
                                         </li>
                                     `
@@ -68,18 +70,18 @@ const voucher = {
                                 </div>`
                             : this.voucherAllList.map((item) => {
                                 return `
-                                    <li class="voucher-item" data-id=${item.id}>
+                                    <li class="voucher-item" data-id=${item.Id}>
                                         <div class="voucher-info">
                                             <img src="../img/icon_voucher.png" alt="">
                                             <div class="voucher-content">
                                                 <div class="voucher-content-header">
-                                                    <span class="voucher-name">${item.name}</span>
-                                                    <span class="voucher-discount">( Giảm ${item.value}% )</span>
+                                                    <span class="voucher-name">${item.Code}</span>
+                                                    <span class="voucher-discount">( Giảm ${item.Value}% )</span>
                                                 </div>
-                                                <span class="primary-text">Sắp hết hạn: ${item.dateExpire}</span>
+                                                <span class="primary-text">Sắp hết hạn: ${item.Expired}</span>
                                             </div>
                                         </div>
-                                        ${this.voucherList.find(vch => vch.id == item.id) ? `
+                                        ${this.voucherList.find(vch => vch.Id == item.Id) ? `
                                             <span class="voucher-add-text">Đã lấy</span>
                                         ` : `
                                             <span class="voucher-add-text voucher-add-btn">Lấy mã</span>
@@ -114,24 +116,37 @@ const voucher = {
             this.handleEvents();
         }
     },
-    voucherApplyHandler() {
-        // Call GetVoucherAPI
-
-        let voucherInfo = {
-            id: id++,
-            name: "BGKTPM",
-            value: Math.floor(Math.random() * (100 - 1 + 1)) + 1,
-            dateExpire: "25/05/2022"
-        }
-        voucher.voucherList.push(voucherInfo);
-        voucher.voucherSelected = {...voucherInfo};
+    errHandler() {
+        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+        notifyModal.showModal();
         voucher.renderHtml();
+        cart.renderHtml();
+        header.renderHtml();
+    },
+    async voucherApplyHandler() {
+        const req = {
+            id: voucherInput.value
+        }
+
+        const token = utils.getCookie("token");
+
+        await voucherAPI.getVoucher(req, token, (res) => {
+            console.log(res)
+            if (res.success) {
+                voucher.message = "";
+                voucher.voucherList.push(res.data.voucher);
+                voucher.voucherSelected = {...res.data.voucher};
+            } else {
+                voucher.message = "Voucher không hợp lệ";
+            }
+        }, voucher.errHandler);
+        voucher.renderHtml();    
     },
     checkHandler(e) {
         if (e.target.checked) {
             const voucherItem = e.target.closest(".voucher-item");
             voucher.voucherList.forEach(item => {
-                if (item.id == voucherItem.dataset.id) {
+                if (item.Id == voucherItem.dataset.id) {
                     voucher.voucherSelected = item;
                 }
             })
@@ -156,7 +171,7 @@ const voucher = {
     },
     voucherAddHandler(e) {
         const voucherItem = e.target.closest(".voucher-item");
-        const vch = voucher.voucherAllList.find(item => item.id == voucherItem.dataset.id);
+        const vch = voucher.voucherAllList.find(item => item.Id == voucherItem.dataset.id);
         voucher.voucherList.push(vch);
         voucher.renderHtml();
     },
@@ -208,22 +223,22 @@ const voucher = {
 
         this.voucherAllList = [
             {
-                id: 0,
-                name: "ancbcs",
-                value: 10,
-                dateExpire: "25/02/2022"
+                Id: 0,
+                Code: "ancbcs",
+                Value: 10,
+                Expired: "25-02-2022"
             },
             {
-                id: 1,
-                name: "uias",
-                value: 23,
-                dateExpire: "25/02/2022"
+                Id: 1,
+                Code: "uias",
+                Value: 23,
+                Expired: "25-02-2022"
             },
             {
-                id: 2,
-                name: "kuro",
-                value: 40,
-                dateExpire: "25/02/2022"
+                Id: 2,
+                Code: "kuro",
+                Value: 40,
+                Expired: "25-02-2022"
             }
         ]
         this.renderHtml();

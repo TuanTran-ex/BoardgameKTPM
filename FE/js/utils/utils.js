@@ -10,6 +10,19 @@ const utils = {
         }
         return formatMoney;
     },
+    formatDate(datetime) {
+        const index = datetime.indexOf("T");
+        const str = datetime.slice(0, index);
+        const arr = str.split("-");
+        let dateStr = "";
+        for (let i = arr.length - 1; i >= 0; i--) {
+            dateStr += arr[i];
+            if (i !== 0) {
+                dateStr += "-";
+            }
+        }
+        return dateStr;
+    },
     setCookie(cname, cvalue, exdays) {
         const d = new Date();
         d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);

@@ -32,7 +32,7 @@ const app = {
   voucher: 0,
   price: {},
   renderHtml() {
-    this.voucher = voucher.voucherSelected.value ? voucher.voucherSelected.value : 0;
+    this.voucher = voucher.voucherSelected.Value ? voucher.voucherSelected.Value : 0;
     this.price = utils.calculationPrice(productSelected, this.voucher);
     document.querySelector(".cart").innerHTML = `
         <div class="cart-header border-b-solid">

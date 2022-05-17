@@ -1,9 +1,13 @@
 import header from "./component/header.js";
 import notifyModal from "./component/notifyModal.js";
+import userAPI from "./api/userAPI.js"
 
 let pwdIcons;
 
 const app = {
+  message: "",
+  username: "",
+  email: "",
   renderHtml() {
     document.querySelector(".center-container").innerHTML = `
       <form action="" class="form-authentication" id="form-register">
@@ -11,12 +15,12 @@ const app = {
               <h3>Đăng ký</h3>
           </div>
           <div class="form-list">
-              <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Tên đăng nhập" name="username">
-                  <span class="form-message"></span>
+              <div class="form-group ${this.message ? "invalid" : ""}">
+                  <input type="text" class="form-control" placeholder="Tên đăng nhập" name="username" value="${this.username}">
+                  <span class="form-message">${this.message}</span>
               </div>
               <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Email" name="email">
+                  <input type="email" class="form-control" placeholder="Email" name="email" value="${this.email}">
                   <span class="form-message"></span>
               </div>
               <div class="form-group">
@@ -65,7 +69,7 @@ const app = {
         Validator.isEmail('input[name="email"]'),
         Validator.isRequired('input[name="password"]',"Vui lòng nhập mật khẩu"),
         Validator.minLength('input[name="password"]', 6),
-        Validator.isRequired('input[name="repassword"]'),
+        Validator.isRequired('input[name="repassword"]', "Vui lòng nhập mật khẩu"),
         Validator.isConfirmed('input[name="repassword"]',
           function () {
             return document.querySelector('#form-register input[name="password"]').value;
@@ -75,16 +79,49 @@ const app = {
       onSubmit: function (data) {
         console.log(data);
 
+        app.signUpHandler(data);
         // Call Register API
 
-        // Pop up modal
+        // // Pop up modal
+        // notifyModal.init("Đăng ký thành công", () => {
+        //   header.renderHtml();
+        //   app.renderHtml();
+        // });
+        // notifyModal.showModal();
+      },
+    });
+  },
+  errHandler() {
+    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+    notifyModal.showModal();
+    app.renderHtml();
+    header.renderHtml();
+  },
+  async signUpHandler(data) {
+    const req = {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    }
+    await userAPI.signUp(req, (res) => {
+      console.log(res)
+      if (res.success) {
         notifyModal.init("Đăng ký thành công", () => {
           header.renderHtml();
           app.renderHtml();
         });
         notifyModal.showModal();
-      },
-    });
+        app.message = ``;
+        app.username = "";
+        app.email = "";
+      } else {
+        app.message = `Tên đăng nhập đã tồn tại`;
+        app.username = req.username;
+        app.email = req.email;
+      }
+    }, app.errHandler);
+    app.renderHtml();
+    header.renderHtml();
   },
   hiddenDisplayPwdHandler(e) {
     const pwdInput = e.target.closest(".form-group").querySelector("input");
