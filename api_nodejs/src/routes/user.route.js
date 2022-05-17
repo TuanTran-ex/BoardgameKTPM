@@ -4,12 +4,14 @@ const {
   getAllUser,
   getUser,
   updateUser,
+  getOrderOfUser,
 } = require('../controllers/user.controller');
 
 const router = express.Router();
 
 router.get('/', checkAdmin, getAllUser);
 router.get('/:id', getUser);
-router.patch('/:id', checkAdmin, updateUser);
+router.get('/:id/orders', getOrderOfUser);
+router.patch('/:id', updateUser);
 
 module.exports = router;

@@ -105,7 +105,7 @@ exports.qGetAllVoucher = (page, pageSize, status) => {
       status || 'NULL'
     }`;
   } else {
-    return `SELECT * FROM Voucher WHERE IsDelete = 0`;
+    return `SELECT * FROM Voucher WHERE IsDelete = 0 AND status =1`;
   }
 };
 
@@ -116,6 +116,13 @@ exports.qFindVoucherById = (id) => {
 
 exports.qFindVoucherByCode = (code) => {
   return `SELECT * FROM Voucher WHERE Code = '${code}'`;
+};
+
+exports.qCheckVoucherUserUsed = (userId, voucherId) => {
+  return `SELECT 	* 
+  FROM 	Voucher v
+      JOIN [Order] o ON o.VoucherId = v.Id 
+  WHERE	v.Id = ${voucherId} AND o.UserId = ${userId}`;
 };
 
 exports.qAddVoucher = (code, expired, amount, value, createBy) => {
@@ -141,4 +148,105 @@ exports.qUpdateVoucher = (
 
 exports.qDeleteVoucher = (id) => {
   return `EXECUTE proc_Voucher_Delete ${id}`;
+};
+
+// Product
+exports.qGetProductById = (id) => {
+  return `SELECT * FROM Product WHERE Id = ${id}`;
+};
+
+// Feedback
+exports.qGetFeedBackByProductAndOrder = (orderId, productId) => {
+  return `SELECT * FROM Feedback WHERE OrderId=${orderId} AND ProductId=${productId}`;
+};
+exports.qGetAllFeedbackProduct = (productId) => {
+  return `SELECT 	u.Username, u.Avatar, f.Id, f.Stars, f.Comment, f.[Date]
+  FROM Feedback AS f
+      JOIN [Order] AS o ON f.OrderId = o.Id 
+      JOIN [User] AS u On o.UserId = u.Id 
+  WHERE	f.ProductId = ${productId}`;
+};
+exports.qGetAllFeedback = () => {
+  return `SELECT * FROM Feedback`;
+};
+exports.qAddFeedback = (orderId, productId, stars, comment) => {
+  // return `EXECUTE proc_Feedback_Add ${orderId}, ${productId}, ${stars}, N'${comment}'`;
+  if (!comment) comment = 'NULL';
+  else comment = `N'${comment}'`;
+  return `IF EXISTS 
+  (SELECT * FROM OrderDetail
+  WHERE OrderId=${orderId} AND ProductId=${productId})
+  AND NOT EXISTS 
+  (SELECT * FROM Feedback
+  WHERE OrderId=${orderId} AND ProductId=${productId})
+BEGIN 
+  INSERT INTO Feedback (OrderId, ProductId, Stars, Comment)
+  OUTPUT Inserted.ID
+  Values (${orderId}, ${productId}, ${stars},  ${comment})		
+END`;
+};
+exports.qAddImageFeedback = (feedbackId, path) => {
+  return `INSERT INTO FeedbackImages (FeedbackId, [Path])
+  VALUES (${feedbackId}, '${path}')`;
+};
+
+// Order
+exports.qGetAllOrder = (page, pageSize, type) => {
+  return `EXECUTE proc_Order_Getall ${page}, ${pageSize}, ${type || 'NULL'}`;
+};
+exports.qGetAllOrderOfUser = (userId, page, pageSize, type) => {
+  return `EXECUTE proc_Order_Getall_User ${userId}, ${page}, ${pageSize}, ${
+    type || 'NULL'
+  }`;
+};
+exports.qGetOrderProduct = (orderId) => {
+  return `EXECUTE proc_Order_Get_Product ${orderId}`;
+};
+exports.qGetOrderById = (id) => {
+  return `SELECT * FROM Order WHERE Id = ${id}`;
+};
+exports.qGetOrderNotConfirm = (id) => {
+  return `SELECT 	*
+  FROM 	[Order] o 
+      JOIN Status s ON o.StatusId = s.Id 
+  WHERE  o.Id = ${id} AND	s.[Type] = 1`;
+};
+exports.qConfirmOrder = (id) => {
+  return `EXECUTE proc_Order_Confirm ${id}`;
+};
+exports.qGetOrderDetail = (orderId, productId) => {
+  return `SELECT * FROM OrderDetail WHERE OrderId=${orderId} AND ProductId=${productId}`;
+};
+exports.qAddOrder = (voucherId, userId, userAddressId, ship, value) => {
+  return `INSERT INTO Order(VoucherId, UserId, UserAddress, ship, value)
+  OUTPUT Inserted.ID
+  Values (${voucherId}, ${userId}, ${userAddressId}, ${
+    ship || 'NULL'
+  }, ${value})`;
+};
+
+exports.qAddOrderDetail = (orderId, productId, productPriceId, quantity) => {
+  return `EXECUTE proc_OrderDetail_Add ${orderId}, ${productId}, ${productPriceId}, ${quantity}`;
+};
+
+// Product
+exports.qGetAllProduct = (categoryId, filter, key, page, pageSize) => {
+  return `EXECUTE proc_Product_GetAll ${categoryId || 'NULL'}, ${
+    filter || 'NULL'
+  }, ${key || 'NULL'}, ${page}, ${pageSize}`;
+};
+exports.qCountProduct = (categoryId) => {
+  return `EXECUTE proc_Product_Count ${categoryId || 'NULL'}`;
+};
+exports.qGetProductById = (productId) => {
+  return `EXECUTE proc_Product_Get ${productId}`;
+};
+exports.qGetProductImage = (productId) => {
+  return `SELECT * FROM ProductImages WHERE ProductId = ${productId}`;
+};
+exports.qGetProductFeedback = (productId) => {
+  return `SELECT * FROM Feedback WHERE ProductId = ${productId}`;
+};
+exports.qGetFeedbackImage = (feedbackId) => {
+  return `SELECT * FROM FeedbackImages Where FeedbackId = ${feedbackId}`;
 };

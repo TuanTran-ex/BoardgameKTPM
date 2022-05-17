@@ -39,10 +39,30 @@ const voucherUpdateSchema = joi.object({
   type: joi.number().valid(0, 1),
 });
 
+// Feedback
+const feedbackSchema = joi.object({
+  orderId: joi.number(),
+  productId: joi.number(),
+  stars: joi.number().min(1).max(5),
+  comment: joi.string(),
+  // listImage: joi.array().length(10),
+});
+
+// Order
+const newOrderSchema = joi.object({
+  userId: joi.number().required(),
+  userAddressId: joi.number().required(),
+  voucherId: joi.number(),
+  ship: joi.number(),
+  listProduct: joi.array(),
+});
+
 module.exports = {
   signInSchema,
   signUpSchema,
   changePassSchema,
   voucherSchema,
   voucherUpdateSchema,
+  feedbackSchema,
+  newOrderSchema,
 };

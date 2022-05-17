@@ -59,3 +59,37 @@ exports.updateUser = async (req, res, next) => {
     return res.json({ data: result });
   }
 };
+
+// Date,status,gia tien,san pham [{ten, anh, price, amount, }]
+exports.getOrderOfUser = async (req, res, next) => {
+  const { id } = req.params;
+  let { type, page, pageSize } = req.query;
+  if (!type) type = 'NULL';
+  try {
+    const user = await sql.query(query.qFindUserById(id));
+    if (user.recordset.length == 0)
+      return next(new CustomError(6, 400, 'User not exists'));
+    const listOrder = await sql.query(
+      query.qGetAllOrderOfUser(id, page, pageSize, type)
+    );
+    const resData = listOrder.recordset;
+    if (listOrder.recordset.length > 0) {
+      for (let i = 0; i < listOrder.recordset.length; i++) {
+        const product = await sql.query(
+          query.qGetOrderProduct(listOrder.recordset[i].Id)
+        );
+        resData[i]['products'] = product.recordset;
+      }
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Get list order success',
+      data: {
+        orders: resData,
+      },
+    });
+    // const
+  } catch (err) {
+    next(err);
+  }
+};
