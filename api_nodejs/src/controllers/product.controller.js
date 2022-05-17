@@ -6,6 +6,7 @@ const {
 } = require('../services/product.services');
 const query = require('../models/query');
 const logger = require('../utils/logger');
+const CustomError = require('../class/customError');
 
 // List Product(mainImg, subScr, name, price), countAll
 async function getAllProduct(req, res, next) {
@@ -34,16 +35,34 @@ async function getAllProduct(req, res, next) {
     next(err);
   }
 }
+
+//list image, đánh giá, số lượng tối đa,
 async function getProduct(req, res, next) {
   const { id } = req.params;
   try {
-    const result = await servGetProduct(id);
-    res.status(200).json({
+    const product = await sql.query(query.qGetProductById(id));
+    if (product.recordset.length == 0)
+      return next(new CustomError(6, 400, 'Product is not exists'));
+    const listProductImage = await sql.query(query.qGetProductImage(id));
+    const listFeedback = await sql.query(query.qGetAllFeedbackProduct(id));
+    console.log(product.recordset[0]);
+    const resData = {
+      ...product.recordset[0],
+      images: listProductImage.recordset,
+      feedback: listFeedback.recordset,
+    };
+    if (listFeedback.recordset.length > 0) {
+      for (let i = 0; i < listFeedback.recordset.length; i++) {
+        const feedbackImages = await sql.query(
+          query.qGetFeedbackImage(listFeedback.recordset[i].Id)
+        );
+        resData.feedback[i].images = feedbackImages.recordset;
+      }
+    }
+    return res.status(200).json({
       success: true,
       message: 'Get data product success',
-      data: {
-        products: result.data,
-      },
+      data: { product: resData },
     });
   } catch (err) {
     next(err);

@@ -160,13 +160,11 @@ exports.qGetFeedBackByProductAndOrder = (orderId, productId) => {
   return `SELECT * FROM Feedback WHERE OrderId=${orderId} AND ProductId=${productId}`;
 };
 exports.qGetAllFeedbackProduct = (productId) => {
-  return `SELECT 	u.Username, u.Avatar, f.Stars, f.Comment, f.[Date] 
-  FROM	Product AS p 
-      LEFT JOIN Feedback AS f ON p.Id = f.ProductId 
-      LEFT JOIN [Order] AS o ON f.OrderId = o.Id 
-      LEFT JOIN [User] AS u On o.UserId = u.Id 
-  WHERE	p.Id = ${productId}
-      `;
+  return `SELECT 	u.Username, u.Avatar, f.Id, f.Stars, f.Comment, f.[Date]
+  FROM Feedback AS f
+      JOIN [Order] AS o ON f.OrderId = o.Id 
+      JOIN [User] AS u On o.UserId = u.Id 
+  WHERE	f.ProductId = ${productId}`;
 };
 exports.qGetAllFeedback = () => {
   return `SELECT * FROM Feedback`;
@@ -239,4 +237,16 @@ exports.qGetAllProduct = (categoryId, filter, key, page, pageSize) => {
 };
 exports.qCountProduct = (categoryId) => {
   return `EXECUTE proc_Product_Count ${categoryId || 'NULL'}`;
+};
+exports.qGetProductById = (productId) => {
+  return `EXECUTE proc_Product_Get ${productId}`;
+};
+exports.qGetProductImage = (productId) => {
+  return `SELECT * FROM ProductImages WHERE ProductId = ${productId}`;
+};
+exports.qGetProductFeedback = (productId) => {
+  return `SELECT * FROM Feedback WHERE ProductId = ${productId}`;
+};
+exports.qGetFeedbackImage = (feedbackId) => {
+  return `SELECT * FROM FeedbackImages Where FeedbackId = ${feedbackId}`;
 };

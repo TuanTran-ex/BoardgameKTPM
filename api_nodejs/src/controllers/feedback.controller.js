@@ -7,7 +7,7 @@ const { getPathImgUpload } = require('../utils/utils');
 
 async function getAllFeedBack(req, res, next) {
   try {
-    await sql.query(query.getAllFeedBack());
+    await sql.query(query.qGetAllFeedback());
   } catch (err) {
     next(err);
   }
