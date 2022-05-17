@@ -7,12 +7,14 @@ const ProductRoute = require('./product.route');
 const CartRoute = require('./cart.route');
 const FeedbackRoute = require('./feedback.route');
 const OrderRoute = require('./order.route');
+const CategoryRouter = require('./category.route');
 function route(app) {
   app.get('/health', (req, res) => {
     res.send('OK');
   });
   app.use('/api/v1/auth', AuthRoute);
   app.use('/api/v1/products', ProductRoute);
+  app.use('/api/v1/categories', CategoryRouter);
   app.use(jwtAuth);
   app.get('/api/test', (req, res) => res.send(req.user));
   app.use('/api/v1/users', UserRoute);

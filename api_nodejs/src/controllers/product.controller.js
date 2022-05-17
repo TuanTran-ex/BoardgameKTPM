@@ -69,16 +69,31 @@ async function getProduct(req, res, next) {
   }
 }
 
-async function addProduct() {}
+async function addProduct(req, res, next) {
+  const {
+    id,
+    name,
+    weight,
+    time,
+    size,
+    shortDesc,
+    playersSuggest,
+    players,
+    origin,
+    mainImage,
+    description,
+    categoryId,
+    brand,
+    amount,
+    ageSuggest,
+  } = req.body;
+}
+
+async function updateProduct(req, res, next) {}
 
 async function deleteProduct(req, res, next) {
   const { id } = req.params;
   try {
-    // console.log(result);
-    res.status(200).json({
-      success: true,
-      message: 'Success delete product',
-    });
   } catch (err) {
     next(err);
   }

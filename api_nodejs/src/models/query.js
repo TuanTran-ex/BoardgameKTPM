@@ -151,9 +151,9 @@ exports.qDeleteVoucher = (id) => {
 };
 
 // Product
-exports.qGetProductById = (id) => {
-  return `SELECT * FROM Product WHERE Id = ${id}`;
-};
+// exports.qGetProductById = (id) => {
+//   return `SELECT * FROM Product WHERE Id = ${id}`;
+// };
 
 // Feedback
 exports.qGetFeedBackByProductAndOrder = (orderId, productId) => {
@@ -249,4 +249,60 @@ exports.qGetProductFeedback = (productId) => {
 };
 exports.qGetFeedbackImage = (feedbackId) => {
   return `SELECT * FROM FeedbackImages Where FeedbackId = ${feedbackId}`;
+};
+exports.qAddProduct = (
+  id,
+  name,
+  weight,
+  time,
+  size,
+  shortDesc,
+  playersSuggest,
+  players,
+  origin,
+  mainImage,
+  description,
+  categoryId,
+  brand,
+  amount,
+  ageSuggest
+) => {
+  return `INSERT INTO Product(
+    ${name ? ',Name' : ''}
+    ${weight ? ',Weigth' : ''}
+    ${time ? ',Time' : ''}
+    ${size ? ',Size' : ''}
+    ${shortDesc ? ',ShortDesc' : ''}
+    ${playersSuggest ? ',PlayersSuggest' : ''}
+    ${players ? ',Players' : ''}
+    ${origin ? ',Origin' : ''}
+    ${mainImage ? ',MainImage' : ''}
+    ${description ? ',Description' : ''}
+    ${categoryId ? ',CategoryId' : ''}
+    ${brand ? ',Brand' : ''}
+    ${amount ? ',Amount' : ''}
+    ${ageSuggest ? ',AgeSuggest' : ''})
+    VALUES (${name || ''})`;
+};
+
+// Category
+exports.qGetAllCategory = () => {
+  return `SELECT Id, Name From Category WHERE IsDelete = 0`;
+};
+exports.qGetCategoryByName = (name) => {
+  return `SELECT * FROM Category WHERE Name = '${name}'`;
+};
+exports.qGetCartegoryById = (id) => {
+  return `SELECT * FROM Category WHERE Id = ${id}`;
+};
+exports.qAddCategory = (name) => {
+  return `INSERT INTO Category(Name) VALUES ('${name}')`;
+};
+exports.qUpdateCategory = (id, name) => {
+  return `UPDATE Category SET Name = '${name}', UpdatedAt = GETDATE()
+    WHERE Id = ${id}`;
+};
+exports.qDeleteCategory = (id, name) => {
+  return `UPDATE Category SET IsDelete = 1, UpdatedAt = GETDATE()
+  WHERE Id = ${id}`;
 };
