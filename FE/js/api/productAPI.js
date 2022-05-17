@@ -12,16 +12,14 @@ const productAPI = {
         }
         await api.callAPI(params, getListProductHandler, errHandler);
     },
-    // async getVoucher(req, token, getVoucherHandler = () => {}, errHandler = () => {}) {
-    //     const params = {
-    //         url: `${voucherUrl}/${req.id}`,
-    //         method: "GET",
-    //         req: req,
-    //         token: token,
-    //         loading: true
-    //     }
-    //     await api.callAPI(params, getVoucherHandler, errHandler);
-    // }
+    async getProduct(req, getProductHandler = () => {}, errHandler = () => {}) {
+        const params = {
+            url: `${productUrl}/${req.id}`,
+            method: "GET",
+            loading: true
+        }
+        await api.callAPI(params, getProductHandler, errHandler);
+    }
 }
 
 export default productAPI;

@@ -25,6 +25,7 @@ const productList = {
     const req = {
       filter: this.filter,
       key: this.key,
+      category: this.category,
       page: this.pageActive,
       pageSize: 10
     }
@@ -57,9 +58,9 @@ const productList = {
             <div class="products-filter">
                 <span class="products-filter-heading">Sắp xếp theo</span>
                 <select name="" id="" class="products-filter-select">
-                    <option value="0" class="products-filter-option">Mới nhất</option>
-                    <option value="1" class="products-filter-option">Giá thấp</option>
-                    <option value="2" class="products-filter-option">Giá cao</option>
+                    <option value="0" class="products-filter-option" ${this.filter === 0 ? "selected" : ""}>Mới nhất</option>
+                    <option value="1" class="products-filter-option" ${this.filter === 1 ? "selected" : ""}>Giá thấp</option>
+                    <option value="2" class="products-filter-option" ${this.filter === 2 ? "selected" : ""}>Giá cao</option>
                 </select>
             </div>
             <div class="products-pagination">
@@ -201,6 +202,7 @@ const productList = {
   },
   filterHandler() {
     productList.filter = Number(filterSelect.value);
+    productList.pageActive = 1;
     productList.renderHtml();
   },
   remvoveEvents() {

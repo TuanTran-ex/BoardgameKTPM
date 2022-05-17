@@ -1,14 +1,17 @@
 const utils = {
     formatMoney(money) {
-        let formatMoney = "";
-        const moneyStr = money.toString();
-        for (let i = 0; i < moneyStr.length; i++) {
-            if (i !== 0 && (moneyStr.length - i) % 3 === 0) {
-                formatMoney += ".";
+        if (money) {
+            let formatMoney = "";
+            const moneyStr = money.toString();
+            for (let i = 0; i < moneyStr.length; i++) {
+                if (i !== 0 && (moneyStr.length - i) % 3 === 0) {
+                    formatMoney += ".";
+                }
+                formatMoney += moneyStr[i];
             }
-            formatMoney += moneyStr[i];
+            return formatMoney;
         }
-        return formatMoney;
+        return 0;
     },
     formatDate(datetime) {
         const index = datetime.indexOf("T");

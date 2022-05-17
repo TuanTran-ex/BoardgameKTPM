@@ -34,8 +34,11 @@
     cursor: pointer;
 }
 
-.category-item * {
-    cursor: default;
+.category-item.active {
+    /* background-color: #ffd662; */
+    /* color: var(--white); */
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .category-item::after {
@@ -53,7 +56,7 @@
 }
 
 .category-name {
-    margin-right: 3rem;
+    margin-right: 6rem;
 }
 
 .category-item:hover .category-products {

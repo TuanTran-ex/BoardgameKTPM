@@ -51,12 +51,12 @@ const header = {
                                   ${this.productList.map((item, index) => {
                                     if (index < 3)
                                     return `
-                                      <li class="header-cart-products-item" data-id="${item.id}">
+                                      <li class="header-cart-products-item" data-id="${item.Id}">
                                           <div class="header-cart-products-item-left">
-                                              <img src="${originUrl}/img/${item.image}" alt="" class="header-cart-products-image">
-                                              <span class="header-cart-products-name">${item.name}</span>
+                                              <img src="${item.MainImage ? item.MainImage : `${originUrl}/img/${item.MainImage}`}" alt="" class="header-cart-products-image">
+                                              <span class="header-cart-products-name">${item.Name}</span>
                                           </div>
-                                          <span class="header-cart-products-price">${utils.formatMoney(item.price)} VNĐ</span>
+                                          <span class="header-cart-products-price">${utils.formatMoney(item.Price)} VNĐ</span>
                                       </li>`;
                                   }).join("")}
                               </ul>
@@ -111,6 +111,7 @@ const header = {
   logoutHandler() {
     utils.removeCookie("token");
     utils.removeItemSession("user");
+    utils.removeItemSession("cart");
   },
   cartBtnHandler(e) {
     e.preventDefault();
