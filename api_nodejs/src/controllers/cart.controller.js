@@ -16,7 +16,7 @@ async function addCartItem(req, res, next) {
       success: true,
       message: 'Add item to cart success',
       data: {
-        cartId: newCartItem.recordset[0].ID,
+        cartProductId: newCartItem.recordset[0].ID,
       },
     });
   } catch (err) {

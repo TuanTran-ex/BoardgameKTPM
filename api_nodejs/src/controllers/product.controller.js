@@ -71,7 +71,6 @@ async function getProduct(req, res, next) {
 
 async function addProduct(req, res, next) {
   const {
-    id,
     name,
     weight,
     time,
@@ -87,6 +86,31 @@ async function addProduct(req, res, next) {
     amount,
     ageSuggest,
   } = req.body;
+  try {
+    const findProduct = await sql.query(query.qGetProductByName(name));
+    if (findProduct.recordset.length > 0)
+      return next(new CustomError(6, 400, 'Product is exists'));
+    await sql.query(
+      query.qAddProduct(
+        name,
+        weight,
+        time,
+        size,
+        shortDesc,
+        playersSuggest,
+        players,
+        origin,
+        mainImage,
+        description,
+        categoryId,
+        brand,
+        amount,
+        ageSuggest
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
 }
 
 async function updateProduct(req, res, next) {}
@@ -94,6 +118,10 @@ async function updateProduct(req, res, next) {}
 async function deleteProduct(req, res, next) {
   const { id } = req.params;
   try {
+    const findProduct = await sql.query(query.qGetProductById(id));
+    if (findProduct.recordset.length == 0)
+      return new CustomError(6, 400, 'Product is not exists');
+    await sql.query(query.qDeleteProduct(id));
   } catch (err) {
     next(err);
   }

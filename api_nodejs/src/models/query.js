@@ -23,11 +23,14 @@ exports.qLockUser = (id) => {
   return `EXECUTE proc_User_Lock ${id}`;
 };
 exports.qUpdateUser = (id, fullName, phone, dob, gender, email, avatar) => {
-  return `EXECUTE proc_User_Update ${id}, N'${fullName || 'NULL'}', '${
-    phone || 'NULL'
-  }', '${dob || 'NULL'}', '${gender || 'NULL'}', '${email || 'NULL'}', '${
-    avatar || 'NULL'
-  }'`;
+  const q = `EXECUTE proc_User_Update ${id}, ${
+    fullName ? "N'" + fullName + "'" : 'NULL'
+  }, ${phone ? "'" + phone + "'" : 'NULL'}, ${
+    dob ? "'" + dob + "'" : 'NULL'
+  }, ${gender || 'NULL'}, ${email ? "'" + email + "'" : 'NULL'}, ${
+    avatar ? "'" + avatar + "'" : 'NULL'
+  }`;
+  return q;
 };
 
 exports.qChangePass = (id, newPass) => {
@@ -237,6 +240,9 @@ exports.qCountProduct = (categoryId) => {
 exports.qGetProductById = (productId) => {
   return `EXECUTE proc_Product_Get ${productId}`;
 };
+exports.qGetProductByName = (productName) => {
+  return `SELECT * FROM Product WHERE Name = ${productName}`;
+};
 exports.qGetProductImage = (productId) => {
   return `SELECT * FROM ProductImages WHERE ProductId = ${productId}`;
 };
@@ -247,7 +253,6 @@ exports.qGetFeedbackImage = (feedbackId) => {
   return `SELECT * FROM FeedbackImages Where FeedbackId = ${feedbackId}`;
 };
 exports.qAddProduct = (
-  id,
   name,
   weight,
   time,
@@ -308,34 +313,26 @@ exports.qUpdateProduct = (
   size,
   amount
 ) => {
-  return `UPDATE Product
-    SET
-      ${name ? '' : ''}
-      ${weight ? ',Weigth' : ''}
-      ${time ? ',Time' : ''}
-      ${size ? ',Size' : ''}
-      ${shortDesc ? ',ShortDesc' : ''}
-      ${playersSuggest ? ',PlayersSuggest' : ''}
-      ${players ? ',Players' : ''}
-      ${origin ? ',Origin' : ''}
-      ${mainImage ? ',MainImage' : ''}
-      ${description ? ',Description' : ''}
-      ${categoryId ? ',CategoryId' : ''}
-      ${brand ? ',Brand' : ''}
-      ${amount ? ',Amount' : ''}
-      ${ageSuggest ? ',AgeSuggest' : ''})
-      VALUES (${name ? name + ',' : ''} ${weight ? weight + ',' : ''} 
-      ${time ? time + ',' : ''} ${size ? size + ',' : ''} ${
-    shortDesc ? shortDesc + ',' : ''
-  }
-      ${playersSuggest ? playersSuggest + ',' : ''} ${
-    players ? players + ',' : ''
-  } ${origin ? origin + ',' : ''} ${mainImage ? mainImage + ',' : ''} ${
-    description ? description + ',' : ''
-  } ${categoryId ? categoryId + ',' : ''}
-    ${brand ? brand + ',' : ''} ${amount ? amount + ',' : ''} ${
-    ageSuggest ? ageSuggest + ',' : ''
-  })`;
+  return `proc_Product_Update ${
+    (id,
+    name,
+    players,
+    playersSuggest,
+    time,
+    ageSuggest,
+    categoryId,
+    mainImage,
+    shortDesc,
+    description,
+    brand,
+    origin,
+    weight,
+    size,
+    amount)
+  }`;
+};
+exports.qDeleteProduct = (id) => {
+  return `proc_Product_Delete ${id}`;
 };
 
 // Category
