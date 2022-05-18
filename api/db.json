@@ -22,26 +22,7 @@
       "source": "Saysomething",
       "Iprice": "500.000VND",
       "Eprice": "200.000VND",
-      "id": 3
-    },
-    {
-      "name": "something",
-      "category": "Nothing",
-      "source": "Saysomething",
-      "Iprice": "500.000VND",
-      "Eprice": "200.000VND",
       "id": 4
-    },
-    {
-      "name": "something",
-      "category": "Nothing",
-      "source": "Saysomething",
-      "Iprice": "500.000VND",
-      "Eprice": "200.000VND",
-      "countpeople": "15-20 người",
-      "timeplay": "30-40 phút",
-      "age": "10-30 tuổi",
-      "id": 5
     }
   ],
   "category": [

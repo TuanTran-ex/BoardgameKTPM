@@ -1,4 +1,4 @@
-var productsApi = "http://localhost:3000/products";
+var productsApi = "http://localhost:3000/api/v1/products?page=1&pageSize=20";
 
 function start() {
   getProductions(renderProducts);
@@ -20,6 +20,7 @@ function getProductions(callback) {
 }
 
 function renderProducts(products) {
+  console.log(products);
   var listProductsBlock = document.querySelector("#list-products");
   var htmls = products
     .map(function (product) {
