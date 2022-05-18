@@ -1,3 +1,5 @@
+import utils from "../utils/utils.js"
+
 const userInfo = {
     renderHtml(user) {
         document.querySelector(".user-info-container").innerHTML = `
@@ -44,12 +46,12 @@ const userInfo = {
                 <li class="user-info-item">
                     <span class="user-info-label">Ngày sinh</span>
                     <span class="user-info-content">
-                        ${user.DOB ? user.DOB : "Chưa có"}
+                        ${user.DOB ? utils.formatDate(user.DOB) : "Chưa có"}
                     </span>
                 </li>
             </ul>
             <div class="user-info-avatar">
-                <img src="../img/${user.avatar ? user.avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
+                <img src="${user.Avatar ? user.Avatar : "../img/ava001.jpg"}" class="user-info-avatar-image"></img>
             </div>
         `
     },

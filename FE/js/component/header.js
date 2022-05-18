@@ -77,8 +77,7 @@ const header = {
                   ? `
                   <div class="header-user">
                       <span class="header-user-name">${user.Username}</span>
-                      <img src="${originUrl}/img/${
-                      user.Avatar ? user.Avatar : "ava001.jpg"
+                      <img src="${user.Avatar ? `${user.Avatar}` : `${originUrl}/img/ava001.jpg`}"
                     }" class="header-user-avatar"></img>
                       <ul class="header-user-list">
                           <li class="header-user-item">

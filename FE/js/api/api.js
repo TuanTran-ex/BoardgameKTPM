@@ -17,9 +17,7 @@ const api = {
         if (!file) {
             headers["Content-Type"] = "application/json"
         } else {
-            headers["Enctype"] = "multipart/form-data";
-            headers["Content-Type"] = false;
-            headers["Process-Data"] = false;
+            // headers["Content-Type"] = "multipart/form-data";
         }
         console.log(url, req)
         // const headers = token ? {

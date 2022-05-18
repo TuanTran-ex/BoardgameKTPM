@@ -26,6 +26,15 @@ const utils = {
         }
         return dateStr;
     },
+    getFormattedDate(date) {
+        let month = (1 + date.getMonth()).toString();
+        month = month.length > 1 ? month : '0' + month;
+
+        let day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        
+        return day + '/' + month;
+    },
     setCookie(cname, cvalue, exdays) {
         const d = new Date();
         d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
@@ -65,7 +74,7 @@ const utils = {
     calculationPrice(productList, voucher) {
         let totalPrice = 0;
         productList.forEach((item) => {
-            totalPrice += item.Price * item.Amount;
+            totalPrice += (item.Price ? item.Price : 0) * item.Amount;
         });
         return {
             totalPrice: totalPrice,

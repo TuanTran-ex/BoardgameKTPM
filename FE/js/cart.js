@@ -169,7 +169,7 @@ const app = {
     app.renderHtml();
     header.renderHtml();
   },
-  selectProduct(productItem) {
+  selectProductItem(productItem) {
     app.productList.forEach((product) => {
       if (product.ProductId == productItem.dataset.id) {
         if (!app.productSelected.includes(product)) {
@@ -178,7 +178,7 @@ const app = {
       }
     });
   },
-  deleteProduct(productItem) {
+  deleteProductItem(productItem) {
     app.productList.forEach((product) => {
       if (product.ProductId == productItem.dataset.id) {
         const index = app.productSelected.indexOf(product);
@@ -190,9 +190,9 @@ const app = {
     cartProductChecks.forEach((cartProductCheck) => {
       const productItem = cartProductCheck.closest(".cart-products-item");
       if (cartTotalCheck.checked) {
-        app.selectProduct(productItem);
+        app.selectProductItem(productItem);
       } else {
-        app.deleteProduct(productItem);
+        app.deleteProductItem(productItem);
       }
     });
     app.renderHtml();
@@ -200,9 +200,9 @@ const app = {
   productCheckHandler(e) {
     const productItem = e.target.closest(".cart-products-item");
     if (!e.target.checked) {
-      app.deleteProduct(productItem);
+      app.deleteProductItem(productItem);
     } else {
-      app.selectProduct(productItem);
+      app.selectProductItem(productItem);
     }
     app.renderHtml();
   },

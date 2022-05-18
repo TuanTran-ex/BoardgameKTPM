@@ -44,7 +44,13 @@ let cartOrderBtn;
 
 let addressList = [];
 
-const cart = JSON.parse(window.sessionStorage.cartSelected);
+let cart;
+
+const date = new Date();
+const beginDate = new Date();
+const endDate = new Date();
+beginDate.setDate(date.getDate() + 10);
+endDate.setDate(date.getDate() + 15);
 
 const app = {
     addressChange: false,
@@ -136,12 +142,12 @@ const app = {
                             return `
                                 <li class="cart-products-item">
                                     <div class="cart-product-info">
-                                        <img src="../img/${item.image}" alt="" class="cart-product-image">
-                                        <span class="cart-product-name">${item.name}</span>
+                                        <img src="${item.MainImage}" alt="" class="cart-product-image">
+                                        <span class="cart-product-name">${item.Name}</span>
                                     </div>
-                                    <span class="cart-product-price">${utils.formatMoney(item.price)} VNĐ</span>
-                                    <span class="cart-product-quantity">${item.quantity}</span>
-                                    <span class="cart-product-price">${utils.formatMoney(item.price * item.quantity)} VNĐ</span>
+                                    <span class="cart-product-price">${utils.formatMoney(item.Price)} VNĐ</span>
+                                    <span class="cart-product-quantity">${item.Amount}</span>
+                                    <span class="cart-product-price">${utils.formatMoney(item.Price * item.Amount)} VNĐ</span>
                                 </li>
                             `
                         }).join("")}
@@ -152,7 +158,7 @@ const app = {
                         <span>Hình thức thanh toán</span>
                         <div>
                             <span>Thanh toán khi nhận hàng</span>
-                            <span>Nhận hàng ngày 31/5-3/6</span>
+                            <span>Nhận hàng ngày ${utils.getFormattedDate(beginDate)} - ${utils.getFormattedDate(endDate)}</span>
                         </div>
                     </div>
                     <div class="cart-products-footer-money border-b-dashed">
@@ -404,6 +410,7 @@ const app = {
     },
     init() {
         if (utils.getCookie("token")) {
+            cart = utils.getSession("cartSelected");
             header.init();
             footerContainer.innerHTML = footer;
 

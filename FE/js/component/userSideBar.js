@@ -8,7 +8,7 @@ const userSideBar = {
     renderHtml(user, page) {
         document.querySelector(".user-sidebar").innerHTML = `
             <div class="user-sidebar-header">
-                <img src="../img/${user.Avatar ? user.Avatar : "ava001.jpg"}" class="user-sidebar-avatar"></img>
+                <img src="${user.Avatar ? user.Avatar : "../img/ava001.jpg"}" class="user-sidebar-avatar"></img>
                 <span class="user-sidebar-name">${user.Username}</span>
             </div>
             <ul class="user-sidebar-list">

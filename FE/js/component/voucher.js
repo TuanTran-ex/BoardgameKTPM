@@ -228,8 +228,12 @@ const voucher = {
         const token = utils.getCookie("token");
         await voucherAPI.getListVoucher(token, (res) => {
             console.log(res);
-            this.voucherAllList = res.data.voucher;
-        }, this.errHandler);
+            if (res.success) {
+                voucher.voucherAllList = res.data.voucher;
+            } else {
+                voucher.errHandler();
+            }
+        }, voucher.errHandler);
 
         this.renderHtml();
     }

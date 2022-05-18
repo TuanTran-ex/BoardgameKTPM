@@ -1,8 +1,6 @@
 import notifyModal from "./notifyModal.js";
-import account from "../account.js";
 import header from "./header.js"
 import userAPI from "../api/userAPI.js";
-import app from "../account.js";
 import utils from "../utils/utils.js";
 
 let userAvatarInput;
@@ -56,7 +54,7 @@ const userEdit = {
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-avatar">
-                    <img src="../img/${user.Avatar ? user.Avatar : "ava001.jpg"}" class="user-info-avatar-image"></img>
+                    <img src="${user.Avatar ? user.Avatar : "../img/ava001.jpg"}" class="user-info-avatar-image"></img>
                     <input type="file" id="user-avatar-input" accept="image/png, image/gif, image/jpeg" hidden>
                     <label for="user-avatar-input" class="btn btn-white">Chọn ảnh</label>
                 </div>
@@ -93,7 +91,7 @@ const userEdit = {
     errHandler() {
         notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
         notifyModal.showModal();
-        account.renderHtml();
+        userEdit.renderHtml();
         header.renderHtml();
     },
     async updateUserHandler(data) {
@@ -104,7 +102,6 @@ const userEdit = {
         form.append("dob", data.birthday);
         form.append("gender", data.gender);
         form.append("email", data.email);
-        form.append("address", "");
         form.append("avatar", userAvatarInput.files[0]);
         const token = utils.getCookie("token");
         await userAPI.updateUser(form, token, (res) => {
@@ -117,7 +114,7 @@ const userEdit = {
                 userEdit.errHandler();
             }
             header.renderHtml();
-            account.renderHtml();
+            userEdit.renderHtml();
         }, userEdit.errHandler);
     },
     avatarChangeHandler(e) {

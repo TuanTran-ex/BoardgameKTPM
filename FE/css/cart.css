@@ -375,6 +375,7 @@
 .cart-products-footer-note>div:last-child {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     font-size: 1.6rem;
     line-height: 2.4rem;
 }

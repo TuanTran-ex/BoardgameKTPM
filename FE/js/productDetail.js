@@ -296,7 +296,9 @@ const app = {
                     console.log(res)
                     if (res.success) {
                         cart.push({...app.product, 
-                            quantity: app.quantity
+                            Id: res.data.cartId,
+                            ProductId: app.product.Id,
+                            Amount: app.quantity
                         });
                         window.sessionStorage.cart = JSON.stringify(cart);
                         notifyModal.init("Thêm vào giỏ hàng thành công");
