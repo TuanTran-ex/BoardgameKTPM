@@ -9,12 +9,15 @@ async function addCartItem(req, res, next) {
     const cart = await sql.query(query.qGetCartId(userId));
     if (cart.recordset.length == 0)
       return next(new CustomError(6, 400, 'Cart not exists'));
-    await sql.query(
+    const newCartItem = await sql.query(
       query.qAddCartItem(cart.recordset[0].Id, productId, amount)
     );
     return res.status(200).json({
       success: true,
       message: 'Add item to cart success',
+      data: {
+        cartId: newCartItem.recordset[0].ID,
+      },
     });
   } catch (err) {
     next(err);
