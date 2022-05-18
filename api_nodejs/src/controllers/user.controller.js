@@ -64,7 +64,7 @@ exports.updateUser = async (req, res, next) => {
     return res.json({
       success: true,
       message: 'Update user success',
-      data: result.recordset,
+      data: { users: result.recordset, avatarPath: avatarPath },
     });
     // return res.send('ok');
   }

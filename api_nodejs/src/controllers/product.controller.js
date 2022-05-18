@@ -1,4 +1,5 @@
 const sql = require('mssql');
+const jwt = require('jsonwebtoken');
 const {
   servGetAllProduct,
   servDeleteProduct,
@@ -11,28 +12,52 @@ const CustomError = require('../class/customError');
 // List Product(mainImg, subScr, name, price), countAll
 async function getAllProduct(req, res, next) {
   const { category, filter, key, page, pageSize } = req.query;
-  try {
-    const listProduct = await sql.query(
-      query.qGetAllProduct(category, filter, key, page, pageSize)
-    );
-    let totalCount;
-    if (key) totalCount = listProduct.recordset.length;
-    else {
-      const resCount = await sql.query(query.qCountProduct(category));
-      if (resCount.recordset.length > 0)
-        totalCount = resCount.recordset[0].CountProduct;
-      else totalCount = 0;
+  let isAdmin;
+  if (!req.get('Authorization')) isAdmin = false;
+  else {
+    let token = req.get('Authorization');
+    token = token.replace('Bearer ', '');
+    const decode = jwt.verify(token, process.env.PRIVATE_KEY);
+    if (decode.user.role == 1) {
+      isAdmin = true;
+    } else isAdmin = false;
+  }
+  if (!isAdmin) {
+    try {
+      const listProduct = await sql.query(
+        query.qGetAllProduct(category, filter, key, page, pageSize)
+      );
+      let totalCount;
+      if (key) totalCount = listProduct.recordset.length;
+      else {
+        const resCount = await sql.query(query.qCountProduct(category));
+        if (resCount.recordset.length > 0)
+          totalCount = resCount.recordset[0].CountProduct;
+        else totalCount = 0;
+      }
+      res.status(200).json({
+        success: true,
+        message: 'Get all product success',
+        data: {
+          count: totalCount,
+          products: listProduct.recordset,
+        },
+      });
+    } catch (err) {
+      next(err);
     }
+  } else {
+    // name, nguon goc, gia ban, amount, ten loai,
+    const listProduct = await sql.query(
+      query.qGetAllProductAdmin(category, filter, key, page, pageSize)
+    );
     res.status(200).json({
       success: true,
       message: 'Get all product success',
       data: {
-        count: totalCount,
         products: listProduct.recordset,
       },
     });
-  } catch (err) {
-    next(err);
   }
 }
 
