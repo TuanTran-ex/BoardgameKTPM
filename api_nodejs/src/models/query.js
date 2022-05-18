@@ -352,10 +352,10 @@ exports.qGetCartegoryById = (id) => {
   return `SELECT * FROM Category WHERE Id = ${id}`;
 };
 exports.qAddCategory = (name) => {
-  return `INSERT INTO Category(Name) VALUES ('${name}')`;
+  return `INSERT INTO Category(Name) VALUES (N'${name}')`;
 };
 exports.qUpdateCategory = (id, name) => {
-  return `UPDATE Category SET Name = '${name}', UpdatedAt = GETDATE()
+  return `UPDATE Category SET Name = N'${name}', UpdatedAt = GETDATE()
     WHERE Id = ${id}`;
 };
 exports.qDeleteCategory = (id, name) => {
