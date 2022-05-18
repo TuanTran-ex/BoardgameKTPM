@@ -24,11 +24,15 @@ async function addCartItem(req, res, next) {
 async function updateCartItem(req, res, next) {
   const { id } = req.params;
   const { amount } = req.body;
+  const userID = req.user.user.id;
   try {
-    const cartProduct = await sql.query(query.qGetCartProductById(id));
+    const cartProduct = await sql.query(
+      query.qGetCartProductByProductId(id, userID)
+    );
     if (cartProduct.recordset.length == 0)
       return next(new CustomError(6, 400, 'Product not exists in Cart'));
-    await sql.query(query.qUpdateCartItem(id, amount));
+    console.log(cartProduct.recordset[0]);
+    await sql.query(query.qUpdateCartItem(cartProduct.recordset[0].Id, amount));
     return res
       .status(200)
       .json({ success: true, message: 'Update cart item success' });

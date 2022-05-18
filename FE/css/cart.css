@@ -221,6 +221,7 @@
     align-self: flex-start;
     font-size: 2rem;
     font-weight: 600;
+    line-height: 2.4rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;

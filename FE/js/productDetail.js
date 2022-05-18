@@ -265,17 +265,17 @@ const app = {
             window.location.href = `${window.location.origin}/FE/pages/login.html`;
         } else {
             const cart = JSON.parse(window.sessionStorage.cart);
-            const productItem = cart.find(item => item.Id == app.product.Id);
+            const productItem = cart.find(item => item.ProductId == app.product.Id);
             if (productItem) {
                 const req = {
                     productId: productId,
-                    amount: app.quantity
+                    amount: Number(productItem.Amount) + app.quantity
                 }
                 await cartAPI.updateCart(req, token, (res) => {
                     console.log(res)
                     if (res.success) {
                         const index = cart.indexOf(productItem);
-                        cart[index].quantity += app.product.quantity;
+                        cart[index].Amount = Number(cart[index].Amount) + app.quantity;
     
                         window.sessionStorage.cart = JSON.stringify(cart);
                         notifyModal.init("Thêm vào giỏ hàng thành công");

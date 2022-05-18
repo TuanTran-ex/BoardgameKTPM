@@ -3,14 +3,6 @@ import api from "./api.js"
 const cartUrl = `${api.route}/cart`
 
 const cartAPI = {
-    // async getListCategory(getListCategoryHandler = () => {}, errHandler = () => {}) {
-    //     const params = {
-    //         url: categoryUrl,
-    //         method: "GET",
-    //         loading: true
-    //     }
-    //     await api.callAPI(params, getListCategoryHandler, errHandler);
-    // },
     async addCart(req, token, addCartHandler = () => {}, errHandler = () => {}) {
         const params = {
             url: cartUrl,
@@ -21,16 +13,24 @@ const cartAPI = {
         }
         await api.callAPI(params, addCartHandler, errHandler);
     },
-    async updateCart(req, token, updateCartHandler = () => {}, errHandler = () => {}) {
+    async updateCart(req, token, updateCartHandler = () => {}, errHandler = () => {}, loading = true) {
         const params = {
             url: `${cartUrl}/${req.productId}`,
             method: "PATCH",
             token: token,
             req: req,
-            loading: true
+            loading: loading
         }
-        console.log(params)
         await api.callAPI(params, updateCartHandler, errHandler);
+    },
+    async deleteCart(req, token, deleteCartHandler = () => {}, errHandler = () => {}, loading = true) {
+        const params = {
+            url: `${cartUrl}/${req.id}`,
+            method: "DELETE",
+            token: token,
+            loading: loading
+        }
+        await api.callAPI(params, deleteCartHandler, errHandler);
     },
 }
 

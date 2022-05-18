@@ -21,12 +21,13 @@ const api = {
             headers["Content-Type"] = false;
             headers["Process-Data"] = false;
         }
+        console.log(url, req)
         // const headers = token ? {
         //     "Authorization" : `Bearer ${token}`
         // } : {
         //     "Content-Type" : file ? "multipart/form-data" : "application/json",
         // }
-        const obj = method === "GET" ? {
+        const obj = method === "GET" || method === "DELETE" ? {
             method: method,
             headers: headers,
         } : {

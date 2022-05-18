@@ -65,7 +65,7 @@ const utils = {
     calculationPrice(productList, voucher) {
         let totalPrice = 0;
         productList.forEach((item) => {
-            totalPrice += item.price * item.quantity;
+            totalPrice += item.Price * item.Amount;
         });
         return {
             totalPrice: totalPrice,

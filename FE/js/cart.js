@@ -5,10 +5,11 @@ import notifyModal from "./component/notifyModal.js";
 import modal from "./utils/modal.js";
 import utils from "./utils/utils.js"
 
+import cartAPI from "./api/cartAPI.js"
+
 const footerContainer = document.querySelector(".footer");
 
-const productSelected = [];
-
+let cartProductItems;
 let cartProductChecks;
 let cartTotalCheck;
 let cartProductDeletes;
@@ -19,28 +20,23 @@ let cartProductQuantitys;
 let cartProductsVoucherBtn;
 let cartPaymentBtn;
 
-const product = {
-  image: "pd001.jpg",
-  name: "Catan US",
-  // price: 100,
-  // quantity: 1,
-};
-
-const productList = utils.getSession("cart");
+const token = utils.getCookie("token");
 
 const app = {
   voucher: 0,
   price: {},
+  productList: [],
+  productSelected: [],
   renderHtml() {
     this.voucher = voucher.voucherSelected.Value ? voucher.voucherSelected.Value : 0;
-    this.price = utils.calculationPrice(productSelected, this.voucher);
+    this.price = utils.calculationPrice(this.productSelected, this.voucher);
     document.querySelector(".cart").innerHTML = `
         <div class="cart-header border-b-solid">
             <span>Giỏ hàng</span>
         </div>
         <div class="cart-content">
         ${
-          productList.length === 0
+          this.productList.length === 0
             ? `
             <div class="cart-empty">
                 <img src="../img/cart001.png" alt="" class="cart-empty-image">
@@ -58,41 +54,37 @@ const app = {
             </div>
             <div class="cart-products">
                 <ul class="cart-products-list">
-                    ${productList
+                    ${this.productList
                       .map((item) => {
                         return `
-                            <li class="cart-products-item" data-id="${item.id}">
+                            <li class="cart-products-item" data-id="${item.ProductId}">
                                 <div class="cart-product-info">
                                     <div>
                                         <input class="cart-product-check" type="checkbox" ${
-                                          productSelected.includes(item)
+                                          this.productSelected.includes(item)
                                             ? "checked"
                                             : ""
                                         }>
                                     </div>
-                                    <img src="../img/${
-                                      item.image
-                                    }" alt="" class="cart-product-image">
-                                    <span class="cart-product-name">${
-                                      item.name
-                                    }</span>
+                                    <img src="${item.MainImage}" alt="" class="cart-product-image">
+                                    <span class="cart-product-name">${item.Name}</span>
                                 </div>
                                 <span class="cart-product-price">${
-                                  utils.formatMoney(item.price)
+                                  utils.formatMoney(item.Price)
                                 } VNĐ</span>
                                 <div class="cart-product-quantity">
                                     <div class="cart-product-quantity-dec">
                                         <span>-</span>
                                     </div>
                                     <input type="number" value="${
-                                      item.quantity
+                                      item.Amount
                                     }" class="cart-product-quantity-number">
                                     <div class="cart-product-quantity-inc">
                                         <span>+</span>
                                     </div>
                                 </div>
                                 <span class="cart-product-price">${
-                                  utils.formatMoney(item.price * item.quantity)
+                                  utils.formatMoney(item.Price * item.Amount)
                                 } VNĐ</span>
                                 <div class="cart-product-action">
                                     <span class="cart-product-delete">Xóa</span>
@@ -123,7 +115,7 @@ const app = {
                 <div class="cart-products-footer-action">
                     <div class="cart-products-footer-left">
                         <input type="checkbox" id="select-all" ${
-                          productSelected.length === productList.length
+                          this.productSelected.length === this.productList.length
                             ? "checked"
                             : ""
                         }>
@@ -134,7 +126,7 @@ const app = {
                         <div class="cart-products-total-price">
                             <div>
                                 <span class="text-middle">Tổng thanh toán (${
-                                  productSelected.length
+                                  this.productSelected.length
                                 } sản phẩm): </span>
                                 <span class="text-small">Tiết kiệm</span>
                             </div>
@@ -158,6 +150,7 @@ const app = {
 
     this.removeEvents();
 
+    cartProductItems = document.querySelectorAll(".cart-product-item");
     cartProductChecks = document.querySelectorAll(".cart-product-check");
     cartTotalCheck = document.querySelector("#select-all");
     cartProductDeletes = document.querySelectorAll(".cart-product-delete");
@@ -170,20 +163,26 @@ const app = {
 
     this.handleEvents();
   },
+  errHandler() {
+    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+    notifyModal.showModal();
+    app.renderHtml();
+    header.renderHtml();
+  },
   selectProduct(productItem) {
-    productList.forEach((product) => {
-      if (product.id == productItem.dataset.id) {
-        if (!productSelected.includes(product)) {
-          productSelected.push(product);
+    app.productList.forEach((product) => {
+      if (product.ProductId == productItem.dataset.id) {
+        if (!app.productSelected.includes(product)) {
+          app.productSelected.push(product);
         }
       }
     });
   },
   deleteProduct(productItem) {
-    productList.forEach((product) => {
-      if (product.id == productItem.dataset.id) {
-        const index = productSelected.indexOf(product);
-        if (index != -1) productSelected.splice(index, 1);
+    app.productList.forEach((product) => {
+      if (product.ProductId == productItem.dataset.id) {
+        const index = app.productSelected.indexOf(product);
+        if (index != -1) app.productSelected.splice(index, 1);
       }
     });
   },
@@ -208,75 +207,103 @@ const app = {
     app.renderHtml();
   },
   productDeleteHandler(e) {
-    productList.forEach((product) => {
+    app.productList.forEach((product) => {
       const productItem = e.target.closest(".cart-products-item");
-      if (product.id == productItem.dataset.id) {
-        const index = productList.indexOf(product);
-        const index2 = productSelected.indexOf(product);
-        if (index != -1) productList.splice(index, 1);
-        if (index2 != -1) productSelected.splice(index2, 1);
-
-        // Call delete cart item API
-
-        // Set cart session
-        utils.setSession("cart", productList);
+      if (product.ProductId == productItem.dataset.id) {
+        const index = app.productList.indexOf(product);
+        const index2 = app.productSelected.indexOf(product);
+        app.deleteProduct(product.Id, index, index2);
       }
     });
     header.renderHtml();
     app.renderHtml();
   },
   productDeleteSelectedHandler() {
-    productSelected.forEach((product) => {
-      const index = productList.indexOf(product);
-      if (index != -1) productList.splice(index, 1);
-      utils.setSession("cart", productList);
+    app.productSelected.forEach((product) => {
+      const index = app.productList.indexOf(product);
+      if (index != -1) app.productList.splice(index, 1);
+      utils.setSession("cart", app.productList);
     });
-    productSelected.splice(0, productSelected.length);
+    app.productSelected.splice(0, app.productSelected.length);
     app.renderHtml();
     header.renderHtml();
   },
+  async deleteProduct(cartProductId, productListIndex, productSelectedIndex) {
+    const req = {
+      id: cartProductId,
+    }
+    await cartAPI.deleteCart(req, token, (res) => {
+      console.log(res);
+      if (res.success) {
+          if (productListIndex != -1) app.productList.splice(productListIndex, 1);
+          if (productSelectedIndex != -1) app.productSelected.splice(productSelectedIndex, 1);
+
+          utils.setSession("cart", app.productList);
+      }
+    }, app.errHandler, false);
+    app.renderHtml();
+    header.renderHtml();
+    return;
+  },
+  async updateQuantity(productId, amount, index) {
+    const req = {
+      productId: productId,
+      amount: amount
+    }
+    await cartAPI.updateCart(req, token, (res) => {
+      console.log(res);
+      if (res.success) {
+        app.productList[index].Amount = amount;
+        utils.setSession("cart", app.productList);
+      } else {
+        app.errHandler();
+      }
+    }, app.errHandler, false);
+    app.renderHtml();
+    header.renderHtml();
+    return;
+  },
   productDecHandler(e) {
     const productItem = e.target.closest(".cart-products-item");
-    productList.forEach((product) => {
-      if (product.id == productItem.dataset.id) {
-        const index = productList.indexOf(product);
+    app.productList.forEach(async (product) => {
+      if (product.ProductId == productItem.dataset.id) {
+        const index = app.productList.indexOf(product);
         if (index != -1) {
-          if (productList[index].quantity > 1) {
-            productList[index].quantity--;
-            utils.setSession("cart", productList);
-            return;
-          }
+          await app.updateQuantity(product.ProductId, app.productList[index].Amount - 1, index)
         }
+        return;
       }
     });
-    app.renderHtml();
   },
   productIncHandler(e) {
     const productItem = e.target.closest(".cart-products-item");
-    productList.forEach((product) => {
-      if (product.id == productItem.dataset.id) {
-        const index = productList.indexOf(product);
+    app.productList.forEach(async (product) => {
+      if (product.ProductId == productItem.dataset.id) {
+        const index = app.productList.indexOf(product);
         if (index != -1) {
-          productList[index].quantity++;
-          utils.setSession("cart", productList);
-        } 
+          if (app.productList[index].Amount < app.productList[index].RemainingAmount) {
+            await app.updateQuantity(product.ProductId, app.productList[index].Amount + 1, index)
+          }
+          return;
+        }
       }
     });
-    app.renderHtml();
   },
   productQuantityHandler(e) {
-    console.log(e.target.value)
     if (!e.target.value || e.target.value < 1) {
       e.target.value = 1;
     }
     const productItem = e.target.closest(".cart-products-item");
-    productList.forEach((product) => {
-      if (product.id == productItem.dataset.id) {
-        const index = productList.indexOf(product);
+    app.productList.forEach(async (product) => {
+      if (product.ProductId == productItem.dataset.id) {
+        const index = app.productList.indexOf(product);
+        if (e.target.value > app.productList[index].RemainingAmount) {
+          e.target.value = app.productList[index].RemainingAmount;
+        }
         if (index != -1) {
-          productList[index].quantity = e.target.value;
-          utils.setSession("cart", productList);
+          await app.updateQuantity(product.ProductId, e.target.value, index);
         } 
+        return;
       }
     });
     app.renderHtml();
@@ -304,7 +331,7 @@ const app = {
     app.renderHtml();
   },
   cartPaymentHandler (e) {
-    if (productSelected.length === 0) {
+    if (app.productSelected.length === 0) {
       e.preventDefault();
       notifyModal.init("Bạn chưa chọn sản phẩm nào để mua", () => header.renderHtml(), 2);
       notifyModal.showModal();
@@ -312,10 +339,10 @@ const app = {
     } else {
       e.preventDefault();
       utils.setSession("cartSelected", {
-        productList: productSelected,
+        productList: app.productSelected,
         voucher: app.voucher,
         price: app.price,
-        quantity: productSelected.length
+        quantity: app.productSelected.length
       })
       window.location.href = `${window.location.origin}/FE/pages/payment.html`;
     }
@@ -415,6 +442,8 @@ const app = {
   init() {
     header.init();
     footerContainer.innerHTML = footer;
+    this.productList = utils.getSession("cart");
+    this.productSelected = [];
     this.renderHtml();
   },
 };
