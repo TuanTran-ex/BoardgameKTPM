@@ -210,9 +210,7 @@ const app = {
     app.productList.forEach((product) => {
       const productItem = e.target.closest(".cart-products-item");
       if (product.ProductId == productItem.dataset.id) {
-        const index = app.productList.indexOf(product);
-        const index2 = app.productSelected.indexOf(product);
-        app.deleteProduct(product.Id, index, index2);
+        app.deleteProduct(product.Id, product.ProductId);
       }
     });
     header.renderHtml();
@@ -221,20 +219,20 @@ const app = {
   productDeleteSelectedHandler() {
     app.productSelected.forEach((product) => {
       const index = app.productList.indexOf(product);
-      if (index != -1) app.productList.splice(index, 1);
-      utils.setSession("cart", app.productList);
+      if (index != -1) {
+        app.deleteProduct(product.Id, product.ProductId);
+      }
     });
-    app.productSelected.splice(0, app.productSelected.length);
-    app.renderHtml();
-    header.renderHtml();
   },
-  async deleteProduct(cartProductId, productListIndex, productSelectedIndex) {
+  async deleteProduct(cartProductId, productId) {
     const req = {
       id: cartProductId,
     }
     await cartAPI.deleteCart(req, token, (res) => {
       console.log(res);
       if (res.success) {
+          const productListIndex = app.productList.indexOf(app.productList.find(item => item.ProductId == productId));
+          const productSelectedIndex = app.productSelected.indexOf(app.productSelected.find(item => item.ProductId == productId));
           if (productListIndex != -1) app.productList.splice(productListIndex, 1);
           if (productSelectedIndex != -1) app.productSelected.splice(productSelectedIndex, 1);
 
