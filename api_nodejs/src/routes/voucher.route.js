@@ -1,4 +1,5 @@
 const express = require('express');
+const { jwtAuth, checkAdmin } = require('../middlewares/authorization');
 const {
   getAllVoucher,
   getVoucher,
@@ -6,11 +7,11 @@ const {
   updateVoucher,
   deleteVoucher,
 } = require('../controllers/voucher.controller');
-const { checkAdmin } = require('../middlewares/authorization');
 const router = express.Router();
 
-router.get('/', checkAdmin, getAllVoucher);
+router.get('/', getAllVoucher);
 router.get('/:id', getVoucher);
+router.use(jwtAuth);
 router.post('/', checkAdmin, addVoucher);
 router.patch('/:id', checkAdmin, updateVoucher);
 router.delete('/:id', checkAdmin, deleteVoucher);
