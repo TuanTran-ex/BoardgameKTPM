@@ -48,52 +48,43 @@
     {
       "category_name": "việt nam zô địch",
       "category_count": 0,
-      "id": 1
+      "id": 13
     },
     {
       "category_name": "zá",
       "category_count": 0,
       "isDelete": false,
-      "id": 2
+      "id": 20
     },
     {
       "category_name": "â",
       "category_count": 0,
       "isDelete": false,
-      "id": 3
+      "id": 21
     },
     {
       "category_name": "fffff",
       "category_count": 0,
       "isDelete": false,
-      "id": 4
+      "id": 23
     },
     {
       "category_name": "bruhh",
       "category_count": 0,
       "isDelete": false,
-      "id": 5
+      "id": 25
     },
     {
       "category_name": "ưe3",
       "category_count": 0,
       "isDelete": false,
-      "id": 6
+      "id": 26
     },
     {
       "category_name": "g3q",
       "category_count": 0,
       "isDelete": false,
-      "id": 7
-    },
-    {
-      "id": 8
-    },
-    {
-      "id": 9
-    },
-    {
-      "id": 10
+      "id": 27
     }
   ]
 }
