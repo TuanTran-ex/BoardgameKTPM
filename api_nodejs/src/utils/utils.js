@@ -1,3 +1,4 @@
 exports.getPathImgUpload = (path) => {
-  return path.replace('public/', 'http://localhost:3000/');
+  const newPath = path.replaceAll('\\', '/');
+  return newPath.replace('public/', 'http://localhost:3000/');
 };
