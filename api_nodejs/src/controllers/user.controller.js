@@ -55,14 +55,16 @@ exports.updateUser = async (req, res, next) => {
   } else {
     const { fullName, phone, dob, gender, email } = req.body;
     const avatar = req.file;
-    const avatarPath = getPathImgUpload(avatar.path);
+    let avatarPath;
+    if (!avatar) avatarPath = null;
+    else avatarPath = getPathImgUpload(avatar.path);
     const result = await sql.query(
       query.qUpdateUser(id, fullName, phone, dob, gender, email, avatarPath)
     );
     return res.json({
       success: true,
       message: 'Update user success',
-      data: result.recordset,
+      data: { users: result.recordset, avatarPath: avatarPath },
     });
     // return res.send('ok');
   }
