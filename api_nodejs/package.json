@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js"
   },
   "dependencies": {
     "axios": "^0.27.2",
