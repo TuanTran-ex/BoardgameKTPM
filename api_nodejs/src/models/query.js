@@ -22,21 +22,12 @@ exports.qFindUserByUsername = (username) => {
 exports.qLockUser = (id) => {
   return `EXECUTE proc_User_Lock ${id}`;
 };
-exports.qUpdateUser = (
-  id,
-  fullName,
-  phone,
-  dob,
-  gender,
-  email,
-  avatar,
-  address
-) => {
-  return `EXECUTE proc_User_Update ${id}, N'${fullName || 'NULL'}, '${
+exports.qUpdateUser = (id, fullName, phone, dob, gender, email, avatar) => {
+  return `EXECUTE proc_User_Update ${id}, N'${fullName || 'NULL'}', '${
     phone || 'NULL'
-  }, '${dob || 'NULL'}', '${gender || 'NULL'}', '${email || 'NULL'}', '${
+  }', '${dob || 'NULL'}', '${gender || 'NULL'}', '${email || 'NULL'}', '${
     avatar || 'NULL'
-  }', '${address || 'NULL'}'`;
+  }'`;
 };
 
 exports.qChangePass = (id, newPass) => {
