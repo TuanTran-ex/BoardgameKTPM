@@ -9,7 +9,8 @@ let userAvatar;
 const userEdit = {
     virtualURL: "",
     message: "",
-    renderHtml(user) {
+    renderHtml() {
+        const user = utils.getSession("user");
         document.querySelector(".user-info-container").innerHTML = `
             <form class="user-info-form">
                 <div class="user-info-form-group">
@@ -50,7 +51,7 @@ const userEdit = {
                 </div>
                 <div class="user-info-form-group">
                     <label class="user-info-form-label">Ngày sinh</label>
-                    <input type="date" class="user-info-form-control" value="${user.DOB ? user.DOB : ""}" name="birthday">
+                    <input type="date" class="user-info-form-control" value="${user.DOB ? utils.inputFormatDate(user.DOB) : ""}" name="birthday">
                     <span class="user-info-form-message"></span>
                 </div>
                 <div class="user-info-avatar">
@@ -97,7 +98,7 @@ const userEdit = {
     async updateUserHandler(data) {
         const form = new FormData();
         form.append("id", utils.getSession("user").Id);
-        form.append("fullName", data.fullName);
+        form.append("fullName", data.fullname);
         form.append("phone", data.phone);
         form.append("dob", data.birthday);
         form.append("gender", data.gender);
@@ -109,7 +110,19 @@ const userEdit = {
             if (res.success) {
                 notifyModal.init("Cập nhật hồ sơ");
                 notifyModal.showModal();
-                app.message = "";
+                const user = utils.getSession("user");
+
+                const newUser = {
+                    ...user,
+                    FullName: data.fullname,
+                    Email: data.email,
+                    Phone: data.phone,
+                    Gender: data.gender ? data.gender : null,
+                    DOB: data.birthday,
+                    // Avatar: res.data.avatarPath
+                }
+
+                utils.setSession("user", newUser);
             } else {
                 userEdit.errHandler();
             }
@@ -133,8 +146,8 @@ const userEdit = {
             userAvatarInput.addEventListener("change", this.avatarChangeHandler);       
         }
     },
-    init(user) {
-        this.renderHtml(user);
+    init() {
+        this.renderHtml();
     }
 }
 

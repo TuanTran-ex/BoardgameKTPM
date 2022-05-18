@@ -13,18 +13,30 @@ const utils = {
         }
         return 0;
     },
+    inputFormatDate(datetime) {
+        const index = datetime.indexOf("T");
+        if (index !== -1) {
+            const str = datetime.slice(0, index);
+            return str;
+        }
+        return datetime;
+    },
     formatDate(datetime) {
         const index = datetime.indexOf("T");
-        const str = datetime.slice(0, index);
-        const arr = str.split("-");
-        let dateStr = "";
-        for (let i = arr.length - 1; i >= 0; i--) {
-            dateStr += arr[i];
-            if (i !== 0) {
-                dateStr += "-";
+        if (index !== -1) {
+            const str = datetime.slice(0, index);
+            const arr = str.split("-");
+            let dateStr = "";
+            for (let i = arr.length - 1; i >= 0; i--) {
+                dateStr += arr[i];
+                if (i !== 0) {
+                    dateStr += "-";
+                }
             }
-        }
-        return dateStr;
+            return dateStr;
+        } 
+        console.log(datetime)
+        return datetime;
     },
     getFormattedDate(date) {
         let month = (1 + date.getMonth()).toString();

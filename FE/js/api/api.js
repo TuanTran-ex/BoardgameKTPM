@@ -19,7 +19,7 @@ const api = {
         } else {
             // headers["Content-Type"] = "multipart/form-data";
         }
-        console.log(url, req)
+        console.log(url, headers, req);
         // const headers = token ? {
         //     "Authorization" : `Bearer ${token}`
         // } : {
