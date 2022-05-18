@@ -89,6 +89,12 @@ exports.qUpdateCartItem = (id, amount) => {
 exports.qGetCartProductById = (id) => {
   return `SELECT * FROM CartProduct WHERE Id = ${id}`;
 };
+exports.qGetCartProductByProductId = (productId, userId) => {
+  return `SELECT cp.Id 
+          FROM	Cart c JOIN CartProduct cp ON c.Id = cp.CartId 
+                JOIN [User] u ON u.Id = c.UserId  
+          WHERE cp.ProductId = ${productId} AND u.Id = ${userId}`;
+};
 exports.qDeleteCartProductById = (id) => {
   return `DELETE FROM CartProduct WHERE Id= ${id}`;
 };
@@ -105,7 +111,7 @@ exports.qGetAllVoucher = (page, pageSize, status) => {
       status || 'NULL'
     }`;
   } else {
-    return `SELECT * FROM Voucher WHERE IsDelete = 0 AND status =1`;
+    return `SELECT * FROM Voucher WHERE IsDelete = 0 AND status = 1`;
   }
 };
 
@@ -282,7 +288,64 @@ exports.qAddProduct = (
     ${brand ? ',Brand' : ''}
     ${amount ? ',Amount' : ''}
     ${ageSuggest ? ',AgeSuggest' : ''})
-    VALUES (${name || ''})`;
+    VALUES (${name ? name + ',' : ''} ${weight ? weight + ',' : ''} 
+    ${time ? time + ',' : ''} ${size ? size + ',' : ''} ${
+    shortDesc ? shortDesc + ',' : ''
+  }
+    ${playersSuggest ? playersSuggest + ',' : ''} ${
+    players ? players + ',' : ''
+  } ${origin ? origin + ',' : ''} ${mainImage ? mainImage + ',' : ''} ${
+    description ? description + ',' : ''
+  } ${categoryId ? categoryId + ',' : ''}
+  ${brand ? brand + ',' : ''} ${amount ? amount + ',' : ''} ${
+    ageSuggest ? ageSuggest + ',' : ''
+  })`;
+};
+exports.qUpdateProduct = (
+  id,
+  name,
+  players,
+  playersSuggest,
+  time,
+  ageSuggest,
+  categoryId,
+  mainImage,
+  shortDesc,
+  description,
+  brand,
+  origin,
+  weight,
+  size,
+  amount
+) => {
+  return `UPDATE Product
+    SET
+      ${name ? '' : ''}
+      ${weight ? ',Weigth' : ''}
+      ${time ? ',Time' : ''}
+      ${size ? ',Size' : ''}
+      ${shortDesc ? ',ShortDesc' : ''}
+      ${playersSuggest ? ',PlayersSuggest' : ''}
+      ${players ? ',Players' : ''}
+      ${origin ? ',Origin' : ''}
+      ${mainImage ? ',MainImage' : ''}
+      ${description ? ',Description' : ''}
+      ${categoryId ? ',CategoryId' : ''}
+      ${brand ? ',Brand' : ''}
+      ${amount ? ',Amount' : ''}
+      ${ageSuggest ? ',AgeSuggest' : ''})
+      VALUES (${name ? name + ',' : ''} ${weight ? weight + ',' : ''} 
+      ${time ? time + ',' : ''} ${size ? size + ',' : ''} ${
+    shortDesc ? shortDesc + ',' : ''
+  }
+      ${playersSuggest ? playersSuggest + ',' : ''} ${
+    players ? players + ',' : ''
+  } ${origin ? origin + ',' : ''} ${mainImage ? mainImage + ',' : ''} ${
+    description ? description + ',' : ''
+  } ${categoryId ? categoryId + ',' : ''}
+    ${brand ? brand + ',' : ''} ${amount ? amount + ',' : ''} ${
+    ageSuggest ? ageSuggest + ',' : ''
+  })`;
 };
 
 // Category

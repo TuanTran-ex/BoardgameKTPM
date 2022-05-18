@@ -17,7 +17,6 @@ async function signIn(req, res, next) {
     next(new CustomError(1, 400, 'Username, Password not valid'));
   } else {
     const { username, password } = req.body;
-    // const query = `SELECT * FROM [User] WHERE Username='${username}'`;
     try {
       const findUser = await sql.query(query.qFindUserByUsername(username));
       if (findUser.recordset.length == 0) {

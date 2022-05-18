@@ -15,10 +15,10 @@ function route(app) {
   app.use('/api/v1/auth', AuthRoute);
   app.use('/api/v1/products', ProductRoute);
   app.use('/api/v1/categories', CategoryRouter);
+  app.use('/api/v1/vouchers', VoucherRoute);
   app.use(jwtAuth);
   app.get('/api/test', (req, res) => res.send(req.user));
   app.use('/api/v1/users', UserRoute);
-  app.use('/api/v1/vouchers', VoucherRoute);
   app.use('/api/v1/cart', CartRoute);
   app.use('/api/v1/feedback', FeedbackRoute);
   app.use('/api/v1/orders', OrderRoute);
