@@ -1,0 +1,20 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "something",
+      "category": "Nothing",
+      "source": "Saysomething",
+      "Iprice": "100.000BVND",
+      "Eprice": "200.000VND"
+    },
+    {
+      "id": 2,
+      "name": "something",
+      "category": "Nothing",
+      "source": "Saysomething",
+      "Iprice": "100VND",
+      "Eprice": "200.000VND"
+    }
+  ]
+}
