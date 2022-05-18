@@ -31,7 +31,6 @@ async function updateCartItem(req, res, next) {
     );
     if (cartProduct.recordset.length == 0)
       return next(new CustomError(6, 400, 'Product not exists in Cart'));
-    console.log(cartProduct.recordset[0]);
     await sql.query(query.qUpdateCartItem(cartProduct.recordset[0].Id, amount));
     return res
       .status(200)

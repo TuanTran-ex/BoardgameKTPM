@@ -2,6 +2,7 @@ const sql = require('mssql');
 const CustomError = require('../class/customError');
 const query = require('../models/query');
 const logger = require('../utils/logger');
+const { getPathImgUpload } = require('../utils/utils');
 
 exports.getAllUser = async (req, res, next) => {
   const { page, pageSize } = req.body;
@@ -52,11 +53,18 @@ exports.updateUser = async (req, res, next) => {
     const result = await sql.query(query.qLockUser(id));
     return res.json({ data: result });
   } else {
-    const { fullName, phone, dob, gender, email, avatar, address } = req.body;
+    const { fullName, phone, dob, gender, email } = req.body;
+    const avatar = req.file;
+    const avatarPath = getPathImgUpload(avatar.path);
     const result = await sql.query(
-      query.qUpdateUser(fullName, phone, dob, gender, email, avatar, address)
+      query.qUpdateUser(id, fullName, phone, dob, gender, email, avatarPath)
     );
-    return res.json({ data: result });
+    return res.json({
+      success: true,
+      message: 'Update user success',
+      data: result.recordset,
+    });
+    // return res.send('ok');
   }
 };
 

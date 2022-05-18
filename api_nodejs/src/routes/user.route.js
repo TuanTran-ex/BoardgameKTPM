@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const { checkAdmin } = require('../middlewares/authorization');
 const {
   getAllUser,
@@ -6,12 +7,12 @@ const {
   updateUser,
   getOrderOfUser,
 } = require('../controllers/user.controller');
-
+const upload = multer({ dest: 'public/upload/avatar' });
 const router = express.Router();
 
 router.get('/', checkAdmin, getAllUser);
 router.get('/:id', getUser);
 router.get('/:id/orders', getOrderOfUser);
-router.patch('/:id', updateUser);
+router.patch('/:id', upload.single('avatar'), updateUser);
 
 module.exports = router;
