@@ -47,9 +47,9 @@ exports.qFindListAddrByUserId = (userId) => {
 exports.qGetCartByUserId = (userId) => {
   return `SELECT cp.Id , p.Id AS 'ProductId' , p.Name, cp.Amount , pp.Price, p.MainImage , isnull(slcl.SoConLai, p.Amount) AS 'RemainingAmount' 
 	FROM 	Cart AS c 
-	LEFT 	JOIN CartProduct AS cp ON c.Id = cp.CartId 
-			JOIN Product AS p ON cp.ProductId  = p.Id 
-			JOIN ProductPrice pp ON pp.ProductId = p.Id 
+	    LEFT 	JOIN CartProduct AS cp ON c.Id = cp.CartId 
+			LEFT JOIN Product AS p ON cp.ProductId  = p.Id 
+			LEFT JOIN ProductPrice pp ON pp.ProductId = p.Id 
 			LEFT JOIN (
 				SELECT Product.Id , (Product.Amount - SUM(OrderDetail.Quantity)) AS SoConLai
 				FROM Product 
@@ -58,11 +58,10 @@ exports.qGetCartByUserId = (userId) => {
 			) AS slcl ON slcl.Id = p.Id  
 	WHERE	c.UserId = ${userId}
 	GROUP BY cp.Id ,p.Id, p.Name, cp.Amount , pp.Price, pp.CreatedAt, p.MainImage , slcl.SoConLai, p.Amount 
-	HAVING pp.CreatedAt >= (
-				SELECT 	TOP(1) CreatedAt
+	HAVING pp.CreatedAt >= ALL (
+				SELECT  CreatedAt
 				FROM 	ProductPrice 
 				WHERE	p.Id  = ProductPrice.ProductId 
-				ORDER BY CreatedAt DESC
 				)`;
 };
 exports.qGetCartId = (userId) => {
