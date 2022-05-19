@@ -1,5 +1,5 @@
 import notifyModal from "./notifyModal.js";
-import header from "./header.js"
+import account from "../account.js";
 import userAPI from "../api/userAPI.js";
 import utils from "../utils/utils.js";
 
@@ -92,8 +92,6 @@ const userEdit = {
     errHandler() {
         notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
         notifyModal.showModal();
-        userEdit.renderHtml();
-        header.renderHtml();
     },
     async updateUserHandler(data) {
         const form = new FormData();
@@ -108,8 +106,6 @@ const userEdit = {
         await userAPI.updateUser(form, token, (res) => {
             console.log(res)
             if (res.success) {
-                notifyModal.init("Cập nhật hồ sơ");
-                notifyModal.showModal();
                 const user = utils.getSession("user");
 
                 const newUser = {
@@ -119,15 +115,18 @@ const userEdit = {
                     Phone: data.phone,
                     Gender: data.gender ? data.gender : null,
                     DOB: data.birthday,
-                    // Avatar: res.data.avatarPath
+                    Avatar: res.data.avatarPath
                 }
 
                 utils.setSession("user", newUser);
+
+                notifyModal.init("Cập nhật hồ sơ", () => {
+                    account.init();
+                });
+                notifyModal.showModal();
             } else {
                 userEdit.errHandler();
             }
-            header.renderHtml();
-            userEdit.renderHtml();
         }, userEdit.errHandler);
     },
     avatarChangeHandler(e) {

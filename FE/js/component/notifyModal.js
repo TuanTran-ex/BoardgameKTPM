@@ -2,32 +2,25 @@ import modal from "../utils/modal.js"
 
 const notifyModal = {
     renderHtml(content, closeFunc, type) {
-        if (!document.querySelector(".modal .notification")) {
-            document.querySelector("body").innerHTML += `
-                <div class="modal">
-                    <div class="modal-overlay"></div>
-                    <div class="modal-body">
-                        <div class="notification">
-                            ${type === 0 ? `
-                                <i class="fa-regular fa-circle-check success-icon"></i>
-                            ` : type === 1 ? `
-                                <i class="fa-regular fa-circle-xmark fail-icon"></i>
-                            ` : ``}
-                            <span>${content}</span>
-                        </div>
+        const notifyModal = document.querySelector(".modal .notification");
+        if (notifyModal) {
+            notifyModal.remove();
+        } 
+        document.querySelector("body").insertAdjacentHTML('beforeend', `
+            <div class="modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-body">
+                    <div class="notification">
+                        ${type === 0 ? `
+                            <i class="fa-regular fa-circle-check success-icon"></i>
+                        ` : type === 1 ? `
+                            <i class="fa-regular fa-circle-xmark fail-icon"></i>
+                        ` : ``}
+                        <span>${content}</span>
                     </div>
                 </div>
-            `
-        } else {
-            document.querySelector(".notification").innerHTML = `
-                ${type === 0 ? `
-                    <i class="fa-regular fa-circle-check success-icon"></i>
-                ` : type === 1 ? `
-                    <i class="fa-regular fa-circle-xmark fail-icon"></i>
-                ` : ``}
-                <span>${content}</span>
-            `
-        }
+            </div>
+        `)
         modal.init(closeFunc);
     },
     hiddenModal(closeFunc = () => {}) {

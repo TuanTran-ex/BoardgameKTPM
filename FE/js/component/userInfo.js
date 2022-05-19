@@ -11,7 +11,7 @@ const userInfo = {
                 <li class="user-info-item">
                     <span class="user-info-label">Họ và tên</span>
                     <span class="user-info-content none">
-                        ${user.Fullname ? user.Fullname : "Chưa có"}
+                        ${user.FullName ? user.FullName : "Chưa có"}
                     </span>
                 </li>
                 <li class="user-info-item">

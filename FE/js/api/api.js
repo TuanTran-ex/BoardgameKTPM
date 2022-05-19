@@ -1,6 +1,12 @@
+import notifyModal from "../component/notifyModal.js";
+
 const api = {
     route: `http://localhost:3000/api/v1`,
-    async callAPI(params, sucessHandler = () => {}, errHandler = () => {}) {
+    errHandler() {
+        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
+        notifyModal.showModal();
+    },
+    async callAPI(params, sucessHandler = () => {}, errHandler = this.errHandler) {
         
         const { url, method, token, file, req, loading } = params;
 

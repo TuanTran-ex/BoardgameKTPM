@@ -1,6 +1,7 @@
-import categoryAPI from "../api/categoryAPI.js";
-
 import productList from "./productList.js"
+
+import api from "../api/api.js";
+import categoryAPI from "../api/categoryAPI.js";
 
 let categoryItems;
 
@@ -33,16 +34,13 @@ const category = {
 
         this.handleEvents();
     },
-    errHandler() {
-        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-        notifyModal.showModal();
-        header.renderHtml();
-    },
     categorySelectHandler(e) {
         const item = e.target.closest(".category-item");
         category.id = item.dataset.id;
         productList.category = item.dataset.id;
         productList.pageActive = 1;
+        productList.key = "";
+        productList.filter = 0;
         category.renderHtml()
         productList.renderHtml();
     },
@@ -65,9 +63,9 @@ const category = {
             if (res.success) {
                 category.categoryList = [...res.data.categories];
             } else {
-                category.errHandler();
+                api.errHandler();
             }
-        }, category.errHandler) 
+        }) 
         this.renderHtml();
     }
 } 

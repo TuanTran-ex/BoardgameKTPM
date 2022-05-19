@@ -1,8 +1,7 @@
 import confirmModal from "../component/confirmModal.js"
 import notifyModal from "../component/notifyModal.js"
-import account from "../account.js"
-import header from "./header.js"
 
+import api from "../api/api.js"
 import userAPI from "../api/userAPI.js"
 import utils from "../utils/utils.js";
 
@@ -10,7 +9,7 @@ let pwdIcons;
 
 const userEditPwd = {
     message: "",
-    renderHtml(user) {
+    renderHtml() {
         document.querySelector(".user-info-container").innerHTML = `
             <form class="user-info-form">
                 <div class="user-info-form-group ${this.message ? "invalid" : ""}">
@@ -80,12 +79,6 @@ const userEditPwd = {
 
         this.handleEvents();
     },
-    errHandler() {
-        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-        notifyModal.showModal();
-        account.renderHtml();
-        header.renderHtml();
-    },
     async changePwdHandler(data) {
         const req = {
             pass: data.oldPassword,
@@ -94,7 +87,6 @@ const userEditPwd = {
         }
         const token = utils.getCookie("token");
         await userAPI.changePwd(req, token, (res) => {
-            console.log(res)
             if (res.success) {
                 notifyModal.init("Thay đổi thành công");
                 notifyModal.showModal();
@@ -102,11 +94,10 @@ const userEditPwd = {
             } else if (res.code === 3) {
                 userEditPwd.message = "Mật khẩu không chính xác";
             } else {
-                userEditPwd.errHandler();
+                api.errHandler();
             }
-        }, userEditPwd.errHandler);
-        account.renderHtml();
-        header.renderHtml();
+        });
+        userEditPwd.renderHtml();
     },
     submitChangeHandler(data) {
         confirmModal.hiddenModal();
@@ -136,8 +127,8 @@ const userEditPwd = {
             })
         }
     },
-    init(user) {
-        this.renderHtml(user)
+    init() {
+        this.renderHtml()
     }
 }
 

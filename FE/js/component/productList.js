@@ -1,8 +1,8 @@
-import productAPI from "../api/productAPI.js";
 import notifyModal from "./notifyModal.js";
-import app from "../main.js"
-import header from "./header.js";
 import utils from "../utils/utils.js"
+
+import api from "../api/api.js";
+import productAPI from "../api/productAPI.js";
 
 let firstPageBtn;
 let lastPageBtn;
@@ -30,7 +30,6 @@ const productList = {
       pageSize: 10
     }
     await productAPI.getListProduct(req, (res) => {
-      console.log(res)
       if (res.success) {
           productList.productLst = [...res.data.products];
           productList.totalPage = res.data.count % req.pageSize 
@@ -38,19 +37,21 @@ const productList = {
               : res.data.count / req.pageSize ;
           productList.count = res.data.count;
       } else {
-          productList.errHandler();
+          api.errHandler();
       }
-      header.renderHtml();
-    }, this.errHandler);
+    });
 
     document.querySelector(".products").innerHTML = `
       <div class="products-header">
             <div class="products-heading">
                 <span>Sản phẩm</span>
+                <span class="products-heading-sub">
+                  ${this.key ? `//Tìm kiếm` : ""}
+                </span>
                 <span class="products-quantity">//${this.count}</span>
             </div>
             <div class="products-search">
-                <input type="text" class="products-search-input">
+                <input type="text" class="products-search-input" value="${this.key}">
                 <i class="fa-solid fa-magnifying-glass products-search-icon"></i>
             </div>
         </div>
@@ -113,17 +114,17 @@ const productList = {
 
     this.handleEvents();
   },
-  errHandler() {
-    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-    notifyModal.showModal();
-    header.renderHtml();
-  },
   pagination() {
     if (this.pageActive <= 1) {
       firstPageBtn.classList.add("disabled");
       previousPageBtn.classList.add("disabled");
-      lastPageBtn.classList.remove("disabled");
-      nextPageBtn.classList.remove("disabled");
+      if (this.totalPage > 1) {
+        lastPageBtn.classList.remove("disabled");
+        nextPageBtn.classList.remove("disabled");
+      } else {
+        lastPageBtn.classList.add("disabled");
+        nextPageBtn.classList.add("disabled");
+      }
     } else if (this.pageActive >= this.totalPage) {
       lastPageBtn.classList.add("disabled");
       nextPageBtn.classList.add("disabled");

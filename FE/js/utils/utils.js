@@ -35,7 +35,6 @@ const utils = {
             }
             return dateStr;
         } 
-        console.log(datetime)
         return datetime;
     },
     getFormattedDate(date) {

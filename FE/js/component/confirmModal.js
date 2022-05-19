@@ -4,30 +4,25 @@ let submitBtn;
 
 const confirmModal = {
     renderHtml(content, submitFunc) {
-        if (!document.querySelector(".modal .confirm-dialog")) {
-            document.querySelector("body").innerHTML += `
-                <div class="modal">
-                    <div class="modal-overlay"></div>
-                    <div class="modal-body">
-                        <div class="confirm-dialog">
-                            <span class="confirm-dialog-content">${content}</span>
-                            <div class="confirm-dialog-footer">
-                                <span class="btn btn-long btn-white modal-close-btn">Trở lại</span>
-                                <button class="btn btn-long btn-primary modal-submit-btn">Xác nhận</button>
-                            </div>
+        const confirmModal = document.querySelector(".modal .confirm-dialog");
+        if (confirmModal) {
+            confirmModal.remove();
+        } 
+        document.querySelector("body").insertAdjacentHTML('beforeend', `
+            <div class="modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-body">
+                    <div class="confirm-dialog">
+                        <span class="confirm-dialog-content">${content}</span>
+                        <div class="confirm-dialog-footer">
+                            <span class="btn btn-long btn-white modal-close-btn">Trở lại</span>
+                            <button class="btn btn-long btn-primary modal-submit-btn">Xác nhận</button>
                         </div>
                     </div>
                 </div>
-            `
-        } else {
-            document.querySelector(".confirm-dialog").innerHTML = `
-                <span class="confirm-dialog-content">${content}</span>
-                <div class="confirm-dialog-footer">
-                    <span class="btn btn-long btn-white modal-close-btn">Trở lại</span>
-                    <button class="btn btn-long btn-primary modal-submit-btn">Xác nhận</button>
-                </div>
-            `
-        }
+            </div>
+        `)
+
         modal.init();
 
         this.removeEvents(submitFunc);

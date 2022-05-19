@@ -45,60 +45,66 @@ const slider = {
   },
   handleEvents() {
     // next event
-    this.sliderNexts.forEach((sliderNext, index) => {
-      if (sliderNext) {
-        sliderNext.onclick = () => {
-          if (!sliderNext.classList.contains("disabled")) {
-            this.currentItem[index]++;
-            this.switchImage(index);
-          }
-        };
-      }
-    });
+    if (this.sliderNexts && this.sliderNexts.length > 0) {
+      this.sliderNexts.forEach((sliderNext, index) => {
+        if (sliderNext) {
+          sliderNext.onclick = () => {
+            if (!sliderNext.classList.contains("disabled")) {
+              this.currentItem[index]++;
+              this.switchImage(index);
+            }
+          };
+        }
+      });
+    }
 
     // previous event
-    this.sliderPreviouss.forEach((sliderPrevious, index) => {
-      if (sliderPrevious) {
-        sliderPrevious.onclick = () => {
-          if (!sliderPrevious.classList.contains("disabled")) {
-            this.currentItem[index]--;
-            this.switchImage(index);
-          }
-        };
-      }
-    });
+    if (this.sliderPreviouss && this.sliderPreviouss.length > 0) {
+      this.sliderPreviouss.forEach((sliderPrevious, index) => {
+        if (sliderPrevious) {
+          sliderPrevious.onclick = () => {
+            if (!sliderPrevious.classList.contains("disabled")) {
+              this.currentItem[index]--;
+              this.switchImage(index);
+            }
+          };
+        }
+      });
+    }
 
     // slider sub event
-    this.sliderSubs.forEach((sliderSub) => {
-      sliderSub.onclick = (e) => {
-        const sliderMainIndex = sliderSub.dataset.sliderIndex - 1;
-        const selectedItem = e.target.closest(".slider-item");
-        if (selectedItem) {
-          this.currentItem[sliderMainIndex] = selectedItem.dataset.itemIndex;
-          this.switchImage(sliderMainIndex);
-        }
-      };
-    });
+    if (this.sliderSubs && this.sliderSubs.length > 0) {
+      this.sliderSubs.forEach((sliderSub) => {
+        sliderSub.onclick = (e) => {
+          const sliderMainIndex = sliderSub.dataset.sliderIndex - 1;
+          const selectedItem = e.target.closest(".slider-item");
+          if (selectedItem) {
+            this.currentItem[sliderMainIndex] = selectedItem.dataset.itemIndex;
+            this.switchImage(sliderMainIndex);
+          }
+        };
+      });
+    }
   },
   init() {
     this.wrappers = Array.from($$(".slider"));
 
     // Create previous and next button
-    this.wrappers.forEach((wrapper) => {
-      if (!wrapper.classList.contains("n-btn")) {
-        const htmls = `
-                  <div class="slider-control">
-                      <div class="slider-button slider-previous">
-                          <i class="fas fa-chevron-left"></i>
-                      </div>
-                      <div class="slider-button slider-next">
-                          <i class="fas fa-chevron-right"></i>
-                      </div>
-                  </div>
-              `;
-        wrapper.innerHTML += htmls;
-      }
-    });
+    // this.wrappers.forEach((wrapper) => {
+    //   if (!wrapper.classList.contains("n-btn")) {
+    //     const htmls = `
+    //               <div class="slider-control">
+    //                   <div class="slider-button slider-previous">
+    //                       <i class="fas fa-chevron-left"></i>
+    //                   </div>
+    //                   <div class="slider-button slider-next">
+    //                       <i class="fas fa-chevron-right"></i>
+    //                   </div>
+    //               </div>
+    //           `;
+    //     wrapper.innerHTML += htmls;
+    //   }
+    // });
 
     // Get slider
     this.sliderMains = Array.from($$(".slider.slider-main"));
@@ -112,14 +118,7 @@ const slider = {
     this.sliderPreviouss = []
     
     this.sliderLists.forEach((sliderList, index) => {
-      if (!this.wrappers[index].classList.contains("n-btn")) {
-        this.sliderNexts.push(this.wrappers[index].querySelector(".slider-next"));
-        this.sliderPreviouss.push(this.wrappers[index].querySelector(".slider-previous"));
-      } else {
-        this.sliderNexts.push(null);
-        this.sliderPreviouss.push(null);
-      }
-
+      
       const currentSliderItems = Array.from(sliderList.querySelectorAll(".slider-item"));
       this.sliderItems = [...this.sliderItems, currentSliderItems];
       this.sliderLength[index] = currentSliderItems.length;
@@ -129,6 +128,29 @@ const slider = {
       this.currentItem[index] = this.currentItem[index] ? this.currentItem[index] : 0;
       
       sliderList.style.marginLeft = `-${this.sliderGap[index]}`;
+      
+      if (this.sliderLength[index] > 1) {
+        if (!this.wrappers[index].classList.contains("n-btn")) {
+          const htmls = `
+                      <div class="slider-control">
+                        <div class="slider-button slider-previous">
+                          <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="slider-button slider-next">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                      </div>
+                  `;
+          //  wrapper.innerHTML += htmls;
+          this.wrappers[index].insertAdjacentHTML('beforeend', htmls);
+
+          this.sliderNexts.push(this.wrappers[index].querySelector(".slider-next"));
+          this.sliderPreviouss.push(this.wrappers[index].querySelector(".slider-previous"));
+        } else {
+          this.sliderNexts.push(null);
+          this.sliderPreviouss.push(null);
+        }
+      }
 
       // Setup for slider item
       currentSliderItems.forEach((currentSliderItem) => {
@@ -138,12 +160,14 @@ const slider = {
       });
 
       // Set disabled for previous and next button
-      if (this.sliderPreviouss[index]) {
-        this.sliderPreviouss[index].classList.add("disabled");
-      }
-      if (this.sliderNexts[index]) {
-        if (this.sliderLength[index] <= this.sliderCol[index]) {
-          this.sliderNexts[index].classList.add("disabled");
+      if (this.sliderLength[index] > 1) {
+        if (this.sliderPreviouss[index]) {
+          this.sliderPreviouss[index].classList.add("disabled");
+        }
+        if (this.sliderNexts[index]) {
+          if (this.sliderLength[index] <= this.sliderCol[index]) {
+            this.sliderNexts[index].classList.add("disabled");
+          }
         }
       }
     });

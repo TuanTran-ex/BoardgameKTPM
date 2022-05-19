@@ -138,7 +138,8 @@
     font-weight: 700;
 }
 
-.products-quantity {
+.products-quantity,
+.products-heading-sub {
     color: var(--light-color);
     font-weight: 400;
 }
@@ -216,6 +217,7 @@
 
 .products-pagination-btn.disabled {
     opacity: 0.65;
+    cursor: default;
 }
 
 .products-pagination-list {

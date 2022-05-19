@@ -91,12 +91,6 @@ const app = {
       },
     });
   },
-  errHandler() {
-    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-    notifyModal.showModal();
-    app.renderHtml();
-    header.renderHtml();
-  },
   async signUpHandler(data) {
     const req = {
       username: data.username,
@@ -104,12 +98,8 @@ const app = {
       password: data.password,
     }
     await userAPI.signUp(req, (res) => {
-      console.log(res)
       if (res.success) {
-        notifyModal.init("Đăng ký thành công", () => {
-          header.renderHtml();
-          app.renderHtml();
-        });
+        notifyModal.init("Đăng ký thành công");
         notifyModal.showModal();
         app.message = ``;
         app.username = "";
@@ -119,9 +109,8 @@ const app = {
         app.username = req.username;
         app.email = req.email;
       }
-    }, app.errHandler);
-    app.renderHtml();
-    header.renderHtml();
+      app.renderHtml();
+    });
   },
   hiddenDisplayPwdHandler(e) {
     const pwdInput = e.target.closest(".form-group").querySelector("input");

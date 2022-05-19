@@ -11,7 +11,7 @@ const userContent = {
         else if (page.code === 1) {
             userEdit.init(user);
         } else if (page.code === 2) {
-            userEditPwd.init(user);
+            userEditPwd.init();
         } else if (page.code === 3) {
             userHistory.init();
         }

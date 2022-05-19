@@ -1,6 +1,5 @@
 import utils from "./utils/utils.js";
 import header from "./component/header.js";
-import notifyModal from "./component/notifyModal.js";
 
 import userAPI from "./api/userAPI.js";
 
@@ -45,12 +44,6 @@ const app = {
 
     this.handleEvents();
   },
-  errHandler() {
-    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-    notifyModal.showModal();
-    app.renderHtml();
-    header.renderHtml();
-  },
   hiddenDisplayPwdHandler(e) {
     const pwdInput = e.target.closest(".form-group").querySelector("input");
     const pwdIcon = e.target.closest(".form-icon");
@@ -77,9 +70,8 @@ const app = {
       } else {
         app.message = `Mật khẩu không chính xác`;
       }
-    }, app.errHandler)
+    })
     app.renderHtml();
-    header.renderHtml();
   },
   removeEvents() {
     if (pwdIcons) {

@@ -53,7 +53,7 @@ const header = {
                                     return `
                                       <li class="header-cart-products-item" data-id="${item.Id}">
                                           <div class="header-cart-products-item-left">
-                                              <img src="${item.MainImage ? item.MainImage : `${originUrl}/img/${item.MainImage}`}" alt="" class="header-cart-products-image">
+                                              <img src="${item.MainImage ? item.MainImage : `${originUrl}/img/noImg.png`}" alt="" class="header-cart-products-image">
                                               <span class="header-cart-products-name">${item.Name}</span>
                                           </div>
                                           <span class="header-cart-products-price">${utils.formatMoney(item.Price)} VNĐ</span>

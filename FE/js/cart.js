@@ -5,6 +5,7 @@ import notifyModal from "./component/notifyModal.js";
 import modal from "./utils/modal.js";
 import utils from "./utils/utils.js"
 
+import api from "./api/api.js";
 import cartAPI from "./api/cartAPI.js"
 
 const footerContainer = document.querySelector(".footer");
@@ -163,12 +164,6 @@ const app = {
 
     this.handleEvents();
   },
-  errHandler() {
-    notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-    notifyModal.showModal();
-    app.renderHtml();
-    header.renderHtml();
-  },
   selectProductItem(productItem) {
     app.productList.forEach((product) => {
       if (product.ProductId == productItem.dataset.id) {
@@ -229,7 +224,6 @@ const app = {
       id: cartProductId,
     }
     await cartAPI.deleteCart(req, token, (res) => {
-      console.log(res);
       if (res.success) {
           const productListIndex = app.productList.indexOf(app.productList.find(item => item.ProductId == productId));
           const productSelectedIndex = app.productSelected.indexOf(app.productSelected.find(item => item.ProductId == productId));
@@ -238,7 +232,7 @@ const app = {
 
           utils.setSession("cart", app.productList);
       }
-    }, app.errHandler, false);
+    }, api.errHandler, false);
     app.renderHtml();
     header.renderHtml();
     return;
@@ -249,14 +243,13 @@ const app = {
       amount: amount
     }
     await cartAPI.updateCart(req, token, (res) => {
-      console.log(res);
       if (res.success) {
         app.productList[index].Amount = amount;
         utils.setSession("cart", app.productList);
       } else {
-        app.errHandler();
+        api.errHandler();
       }
-    }, app.errHandler, false);
+    }, api.errHandler, false);
     app.renderHtml();
     header.renderHtml();
     return;

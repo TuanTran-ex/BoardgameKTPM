@@ -1,9 +1,11 @@
 import modal from "../utils/modal.js";
 import cart from "../cart.js";
 import header from "./header.js";
-import voucherAPI from "../api/voucherAPI.js";
 import notifyModal from "./notifyModal.js"
 import utils from "../utils/utils.js";
+
+import api from "../api/api.js";
+import voucherAPI from "../api/voucherAPI.js";
 
 let voucherInput;
 let voucherApplyBtn;
@@ -131,7 +133,6 @@ const voucher = {
         const token = utils.getCookie("token");
 
         await voucherAPI.getVoucher(req, token, (res) => {
-            console.log(res)
             if (res.success) {
                 const vch = voucher.voucherList.find(item => item.Id === res.data.voucher.Id);
                 if (!vch) { 
@@ -144,7 +145,7 @@ const voucher = {
             } else {
                 voucher.message = "Voucher không hợp lệ";
             }
-        }, voucher.errHandler);
+        });
         voucher.renderHtml();    
     },
     checkHandler(e) {
@@ -164,7 +165,7 @@ const voucher = {
         cart.renderHtml();
         const voucherModal = document.querySelector(".voucher").closest(".modal");
         const index = Array.from(document.querySelectorAll(".modal")).indexOf(voucherModal);
-        modal.hiddenModal(index, () => header.renderHtml());
+        modal.hiddenModal(index);
     },
     voucherGetHandler() {
         voucher.isGet = true;
@@ -227,13 +228,12 @@ const voucher = {
         // Call Get All voucher API
         const token = utils.getCookie("token");
         await voucherAPI.getListVoucher(token, (res) => {
-            console.log(res);
             if (res.success) {
                 voucher.voucherAllList = res.data.voucher;
             } else {
-                voucher.errHandler();
+                api.errHandler();
             }
-        }, voucher.errHandler);
+        });
 
         this.renderHtml();
     }

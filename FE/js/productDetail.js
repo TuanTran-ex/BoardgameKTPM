@@ -4,6 +4,7 @@ import notifyModal from "./component/notifyModal.js";
 import slider from "./utils/slider.js";
 import utils from "./utils/utils.js";
 
+import api from "./api/api.js";
 import productAPI from "./api/productAPI.js";
 import cartAPI from "./api/cartAPI.js";
 
@@ -102,7 +103,7 @@ const app = {
                                 `
                             }).join("") : 
                                 `<li class="slider-item">
-                                    <img class="slider-img" src="../img/pd001.png" alt="">
+                                    <img class="slider-img" src="../img/noImg.png" alt="">
                                 </li>`
                             }
                             </ul>
@@ -119,7 +120,7 @@ const app = {
                                     `
                                 }).join("") : 
                                     `<li class="slider-item">
-                                        <img class="slider-img" src="../img/pd001.png" alt="">
+                                        <img class="slider-img" src="../img/noImg.png" alt="">
                                     </li>`
                                 }
                             </ul>
@@ -183,7 +184,8 @@ const app = {
                     <span>Đánh giá sản phẩm</span>
                 </div>
                 <ul class="product-feedback-list">
-                    ${this.product.feedback.map(feedback => {
+                     ${// this.product.feedback.map(feedback => {
+                        feedbacks.map(feedback => {
                         return `
                             <li class="product-feedback-item">
                                 <img src="../img/${feedback.user.avatar ? feedback.user.avatar : "ava001.jpg"}" alt="" class="product-feedback-avatar">
@@ -230,12 +232,6 @@ const app = {
 
         this.handleEvents();
     },
-    errHandler() {
-        notifyModal.init("Có lỗi xảy ra. Vui lòng thử lại", () => {}, 1);
-        notifyModal.showModal();
-        header.renderHtml();
-        app.renderHtml();
-    },
     cartProductDecHandler() {
         if (app.quantity > 1) {
             app.quantity--;
@@ -272,7 +268,6 @@ const app = {
                     amount: Number(productItem.Amount) + app.quantity
                 }
                 await cartAPI.updateCart(req, token, (res) => {
-                    console.log(res)
                     if (res.success) {
                         const index = cart.indexOf(productItem);
                         cart[index].Amount = Number(cart[index].Amount) + app.quantity;
@@ -284,19 +279,18 @@ const app = {
                         header.renderHtml();
                         isSuccess = true;
                     } else {
-                        app.errHandler();
+                        api.errHandler();
                     }
-                }, app.errHandler);
+                });
             } else {
                 const req = {
                     productId: productId,
                     amount: app.quantity
                 }
                 await cartAPI.addCart(req, token, (res) => {
-                    console.log(res)
                     if (res.success) {
                         cart.push({...app.product, 
-                            Id: res.data.cartId,
+                            Id: res.data.cartProductId,
                             ProductId: app.product.Id,
                             Amount: app.quantity
                         });
@@ -307,9 +301,9 @@ const app = {
                         header.renderHtml();
                         isSuccess = true;
                     } else {
-                        app.errHandler();
+                        api.errHandler();
                     }
-                }, app.errHandler);
+                });
             }
         }
         return isSuccess;
@@ -362,13 +356,12 @@ const app = {
             id: productId
         }
         await productAPI.getProduct(req, (res) => {
-            console.log(res)
             if (res.success) {
                 app.product = res.data.product;
             } else {
-                app.errHandler();
+                api.errHandler();
             }
-        }, app.errHandler);
+        });
         header.init();
         footerContainer.innerHTML = footer;
         this.renderHtml();

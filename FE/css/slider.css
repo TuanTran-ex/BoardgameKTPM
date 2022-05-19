@@ -23,6 +23,7 @@
     height: 38.8rem;
     border-radius: 1rem;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .banner-left {
@@ -103,7 +104,6 @@
     height: 1px;
     display: flex;
     justify-content: space-between;
-    transform: translateY(-50%);
 }
 
 .slider-button {
@@ -117,6 +117,7 @@
     background-color: rgba(0, 0, 0, 0.6);
     color: var(--white);
     font-size: 2rem;
+    transform: translateY(-50%);
 }
 
 .slider-button.disabled {
