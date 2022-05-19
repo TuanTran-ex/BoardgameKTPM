@@ -38,10 +38,35 @@ exports.qChangePass = (id, newPass) => {
 };
 
 // Address
-exports.qFindListAddrByUserId = (userId) => {
+exports.qGetListAddrByUserId = (userId) => {
   return `SELECT * FROM UserAddress WHERE UserId = ${userId}`;
 };
-
+exports.qGetAddressById = (id) => {
+  return `SELECT * FROM UserAddress WHERE Id = ${id}`;
+};
+exports.qAddAddress = (userId, fullName, phone, address, isDefault) => {
+  const q = `INSERT INTO UserAddress (UserId, Fullname, Phone, Address, IsDefault)
+  OUTPUT Inserted.ID
+  VALUES (${userId}, '${fullName}', '${phone}', '${address}', ${isDefault})`;
+  return q;
+};
+exports.qSetAddressDefaultToFalseExceptId = (userId, addressId) => {
+  return `UPDATE UserAddress 
+  SET	IsDefault = 0
+  WHERE Id <> ${addressId} AND UserId = ${userId} AND IsDefault = 1
+  `;
+};
+exports.qUpdateAddress = (id, fullName, phone, address, isDefault) => {
+  const q = `EXECUTE proc_Address_Update ${id}, ${
+    fullName ? "N'" + fullName + "'" : 'NULL'
+  }, ${phone ? "'" + phone + "'" : 'NULL'}, ${
+    address ? "N'" + address + "'" : 'NULL'
+  }, ${isDefault || 'NULL'}`;
+  return q;
+};
+exports.qDeleteAddress = (id) => {
+  return `DELETE FROM UserAddress WHERE Id = ${id}`;
+};
 // Cart
 // exports.qGetCartByUserId = (userId) => {
 //   return `EXECUTE proc_Cart_Get ${userId}`;
