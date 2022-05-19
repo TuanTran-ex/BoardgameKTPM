@@ -239,8 +239,11 @@ exports.qGetAllProductAdmin = (categoryId, filter, key, page, pageSize) => {
     filter || 'NULL'
   }, ${key || 'NULL'}, ${page}, ${pageSize}`;
 };
-exports.qCountProduct = (categoryId) => {
-  return `EXECUTE proc_Product_Count ${categoryId || 'NULL'}`;
+exports.qCountProduct = (categoryId, key) => {
+  const q = `EXECUTE proc_Product_Count ${categoryId || 'NULL'} ,${
+    key ? "N'" + key + "' " : 'NULL'
+  }`;
+  return q;
 };
 exports.qGetProductById = (productId) => {
   return `EXECUTE proc_Product_Get ${productId}`;
@@ -254,7 +257,13 @@ exports.qGetProductImage = (productId) => {
 exports.qGetProductFeedback = (productId) => {
   return `SELECT * FROM Feedback WHERE ProductId = ${productId}`;
 };
-
+exports.qGetProductCategory = (productId) => {
+  return `SELECT 	c.Id, c.Name 
+  FROM 	Category c 
+      JOIN ProductCategory pc ON c.Id = pc.CategoryId  
+      JOIN Product p ON p.Id = pc.ProductId 
+  WHERE	p.Id = ${productId}`;
+};
 exports.qGetFeedbackImage = (feedbackId) => {
   return `SELECT * FROM FeedbackImages Where FeedbackId = ${feedbackId}`;
 };

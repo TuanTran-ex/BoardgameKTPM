@@ -1,12 +1,6 @@
 const sql = require('mssql');
 const jwt = require('jsonwebtoken');
-const {
-  servGetAllProduct,
-  servDeleteProduct,
-  servGetProduct,
-} = require('../services/product.services');
 const query = require('../models/query');
-const logger = require('../utils/logger');
 const CustomError = require('../class/customError');
 
 // List Product(mainImg, subScr, name, price), countAll
@@ -28,13 +22,10 @@ async function getAllProduct(req, res, next) {
         query.qGetAllProduct(category, filter, key, page, pageSize)
       );
       let totalCount;
-      if (key) totalCount = listProduct.recordset.length;
-      else {
-        const resCount = await sql.query(query.qCountProduct(category));
-        if (resCount.recordset.length > 0)
-          totalCount = resCount.recordset[0].CountProduct;
-        else totalCount = 0;
-      }
+      const resCount = await sql.query(query.qCountProduct(category, key));
+      if (resCount.recordset.length > 0)
+        totalCount = resCount.recordset[0].CountProduct;
+      else totalCount = 0;
       res.status(200).json({
         success: true,
         message: 'Get all product success',
@@ -69,11 +60,12 @@ async function getProduct(req, res, next) {
     if (product.recordset.length == 0)
       return next(new CustomError(6, 400, 'Product is not exists'));
     const listProductImage = await sql.query(query.qGetProductImage(id));
+    const listCategory = await sql.query(query.qGetProductCategory(id));
     const listFeedback = await sql.query(query.qGetAllFeedbackProduct(id));
-    console.log(product.recordset[0]);
     const resData = {
       ...product.recordset[0],
       images: listProductImage.recordset,
+      categories: listCategory.recordset,
       feedback: listFeedback.recordset,
     };
     if (listFeedback.recordset.length > 0) {
