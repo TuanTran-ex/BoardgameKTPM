@@ -21,6 +21,21 @@ const changePassSchema = joi.object({
     .required(),
 });
 
+// User Address
+const addressSchema = joi.object({
+  userId: joi.number().required(),
+  fullName: joi.string().max(250).required(),
+  phone: joi.string().regex(/^\d+$/).min(8).max(11).required(),
+  address: joi.string().min(5).max(500).required(),
+  isDefault: joi.allow('0', '1').required(),
+});
+const addressUpdateSchema = joi.object({
+  userId: joi.number(),
+  fullName: joi.string().max(250),
+  phone: joi.string().regex(/^\d+$/).min(8).max(11),
+  address: joi.string().min(5).max(500),
+  isDefault: joi.allow('0', '1'),
+});
 // Voucher
 const voucherSchema = joi.object({
   code: joi.string().max(250).required(),
@@ -65,4 +80,6 @@ module.exports = {
   voucherUpdateSchema,
   feedbackSchema,
   newOrderSchema,
+  addressSchema,
+  addressUpdateSchema,
 };

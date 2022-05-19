@@ -7,6 +7,12 @@ const {
   updateUser,
   getOrderOfUser,
 } = require('../controllers/user.controller');
+const {
+  getListAddress,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+} = require('../controllers/address.controller');
 const upload = multer({ dest: 'public/upload/avatar' });
 const router = express.Router();
 
@@ -14,5 +20,11 @@ router.get('/', checkAdmin, getAllUser);
 router.get('/:id', getUser);
 router.get('/:id/orders', getOrderOfUser);
 router.patch('/:id', upload.single('avatar'), updateUser);
+
+// address
+router.get('/:userId/address', getListAddress);
+router.post('/:userId/address', addAddress);
+router.patch('/:userId/address/:id', updateAddress);
+router.delete('/:userId/address/:id', deleteAddress);
 
 module.exports = router;

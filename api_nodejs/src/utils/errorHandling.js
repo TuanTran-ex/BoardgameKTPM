@@ -39,6 +39,12 @@ module.exports = function errorHandling(error, res) {
           error: 'data_not_exists',
           message: error.message,
         });
+      case 7:
+        return res.status(error.statusCode).json({
+          code: error.code,
+          error: 'action_is_denied',
+          message: error.message,
+        });
       default:
         return res.status(error.statusCode).json({
           code: error.code,

@@ -20,7 +20,6 @@ async function getCategory(req, res, next) {}
 
 async function addCategory(req, res, next) {
   const { name } = req.body;
-  console.log(name);
   try {
     const category = await sql.query(query.qGetCategoryByName(name));
     if (category.recordset.length > 0)
