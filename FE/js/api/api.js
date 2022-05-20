@@ -22,23 +22,19 @@ const api = {
         }
         if (!file) {
             headers["Content-Type"] = "application/json"
-        } else {
-            // headers["Content-Type"] = "multipart/form-data";
-        }
-        console.log(url, headers, req);
-        // const headers = token ? {
-        //     "Authorization" : `Bearer ${token}`
-        // } : {
-        //     "Content-Type" : file ? "multipart/form-data" : "application/json",
-        // }
+        } 
+
         const obj = method === "GET" || method === "DELETE" ? {
             method: method,
             headers: headers,
-        } : {
+        } : method === "POST" || method === "PATCH" ? {
             method: method,
             headers: headers,
             body: file ? req : JSON.stringify(req),
-        }
+        } : {}
+
+        console.log(url, method, headers, req);
+
         await fetch(url, obj)
         .then(res => res.json())
         .then(data => sucessHandler(data))

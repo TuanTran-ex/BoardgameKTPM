@@ -3,8 +3,12 @@ import footer from "./component/footer.js";
 import address from "./component/address.js";
 import modal from "./utils/modal.js";
 import utils from "./utils/utils.js"
+import addressAPI from "./api/addressAPI.js";
+import api from "./api/api.js";
 
 const footerContainer = document.querySelector(".footer");
+const token = utils.getCookie("token");
+const userId = utils.getSession("user").Id;
 
 let cartAddressChange;
 let cartAddressCloseBtn;
@@ -16,34 +20,6 @@ let cartAddressUpdateBtns;
 let cartAddressNewBtn;
 let cartOrderBtn;
 
-// const user = {
-//     address: [
-//         {
-//             id: 0,
-//             name: "Ricasdo Công Đạt  Công Đạt Công Đạt Công Đạt Công Đạt",
-//             phone: "(+84) 0123456789",
-//             address: "72 Phạm Văn Đồng",
-//             isDefault: true,
-//         },
-//         {
-//             id: 1,
-//             name: "Ricasdo ",
-//             phone: "(+84) 01234522289",
-//             address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Tp Huế, Thừa Thiên Huế",
-//             isDefault: false
-//         },
-//         {
-//             id: 2,
-//             name: "Ricasdo Đạt",
-//             phone: "(+84) 0121236789",
-//             address: "72 Phạm Văn Đồng, Thừa Thiên Huế",
-//             isDefault: false
-//         }
-//     ]
-// };
-
-let addressList = [];
-
 let cart;
 
 const date = new Date();
@@ -53,6 +29,7 @@ beginDate.setDate(date.getDate() + 10);
 endDate.setDate(date.getDate() + 15);
 
 const app = {
+    addressList: [],
     addressChange: false,
     addressSelected: {},
     renderHtml() {
@@ -76,19 +53,19 @@ const app = {
                 <div class="cart-address-content">
                     ${this.addressChange ? `
                         <ul class="cart-address-list">
-                            ${addressList.map(item => {
+                            ${this.addressList.map(item => {
                                 return `
-                                    <li class="cart-address-item" data-id="${item.id}">
+                                    <li class="cart-address-item" data-id="${item.Id}">
                                         <div class="cart-address-info">
-                                            <input type="checkbox" class="cart-address-check" ${item.id == this.addressSelected.id ? "checked" : ""}>
+                                            <input type="checkbox" class="cart-address-check" ${item.Id == this.addressSelected.Id ? "checked" : ""}>
                                             <div>
-                                                <span class="cart-address-name">${item.name}</span>
-                                                <span>(+84) ${item.phone}</span>
+                                                <span class="cart-address-name">${item.Fullname}</span>
+                                                <span>(+84) ${item.Phone}</span>
                                             </div>
-                                            <span class="cart-address-address">${item.address}</span>
+                                            <span class="cart-address-address">${item.Address}</span>
                                         </div>
                                         <div class="cart-address-action">
-                                            ${item.isDefault ? `
+                                            ${item.IsDefault ? `
                                                 <span>Mặc định</span>
                                             ` : `
                                                 <span class="primary-text cart-address-default-btn">Đặt làm mặc định</span>
@@ -110,16 +87,16 @@ const app = {
                                     ${Object.keys(this.addressSelected).length !== 0 ? `
                                         <div class="cart-address-info">
                                             <div>
-                                                <span class="cart-address-name">${this.addressSelected.name}</span>
-                                                <span>(+84) ${this.addressSelected.phone}</span>
+                                                <span class="cart-address-name">${this.addressSelected.Fullname}</span>
+                                                <span>(+84) ${this.addressSelected.Phone}</span>
                                             </div>
-                                            <span class="cart-address-address">${this.addressSelected.address}</span>
+                                            <span class="cart-address-address">${this.addressSelected.Address}</span>
                                         </div>
                                     ` : `
                                         <span>Không có</span>
                                     `}
                                     <div class="cart-address-action">
-                                        ${this.addressSelected.isDefault ? `
+                                        ${this.addressSelected.IsDefault ? `
                                             <span>Mặc định</span>
                                         ` : ""}
                                         <span class="text-primary cart-address-change">Thay đổi</span>
@@ -224,44 +201,67 @@ const app = {
     },
     cartAddressCheckHandler(e) {
         const addressItem = e.target.closest(".cart-address-item");
-        addressList.forEach(item => {
-            if (item.id == addressItem.dataset.id) {
+        app.addressList.forEach(item => {
+            if (item.Id == addressItem.dataset.id) {
                 app.addressSelected = {...item};
             }
         })
         app.renderHtml();
     },
-    cartAddressDefaultBtnHandler(e) {
-        // Call address update API
-
+    async cartAddressDefaultBtnHandler(e) {
         const addressItem = e.target.closest(".cart-address-item");
-        addressList.forEach((item, index) => {
-            if (item.isDefault == true)
-                addressList[index].isDefault = false;
-            if (item.id == addressItem.dataset.id)
-                addressList[index].isDefault = true;
-            })
-        if (Object.keys(app.addressSelected).length !== 0) {
-            if (addressItem.dataset.id == app.addressSelected.id)
-                app.addressSelected.isDefault = true;
-            else 
-                app.addressSelected.isDefault = false;
+        const adr = app.addressList.find(item => item.Id == addressItem.dataset.id);
+
+        const req = {
+            userId: userId,
+            addressId: adr.Id,
+            isDefault: !adr.IsDefault
         }
-        app.renderHtml();
+        await addressAPI.updateAddress(req, token, (res) => {
+            if (res.success) {
+                app.addressList.forEach((item, index) => {
+                    if (item.IsDefault == true)
+                        app.addressList[index].IsDefault = false;
+                    if (item.Id == addressItem.dataset.id)
+                        app.addressList[index].IsDefault = true;
+                    })
+                if (Object.keys(app.addressSelected).length !== 0) {
+                    if (addressItem.dataset.id == app.addressSelected.Id)
+                        app.addressSelected.IsDefault = true;
+                    else 
+                        app.addressSelected.IsDefault = false;
+                }
+            } else {
+                api.errHandler();
+            }
+            app.renderHtml();
+        })
     },
-    cartAddressDeleteHandler(e) {
-        // Call address delete API
-
+    async cartAddressDeleteHandler(e) {
         const addressItem = e.target.closest(".cart-address-item");
-        addressList = [...addressList.filter(item => item.id != addressItem.dataset.id)];
-        if (addressItem.dataset.id == app.addressSelected.id) {
-            app.addressSelected = {};
+
+        if (addressItem) {
+            const req = {
+                userId: userId,
+                addressId: addressItem.dataset.id 
+            }
+            await addressAPI.deleteAddress(req, token, (res) => {
+                if (res.success) {
+                    app.addressList = [...app.addressList.filter(item => item.Id != addressItem.dataset.id)];
+                    if (addressItem.dataset.id == app.addressSelected.Id) {
+                        app.addressSelected = {};
+                    }
+                    app.renderHtml();
+                } else {
+                    api.errHandler();
+                }
+            })
         }
-        app.renderHtml();
+
     },
     cartAddressUpdateHandler(e) {
         const addressItem = e.target.closest(".cart-address-item");
-        const item = addressList.find(item => item.id == addressItem.id);
+        const item = app.addressList.find(item => item.Id == addressItem.dataset.id);
         if (document.querySelector(".address")) {
             const modals = Array.from(document.querySelectorAll(".modal"));
             const addressModal = document.querySelector(".modal .address").closest(".modal");
@@ -278,7 +278,7 @@ const app = {
             `;
             document.querySelector("body").innerHTML += modalHtml;
         }
-        address.init(item.id, item.name, item.phone, item.address, item.isDefault);
+        address.init(item.Id, item.Fullname, item.Phone, item.Address, item.IsDefault);
         app.renderHtml();
     },
     cartAddressNewHandler() {
@@ -408,37 +408,25 @@ const app = {
             cartOrderBtn.addEventListener("click", this.cartOrderHandler);
         }
     },
-    init() {
+    async init() {
         if (utils.getCookie("token")) {
             cart = utils.getSession("cartSelected");
             header.init();
             footerContainer.innerHTML = footer;
 
-            // Call get address list API
-            addressList = [
-                {
-                    id: 0,
-                    name: "Ricasdo Công Đạt  Công Đạt Công Đạt Công Đạt Công Đạt",
-                    phone: "0123456789",
-                    address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Thành phố Huế, Tỉnh Thừa Thiên Huế",
-                    isDefault: true,
-                },
-                {
-                    id: 1,
-                    name: "Ricasdo ",
-                    phone: "01234522289",
-                    address: "72 Phạm Văn Đồng, Phường Phú Thuận, Thành phố Huế, Tỉnh Thừa Thiên Huế",
-                    isDefault: false
-                },
-                {
-                    id: 2,
-                    name: "Ricasdo Đạt",
-                    phone: "0121236789",
-                    address: "72 Phạm Văn Đồng, Phường Vỹ Dạ, Thành phố Huế, Tỉnh Thừa Thiên Huế",
-                    isDefault: false
+            const req = {
+                userId: userId
+            }
+            await addressAPI.getListAddress(req, token, (res) => {
+                if (res.success) {
+                    app.addressList = res.data.address
+                } else {
+                    api.errHandler();
                 }
-            ]
-            this.addressSelected = addressList.find(item => item.isDefault = true);
+            })
+
+            const defaultAddress = this.addressList.find(item => item.isDefault = true);
+            this.addressSelected = defaultAddress || {};
             this.renderHtml();
         } else {
             window.location.href = `${window.location.origin}/FE/pages/login.html`

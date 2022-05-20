@@ -5,7 +5,7 @@ const getAllVoucherUrl = `${api.route}/vouchers/`;
 const getVoucherUrl = `${api.route}/vouchers/`
 
 const voucherAPI = {
-    async getListVoucher(token, getListVoucherHandler = () => {}, errHandler = () => {}) {
+    async getListVoucher(token, getListVoucherHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: `${voucherUrl}/`,
             method: "GET",
@@ -13,7 +13,7 @@ const voucherAPI = {
         }
         await api.callAPI(params, getListVoucherHandler, errHandler);
     },
-    async getVoucher(req, token, getVoucherHandler = () => {}, errHandler = () => {}) {
+    async getVoucher(req, token, getVoucherHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: `${voucherUrl}/${req.id}`,
             method: "GET",

@@ -260,7 +260,7 @@ const app = {
         if (!token) {
             window.location.href = `${window.location.origin}/FE/pages/login.html`;
         } else {
-            const cart = JSON.parse(window.sessionStorage.cart);
+            let cart = JSON.parse(window.sessionStorage.cart);
             const productItem = cart.find(item => item.ProductId == app.product.Id);
             if (productItem) {
                 const req = {
@@ -271,6 +271,9 @@ const app = {
                     if (res.success) {
                         const index = cart.indexOf(productItem);
                         cart[index].Amount = Number(cart[index].Amount) + app.quantity;
+                        const tmpItem = cart[index];
+                        cart.splice(index, 1);
+                        cart.unshift(tmpItem);
     
                         window.sessionStorage.cart = JSON.stringify(cart);
                         notifyModal.init("Thêm vào giỏ hàng thành công");
@@ -289,7 +292,7 @@ const app = {
                 }
                 await cartAPI.addCart(req, token, (res) => {
                     if (res.success) {
-                        cart.push({...app.product, 
+                        cart.unshift({...app.product, 
                             Id: res.data.cartProductId,
                             ProductId: app.product.Id,
                             Amount: app.quantity

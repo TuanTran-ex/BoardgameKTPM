@@ -65,6 +65,7 @@ const app = {
       errorSelector: ".form-message",
       rules: [
         Validator.isRequired('input[name="username"]', "Vui lòng nhập tên đăng nhập"),
+        Validator.minLength('input[name="username"]', 4),
         Validator.isRequired('input[name="email"]', "Vui lòng nhập email"),
         Validator.isEmail('input[name="email"]'),
         Validator.isRequired('input[name="password"]',"Vui lòng nhập mật khẩu"),

@@ -3,7 +3,7 @@ import api from "./api.js"
 const categoryUrl = `${api.route}/categories`
 
 const categoryAPI = {
-    async getListCategory(getListCategoryHandler = () => {}, errHandler = () => {}) {
+    async getListCategory(getListCategoryHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: categoryUrl,
             method: "GET",

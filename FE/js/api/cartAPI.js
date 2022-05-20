@@ -3,7 +3,7 @@ import api from "./api.js"
 const cartUrl = `${api.route}/cart`
 
 const cartAPI = {
-    async addCart(req, token, addCartHandler = () => {}, errHandler = () => {}) {
+    async addCart(req, token, addCartHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: cartUrl,
             method: "POST",
@@ -13,7 +13,7 @@ const cartAPI = {
         }
         await api.callAPI(params, addCartHandler, errHandler);
     },
-    async updateCart(req, token, updateCartHandler = () => {}, errHandler = () => {}, loading = true) {
+    async updateCart(req, token, updateCartHandler = () => {}, errHandler = api.errHandler, loading = true) {
         const params = {
             url: `${cartUrl}/${req.productId}`,
             method: "PATCH",
@@ -23,7 +23,7 @@ const cartAPI = {
         }
         await api.callAPI(params, updateCartHandler, errHandler);
     },
-    async deleteCart(req, token, deleteCartHandler = () => {}, errHandler = () => {}, loading = true) {
+    async deleteCart(req, token, deleteCartHandler = () => {}, errHandler = api.errHandler, loading = true) {
         const params = {
             url: `${cartUrl}/${req.id}`,
             method: "DELETE",

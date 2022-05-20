@@ -2,7 +2,8 @@ import modal from "../utils/modal.js"
 import payment from "../payment.js"
 import utils from "../utils/utils.js";
 
-const apiUrl = "https://provinces.open-api.vn/api/?depth=3"
+import addressAPI from "../api/addressAPI.js"
+import api from "../api/api.js";
 
 let addressProvince;
 let addressDistrict;
@@ -24,10 +25,6 @@ const address = {
     isDefault: false,
     isUpdate: false,
     addressId: "",
-    async getProvince() {
-        const res = await fetch(apiUrl);
-        return res.json();
-    },
     renderHtml() {
         if (document.querySelector(".address")) {
             const addressModal = document.querySelector(".address").closest(".modal");
@@ -104,10 +101,12 @@ const address = {
                                 <input type="text" class="address-form-control" name="addressAddress" value="${this.addressDetail}">
                                 <span class="address-form-message primary-text"></span>
                             </div>
-                            <div class="address-form-group checkbox">
-                                <input type="checkbox" class="address-checkbox" id="address-checkbox" name="address-default" ${this.isDefault ? "checked" : ""}>
-                                <label for="address-checkbox">Đặt làm mặc định</label>
-                            </div>
+                            ${!this.isUpdate ? `
+                                <div class="address-form-group checkbox">
+                                    <input type="checkbox" class="address-checkbox" id="address-checkbox" name="addressDefault" ${this.isDefault ? "checked" : ""}>
+                                    <label for="address-checkbox">Đặt làm mặc định</label>
+                                </div>
+                            ` : ``} 
                             <div class="address-form-footer">
                                 <span class="btn btn-transparent btn-long modal-close-btn">Trở lại</span>
                                 <button class="btn btn-primary btn-long">Hoàn thành</button>
@@ -140,11 +139,77 @@ const address = {
                     Validator.minLength('input[name="addressPhone"]', 10),
                     Validator.maxLength('input[name="addressPhone"]', 11),
                     Validator.isRequired('input[name="addressAddress"]', "Vui lòng nhập địa chỉ"),
+                    Validator.minLength('input[name="addressAddress"]', 5),
                 ],
                 onSubmit: function (data) {
-                    console.log(data);
+                    address.submitAddressHandler(data);
+                }
+            })
+        }
+    },
+    async submitAddressHandler(data) {
+        const token = utils.getCookie("token");
 
-                    // Call address new API
+        let req = {
+            userId: utils.getSession("user").Id,
+            fullName: data.addressFullname, 
+            phone: data.addressPhone, 
+            address: utils.attachAddress(address.provinceSelected.name, address.districtSelected.name, address.wardSelected.name, data.addressAddress), 
+            isDefault: data.addressDefault ? 1 : 0
+        }
+        if (address.isUpdate) {
+            req = {
+                ...req,
+                addressId: address.addressId,
+                isDefault: null
+            }
+            await addressAPI.updateAddress(req, token, (res) => {
+                console.log(res);
+                if (res.success) {
+                    if (req.isDefault) {
+                        payment.addressList.forEach(item => {
+                            if (item.IsDefault)
+                                item.IsDefault = false;
+                        })
+                    }
+
+                    let oldAddress = payment.addressList.find(item => item.Id == address.addressId);
+                    payment.addressList[payment.addressList.indexOf(oldAddress)] = {
+                        ...oldAddress,
+                        Fullname: req.fullName,
+                        Phone: req.phone,
+                        Address: req.address,
+                        IsDefault: req.isDefault
+                    }
+
+                    const modals = Array.from(document.querySelectorAll(".modal"));
+                    const addressModal = document.querySelector(".modal .address").closest(".modal");
+                    const index = modals.indexOf(addressModal);
+                    payment.renderHtml();
+                    modal.hiddenModal(index);
+                } else {
+                    api.errHandler();
+                }
+            })
+        } else {
+            await addressAPI.addAddress(req, token, (res) => {
+                if (res.success) {
+                    const newAddress = {
+                        Id: res.data.id,
+                        UserId: req.userId,
+                        Fullname: req.fullName,
+                        Phone: req.phone,
+                        Address: req.address,
+                        IsDefault: req.isDefault
+                    }
+
+                    if (req.isDefault) {
+                        payment.addressList.forEach(item => {
+                            if (item.IsDefault)
+                                item.IsDefault = false;
+                        })
+                    }
+                    payment.addressList.push(newAddress);
 
                     const modals = Array.from(document.querySelectorAll(".modal"));
                     const addressModal = document.querySelector(".modal .address").closest(".modal");
@@ -152,6 +217,8 @@ const address = {
                     modal.hiddenModal(index, () => {
                         payment.renderHtml();
                     });
+                } else {
+                    api.errHandler();
                 }
             })
         }
@@ -205,20 +272,15 @@ const address = {
         if (addressAddressDetail) 
             addressAddressDetail.addEventListener("change", this.infoChangeHandler);
     },
-    async init(addressId = "", fullname = "", phone = "", addressDetail = "", isDefault = false) {    
+    async init(addressId = "", fullname = "", phone = "", addressDetail = "", isDefault = false) {  
         if (this.provinces.length === 0) {
-            await this.getProvince()
-                .then(data => {
-                    this.provinces = [...data];
-                    this.provinceSelected = {...this.provinces[0]};
-                    this.districtSelected = {...this.provinceSelected.districts[0]}
-                    this.wardSelected = {...this.districtSelected.wards[0]};
-                })
-                .catch(err => {
-                    
-                })
-            
-            }
+            await addressAPI.getProvine((res) => {
+                this.provinces = [...res];
+                this.provinceSelected = {...this.provinces[0]};
+                this.districtSelected = {...this.provinceSelected.districts[0]}
+                this.wardSelected = {...this.districtSelected.wards[0]};
+            })
+        }
         this.fullname = fullname;
         this.phone = phone;
         if (addressDetail) {
@@ -244,7 +306,11 @@ const address = {
             this.isDefault = isDefault;
             this.isUpdate = true;
             this.addressId = addressId;
-
+        } else {
+            this.addressDetail = "";
+            this.provinceSelected = {...this.provinces[0]};
+            this.districtSelected = {...this.provinceSelected.districts[0]}
+            this.wardSelected = {...this.districtSelected.wards[0]};
         }
         this.renderHtml();
     }

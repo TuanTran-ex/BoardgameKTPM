@@ -6,7 +6,7 @@ const changePwdUrl = `${api.route}/auth/changepass`;
 const updateUser = `${api.route}/users`
 
 const userAPI = {
-    async signIn(req, signInHandler = () => {}, errHandler = () => {}) {
+    async signIn(req, signInHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: signInUrl,
             method: "POST",
@@ -15,7 +15,7 @@ const userAPI = {
         }
         await api.callAPI(params, signInHandler, errHandler);
     },
-    async signUp(req , signUpHandler = () => {}, errHandler = () => {}) {
+    async signUp(req , signUpHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: signUpUrl,
             method: "POST",
@@ -24,7 +24,7 @@ const userAPI = {
         }
         await api.callAPI(params, signUpHandler, errHandler);
     },
-    async changePwd(req, token, changePwdHandler = () => {}, errHandler = () => {}) {
+    async changePwd(req, token, changePwdHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: changePwdUrl,
             method: "PATCH",
@@ -34,7 +34,7 @@ const userAPI = {
         }
         await api.callAPI(params, changePwdHandler, errHandler);
     },
-    async updateUser(req, token, updateUserHandler = () => {}, errHandler = () => {}) {
+    async updateUser(req, token, updateUserHandler = () => {}, errHandler = api.errHandler) {
         const params = {
             url: `${updateUser}/${req.get("id")}`,
             method: "PATCH",

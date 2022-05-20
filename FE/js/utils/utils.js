@@ -101,6 +101,9 @@ const utils = {
             ward: item[1],
             addressDetail: item[0],
         }
+    },
+    attachAddress(province, district, ward, addressDetail) {
+        return `${addressDetail}, ${ward}, ${district}, ${province}`;
     }
 }
 
