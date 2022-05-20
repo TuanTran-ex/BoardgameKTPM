@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const CustomError = require('../class/customError');
 const query = require('../models/query');
+const { newOrderSchema } = require('../utils/validation');
 // OrderId, createAt, username, phone(user|userAddress?), giatri
 async function getAllOrder(req, res, next) {
   const { type, page, pageSize } = req.query;
@@ -23,15 +24,18 @@ async function getOrder(req, res, next) {}
 
 // listProduct [{productId, amount, price}]
 async function addNewOrder(req, res, next) {
-  const validate = voucherSchema.validate(req.body);
+  const validate = newOrderSchema.validate(req.body);
   if (validate.error) {
-    return next(new CustomError(1, 400, 'Data voucher not valid'));
+    return next(
+      new CustomError(1, 400, 'Data order not valid' + validate.error)
+    );
   } else {
     const { voucherId, userId, userAddressId, ship, value, listProduct } =
       req.body;
+    const products = JSON.parse(listProduct);
     try {
       // Ktra voucher co hop le ko
-      const voucher = await sql.query(query.qFindVoucherById(id));
+      const voucher = await sql.query(query.qFindVoucherById(voucherId));
       if (voucher.recordset.length == 0)
         return next(new CustomError(6, 400, 'Voucher not exists'));
       if (
@@ -50,15 +54,16 @@ async function addNewOrder(req, res, next) {
         query.qAddOrder(voucherId, userId, userAddressId, ship, value)
       );
       const newOrderId = newOrder.recordset[0].ID;
-      listProduct.forEach(async (item) => {
+      products.forEach(async (item) => {
         await sql.query(
           query.qAddOrderDetail(
             newOrderId,
-            item.Id,
-            item.productPriceId,
-            item.quantity
+            item.ProductId,
+            item.PriceId,
+            item.Amount
           )
         );
+        await sql.query(query.qDeleteCartProductById(item.Id));
       });
       res.status(200).json({
         success: true,

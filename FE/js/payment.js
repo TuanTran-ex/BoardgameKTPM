@@ -305,23 +305,32 @@ const app = {
     },
     async cartOrderHandler() {
         if (Object.keys(app.addressSelected).length !== 0) {
-            const req = {
-                voucherId: cart.voucher.Id, 
+            let req = {
                 userId: userId, 
                 userAddressId: app.addressSelected.Id, 
                 ship: 33000, 
                 value: cart.price.lastPrice + 33000, 
-                listProduct: cart.productList
+                listProduct: JSON.stringify(cart.productList)
             }
-            console.log(JSON.stringify(req));
-            // await orderAPI.addOrder(req, token, (res) => {
-            //     console.log(res);
-            //     if (res.success) {
-            //         // window.location.href = `${window.location.origin}/FE/index.html`;
-            //     } else {
-            //         api.errHandler();
-            //     }
-            // })    
+            if (cart.voucher.Id) {
+                req = {
+                    ...req,
+                    voucherId: cart.voucher.Id
+                }
+            }
+            await orderAPI.addOrder(req, token, (res) => {
+                console.log(res);
+                if (res.success) {
+                    cart.productList.forEach(product => {
+                        cart.productList = cart.productList.filter(item => item.Id !== product.Id);
+                    })
+                    utils.setSession("cart", cart);
+                    utils.setSession("cartSelected", []);
+                    window.location.href = `${window.location.origin}/FE/index.html`;
+                } else {
+                    api.errHandler();
+                }
+            })    
         } else {
             notifyModal.init("Vui lòng chọn địa chỉ nhận hàng", () => {}, 2);
         }
@@ -411,13 +420,13 @@ const app = {
             }
             await addressAPI.getListAddress(req, token, (res) => {
                 if (res.success) {
-                    app.addressList = res.data.address
+                    app.addressList = [...res.data.address];
                 } else {
                     api.errHandler();
                 }
             })
 
-            const defaultAddress = this.addressList.find(item => item.isDefault = true);
+            const defaultAddress = this.addressList.find(item => item.IsDefault == true);
             this.addressSelected = defaultAddress || {};
             this.renderHtml();
         } else {

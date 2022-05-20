@@ -150,8 +150,8 @@ const app = {
                         <ul class="product-tag-list">
                             ${this.product.categories ? this.product.categories.map(category => {
                                 return `
-                                    <li class="product-tag-item">
-                                        <span>${category.name}</span>
+                                    <li class="product-tag-item" data-id="${category.Id}">
+                                        <span>${category.Name}</span>
                                     </li>
                                 `
                             }).join("") : ""}    
@@ -360,6 +360,7 @@ const app = {
         }
         await productAPI.getProduct(req, (res) => {
             if (res.success) {
+                console.log(res)
                 app.product = res.data.product;
             } else {
                 api.errHandler();

@@ -73,7 +73,7 @@ exports.qDeleteAddress = (id) => {
 // };
 
 exports.qGetCartByUserId = (userId) => {
-  return `SELECT cp.Id , p.Id AS 'ProductId' , p.Name, cp.Amount , pp.Price, p.MainImage , isnull(slcl.SoConLai, p.Amount) AS 'RemainingAmount' 
+  return `SELECT cp.Id , p.Id AS 'ProductId' , p.Name, cp.Amount ,pp.Id AS PriceId, pp.Price, p.MainImage , isnull(slcl.SoConLai, p.Amount) AS 'RemainingAmount' 
 	FROM 	Cart AS c 
 	    JOIN CartProduct AS cp ON c.Id = cp.CartId 
 			LEFT JOIN Product AS p ON cp.ProductId  = p.Id 
@@ -85,7 +85,7 @@ exports.qGetCartByUserId = (userId) => {
 				GROUP BY Product.Id , Product.Amount 
 			) AS slcl ON slcl.Id = p.Id  
 	WHERE	c.UserId = ${userId}
-	GROUP BY cp.Id ,p.Id, p.Name, cp.Amount , pp.Price, pp.CreatedAt, p.MainImage , slcl.SoConLai, p.Amount 
+	GROUP BY cp.Id ,p.Id, p.Name, cp.Amount ,pp.Id, pp.Price, pp.CreatedAt, p.MainImage , slcl.SoConLai, p.Amount 
           ,cp.UpdateAt
 	HAVING pp.CreatedAt >= ALL (
 				SELECT  CreatedAt
@@ -244,11 +244,12 @@ exports.qGetOrderDetail = (orderId, productId) => {
   return `SELECT * FROM OrderDetail WHERE OrderId=${orderId} AND ProductId=${productId}`;
 };
 exports.qAddOrder = (voucherId, userId, userAddressId, ship, value) => {
-  return `INSERT INTO Order(VoucherId, UserId, UserAddress, ship, value)
+  const q = `INSERT INTO [Order] (VoucherId, UserId, UserAddressId, Ship, Value)
   OUTPUT Inserted.ID
   Values (${voucherId}, ${userId}, ${userAddressId}, ${
     ship || 'NULL'
   }, ${value})`;
+  return q;
 };
 
 exports.qAddOrderDetail = (orderId, productId, productPriceId, quantity) => {

@@ -29,7 +29,9 @@ const app = {
   productList: [],
   productSelected: [],
   renderHtml() {
-    this.voucher = voucher.voucherSelected ? voucher.voucherSelected : {};
+    this.voucher = Object.keys(voucher.voucherSelected).length > 0 ? voucher.voucherSelected : {
+      Value: 0,
+    };
     this.price = utils.calculationPrice(this.productSelected, this.voucher.Value);
     document.querySelector(".cart").innerHTML = `
         <div class="cart-header border-b-solid">
