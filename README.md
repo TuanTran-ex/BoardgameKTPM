@@ -5,7 +5,7 @@
 
 ## Công nghệ
 
-- ASP .NET CORE 3.1
+- ASP .NET CORE 3.1 (chưa áp dụng)
 - NodeJS
 - MS SQL SERVER 2019
 - BOOTSTRAP 4 HTML JAVASCRIPT
@@ -44,3 +44,10 @@ Tạo file .env trong thư mục api_nodejs
 ```npm
 npm run dev
 ```
+
+## Client
+
+### Client Customer
+
+Chạy file **index.html** ở folder FE với server.  
+Có thể sử dụng extension [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) của VSCode để chạy trên môi trường development
