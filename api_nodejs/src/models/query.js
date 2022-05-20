@@ -240,6 +240,9 @@ exports.qGetOrderNotConfirm = (id) => {
 exports.qConfirmOrder = (id) => {
   return `EXECUTE proc_Order_Confirm ${id}`;
 };
+exports.qCancelOrder = (id) => {
+  return `EXECUTE proc_Order_Cancel ${id}`;
+};
 exports.qGetOrderDetail = (orderId, productId) => {
   return `SELECT * FROM OrderDetail WHERE OrderId=${orderId} AND ProductId=${productId}`;
 };
