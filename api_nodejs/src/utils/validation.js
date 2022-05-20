@@ -68,8 +68,9 @@ const newOrderSchema = joi.object({
   userId: joi.number().required(),
   userAddressId: joi.number().required(),
   voucherId: joi.number(),
+  value: joi.number(),
   ship: joi.number(),
-  listProduct: joi.array(),
+  listProduct: joi.string(),
 });
 
 module.exports = {

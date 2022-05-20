@@ -15,9 +15,13 @@ function route(app) {
   app.use('/api/v1/auth', AuthRoute);
   app.use('/api/v1/products', ProductRoute);
   app.use('/api/v1/categories', CategoryRouter);
+  app.post('/api/test', (req, res) => {
+    const data = req.body;
+    const result = JSON.parse(data);
+    res.send(result);
+  });
   app.use(jwtAuth);
   app.use('/api/v1/vouchers', VoucherRoute);
-  app.get('/api/test', (req, res) => res.send(req.user));
   app.use('/api/v1/users', UserRoute);
   app.use('/api/v1/cart', CartRoute);
   app.use('/api/v1/feedback', FeedbackRoute);
