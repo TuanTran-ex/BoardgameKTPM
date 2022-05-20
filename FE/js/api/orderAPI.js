@@ -23,6 +23,15 @@ const orderAPI = {
         }
         await api.callAPI(params, addOrderHandler, errHandler);
     },
+    async cancelOrder(req, token, cancelOrderHandler = () => {}, errHandler = () => api.errHandler) {
+        const params = {
+            url: `${orderUrl}/${req.orderId}/cancel`,
+            method: "PATCH",
+            token: token,
+            req: req
+        }
+        await api.callAPI(params, cancelOrderHandler, errHandler);
+    },
 }
 
 export default orderAPI;

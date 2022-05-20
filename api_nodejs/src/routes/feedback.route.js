@@ -8,6 +8,6 @@ const upload = multer({ dest: 'public/upload' });
 
 const router = express.Router();
 router.get('/', getAllFeedBack);
-router.post('/', upload.array('feedbackImage', 10), addFeedBack);
+router.post('/', upload.array('listImage[]', 10), addFeedBack);
 
 module.exports = router;

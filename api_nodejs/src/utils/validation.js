@@ -60,7 +60,7 @@ const feedbackSchema = joi.object({
   productId: joi.number(),
   stars: joi.number().min(1).max(5),
   comment: joi.string(),
-  // listImage: joi.array().length(10),
+  listImage: joi.string(),
 });
 
 // Order

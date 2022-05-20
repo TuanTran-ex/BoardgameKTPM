@@ -382,19 +382,33 @@ const userHistory = {
             userHistory.renderHtml();
         }
     },
-    cancleOrderHandler(e) {
+    async cancelOrderHandler(e) {
         const orderItem = e.target.closest(".history-item");
-        const index = userHistory.orders.indexOf(userHistory.orders.find(item => item.Id == orderItem.dataset.id));
-        // Pop up confirm modal
-        confirmModal.init("Xác nhận hủy đơn hàng", () => {
-            // Call Cancle Order API
-
-            userHistory.orders[index].Type = 5;
-            userHistory.orders[index].Name = "Huỷ";
-            confirmModal.hiddenModal();
-            userHistory.renderHtml();
-        });
-        confirmModal.showModal();
+        
+        if (orderItem) {
+            const index = userHistory.orders.indexOf(userHistory.orders.find(item => item.Id == orderItem.dataset.id));
+            confirmModal.init("Xác nhận hủy đơn hàng", async () => {
+                const req = {
+                    orderId: orderItem.dataset.id
+                }
+    
+                await orderAPI.cancelOrder(req, token, (res) => {
+                    if (res.success) {
+                        userHistory.orders[index].Type = 5;
+                        userHistory.orders[index].Name = "Huỷ";
+                        confirmModal.hiddenModal();
+                        userHistory.renderHtml();
+                    } else {
+                        confirmModal.hiddenModal();
+                        api.errHandler();
+                    }
+                })
+    
+            });
+            confirmModal.showModal();
+        } else {
+            api.errHandler();
+        }
     },
     feedbackHandler(e) {
         const orderItem = e.target.closest(".history-item");
@@ -413,7 +427,7 @@ const userHistory = {
         }
         if(cancleBtns) {
             cancleBtns.forEach(cancleBtn => {
-                cancleBtn.removeEventListener("click", this.cancleOrderHandler);
+                cancleBtn.removeEventListener("click", this.cancelOrderHandler);
             })
         }
         if(feedbackBtns) {
@@ -431,7 +445,7 @@ const userHistory = {
         }
         if(cancleBtns) {
             cancleBtns.forEach(cancleBtn => {
-                cancleBtn.addEventListener("click", this.cancleOrderHandler);
+                cancleBtn.addEventListener("click", this.cancelOrderHandler);
             })
         }
         if(feedbackBtns) {
