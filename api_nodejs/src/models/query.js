@@ -246,7 +246,7 @@ exports.qGetOrderDetail = (orderId, productId) => {
 exports.qAddOrder = (voucherId, userId, userAddressId, ship, value) => {
   const q = `INSERT INTO [Order] (VoucherId, UserId, UserAddressId, Ship, Value)
   OUTPUT Inserted.ID
-  Values (${voucherId}, ${userId}, ${userAddressId}, ${
+  Values (${voucherId || 'NULL'}, ${userId}, ${userAddressId}, ${
     ship || 'NULL'
   }, ${value})`;
   return q;
