@@ -22,6 +22,8 @@ router.get('/:id/orders', getOrderOfUser);
 router.patch('/:id', upload.single('avatar'), updateUser);
 
 // address
+// localhost:3000/api/v1/users/:userId/address/:id
+// Ex: DELETE localhost:3000/api/v1/users/5/address/7
 router.get('/:userId/address', getListAddress);
 router.post('/:userId/address', addAddress);
 router.patch('/:userId/address/:id', updateAddress);
