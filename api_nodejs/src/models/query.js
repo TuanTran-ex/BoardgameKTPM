@@ -47,7 +47,7 @@ exports.qGetAddressById = (id) => {
 exports.qAddAddress = (userId, fullName, phone, address, isDefault) => {
   const q = `INSERT INTO UserAddress (UserId, Fullname, Phone, Address, IsDefault)
   OUTPUT Inserted.ID
-  VALUES (${userId}, '${fullName}', '${phone}', '${address}', ${isDefault})`;
+  VALUES (${userId}, N'${fullName}', '${phone}', N'${address}', ${isDefault})`;
   return q;
 };
 exports.qSetAddressDefaultToFalseExceptId = (userId, addressId) => {
@@ -75,7 +75,7 @@ exports.qDeleteAddress = (id) => {
 exports.qGetCartByUserId = (userId) => {
   return `SELECT cp.Id , p.Id AS 'ProductId' , p.Name, cp.Amount , pp.Price, p.MainImage , isnull(slcl.SoConLai, p.Amount) AS 'RemainingAmount' 
 	FROM 	Cart AS c 
-	    LEFT 	JOIN CartProduct AS cp ON c.Id = cp.CartId 
+	    JOIN CartProduct AS cp ON c.Id = cp.CartId 
 			LEFT JOIN Product AS p ON cp.ProductId  = p.Id 
 			LEFT JOIN ProductPrice pp ON pp.ProductId = p.Id 
 			LEFT JOIN (
@@ -86,11 +86,13 @@ exports.qGetCartByUserId = (userId) => {
 			) AS slcl ON slcl.Id = p.Id  
 	WHERE	c.UserId = ${userId}
 	GROUP BY cp.Id ,p.Id, p.Name, cp.Amount , pp.Price, pp.CreatedAt, p.MainImage , slcl.SoConLai, p.Amount 
+          ,cp.UpdateAt
 	HAVING pp.CreatedAt >= ALL (
 				SELECT  CreatedAt
 				FROM 	ProductPrice 
 				WHERE	p.Id  = ProductPrice.ProductId 
-				)`;
+				)
+  ORDER BY cp.UpdateAt DESC`;
 };
 exports.qGetCartId = (userId) => {
   return `SELECT Id FROM Cart WHERE UserId = ${userId}`;
