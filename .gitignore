@@ -358,5 +358,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # Upload
-upload/
-.vscode/launch.json
+public/upload
+
+# Vs code
+.vscode
