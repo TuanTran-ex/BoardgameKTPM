@@ -92,4 +92,19 @@ async function confirmOrder(req, res, next) {
     next(err);
   }
 }
-module.exports = { getAllOrder, addNewOrder, confirmOrder };
+async function cancelOrder(req, res, next) {
+  const { id } = req.params;
+  try {
+    const order = await sql.query(query.qGetOrderNotConfirm(id));
+    if (order.recordset.length <= 0)
+      return next(new CustomError(1, 400, 'Order not valid to cancel'));
+    await sql.query(query.qCancelOrder(id));
+    return res.status(200).json({
+      success: true,
+      message: 'Cancel Order success',
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+module.exports = { getAllOrder, addNewOrder, confirmOrder, cancelOrder };
