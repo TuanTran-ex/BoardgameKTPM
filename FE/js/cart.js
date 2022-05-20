@@ -24,13 +24,13 @@ let cartPaymentBtn;
 const token = utils.getCookie("token");
 
 const app = {
-  voucher: 0,
+  voucher: {},
   price: {},
   productList: [],
   productSelected: [],
   renderHtml() {
-    this.voucher = voucher.voucherSelected.Value ? voucher.voucherSelected.Value : 0;
-    this.price = utils.calculationPrice(this.productSelected, this.voucher);
+    this.voucher = voucher.voucherSelected ? voucher.voucherSelected : {};
+    this.price = utils.calculationPrice(this.productSelected, this.voucher.Value);
     document.querySelector(".cart").innerHTML = `
         <div class="cart-header border-b-solid">
             <span>Giỏ hàng</span>
@@ -105,9 +105,9 @@ const app = {
                 </div>
                 <div class="cart-products-saving-container border-b-dashed">
                     <div class="cart-products-saving">
-                      ${this.voucher ? `
+                      ${this.voucher.Value ? `
                             <div class="cart-products-saving-voucher">-${
-                              this.voucher
+                              this.voucher.Value
                             }%</div>
                             ` : ""}
                         <span>-${utils.formatMoney(this.price.savingPrice)} VNĐ</span>

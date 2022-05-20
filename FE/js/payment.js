@@ -5,6 +5,8 @@ import modal from "./utils/modal.js";
 import utils from "./utils/utils.js"
 import addressAPI from "./api/addressAPI.js";
 import api from "./api/api.js";
+import orderAPI from "./api/orderAPI.js";
+import notifyModal from "./component/notifyModal.js";
 
 const footerContainer = document.querySelector(".footer");
 const token = utils.getCookie("token");
@@ -150,7 +152,7 @@ const app = {
                                 <span>Voucher:</span>
                             </div>
                             <div>
-                                <div class="cart-products-saving-voucher">-${cart.voucher}%</div>
+                                <div class="cart-products-saving-voucher">-${cart.voucher.Value}%</div>
                             </div>
                             <div>
                                 <span>Phí vận chuyển:</span>
@@ -301,37 +303,27 @@ const app = {
         address.init();
         app.renderHtml();
     },
-    cartOrderHandler() {
+    async cartOrderHandler() {
         if (Object.keys(app.addressSelected).length !== 0) {
-            // Call Create Order API
-    
-            window.location.href = `${window.location.origin}/FE/index.html`;
+            const req = {
+                voucherId: cart.voucher.Id, 
+                userId: userId, 
+                userAddressId: app.addressSelected.Id, 
+                ship: 33000, 
+                value: cart.price.lastPrice + 33000, 
+                listProduct: cart.productList
+            }
+            console.log(JSON.stringify(req));
+            // await orderAPI.addOrder(req, token, (res) => {
+            //     console.log(res);
+            //     if (res.success) {
+            //         // window.location.href = `${window.location.origin}/FE/index.html`;
+            //     } else {
+            //         api.errHandler();
+            //     }
+            // })    
         } else {
-            if (document.querySelector(".notification")) {
-                const modals = Array.from(document.querySelectorAll(".modal"));
-                const notifyModal = document.querySelector(".modal .notification").closest(".modal");
-                const index = modals.indexOf(notifyModal);
-                modal.showModal(index);
-            } else {
-                const modalHtml = `
-                <div class="modal active">
-                <div class="modal-overlay"></div>
-                    <div class="modal-body">
-                    <div class="notification">
-                        <span>Vui lòng chọn địa chỉ nhận hàng</span>
-                    </div>
-                    </div>
-                </div>
-                `;
-                document.querySelector("body").innerHTML += modalHtml;
-            }
-            if (document.querySelector(".address")) {
-                address.init();
-            }
-            else {
-                modal.init();
-            }
-      app.renderHtml();
+            notifyModal.init("Vui lòng chọn địa chỉ nhận hàng", () => {}, 2);
         }
     },
     removeEvents() {
