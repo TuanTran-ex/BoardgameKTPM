@@ -70,7 +70,6 @@ const userEditPwd = {
                 }, "Mật khẩu nhập lại không đúng"),
             ],
             onSubmit: function (data) {
-                console.log(data);
                 // Pop up confirm modal
                 confirmModal.init("Xác nhận thay đổi mật khẩu", () => userEditPwd.submitChangeHandler(data));
                 confirmModal.showModal();

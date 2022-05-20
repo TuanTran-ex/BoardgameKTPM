@@ -22,7 +22,7 @@ let cartAddressUpdateBtns;
 let cartAddressNewBtn;
 let cartOrderBtn;
 
-let cart;
+let cartSelected;
 
 const date = new Date();
 const beginDate = new Date();
@@ -117,7 +117,7 @@ const app = {
                 </div>
                 <div class="cart-products">
                     <ul class="cart-products-list">
-                        ${cart.productList.map(item => {
+                        ${cartSelected.productList.map(item => {
                             return `
                                 <li class="cart-products-item">
                                     <div class="cart-product-info">
@@ -146,13 +146,13 @@ const app = {
                                 <span>Tổng tiền hàng:</span>
                             </div>
                             <div>
-                                <span>${utils.formatMoney(cart.price.totalPrice)} VNĐ</span>
+                                <span>${utils.formatMoney(cartSelected.price.totalPrice)} VNĐ</span>
                             </div>
                             <div>
                                 <span>Voucher:</span>
                             </div>
                             <div>
-                                <div class="cart-products-saving-voucher">-${cart.voucher.Value}%</div>
+                                <div class="cart-products-saving-voucher">-${cartSelected.voucher.Value}%</div>
                             </div>
                             <div>
                                 <span>Phí vận chuyển:</span>
@@ -161,10 +161,10 @@ const app = {
                                 <span>33.000 VNĐ</span>
                             </div>
                             <div>
-                                <span>Tổng thanh toán (${cart.quantity} sản phẩm):</span>
+                                <span>Tổng thanh toán (${cartSelected.quantity} sản phẩm):</span>
                             </div>
                             <div>
-                                <span class="primary-text text-middle">${utils.formatMoney(cart.price.lastPrice + 33000)} VNĐ</span>
+                                <span class="primary-text text-middle">${utils.formatMoney(cartSelected.price.lastPrice + 33000)} VNĐ</span>
                             </div>
                         </div>
                     </div>
@@ -309,24 +309,27 @@ const app = {
                 userId: userId, 
                 userAddressId: app.addressSelected.Id, 
                 ship: 33000, 
-                value: cart.price.lastPrice + 33000, 
-                listProduct: JSON.stringify(cart.productList)
+                value: cartSelected.price.lastPrice + 33000, 
+                listProduct: JSON.stringify(cartSelected.productList)
             }
-            if (cart.voucher.Id) {
+            if (cartSelected.voucher.Id) {
                 req = {
                     ...req,
-                    voucherId: cart.voucher.Id
+                    voucherId: cartSelected.voucher.Id
                 }
             }
             await orderAPI.addOrder(req, token, (res) => {
-                console.log(res);
                 if (res.success) {
-                    cart.productList.forEach(product => {
-                        cart.productList = cart.productList.filter(item => item.Id !== product.Id);
+                    let cart = utils.getSession("cart");
+                    cartSelected.productList.forEach(product => {
+                        cart = cart.filter(item => item.Id !== product.Id);
                     })
                     utils.setSession("cart", cart);
                     utils.setSession("cartSelected", []);
-                    window.location.href = `${window.location.origin}/FE/index.html`;
+                    notifyModal.init("Đặt hàng thành công", () => {
+                        window.location.href = `${window.location.origin}/FE/index.html`;
+                    })
+                    notifyModal.showModal();
                 } else {
                     api.errHandler();
                 }
@@ -411,7 +414,7 @@ const app = {
     },
     async init() {
         if (utils.getCookie("token")) {
-            cart = utils.getSession("cartSelected");
+            cartSelected = utils.getSession("cartSelected");
             header.init();
             footerContainer.innerHTML = footer;
 

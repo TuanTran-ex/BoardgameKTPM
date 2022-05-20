@@ -1,8 +1,6 @@
 import api from "./api.js"
 
 const voucherUrl = `${api.route}/vouchers`
-const getAllVoucherUrl = `${api.route}/vouchers/`;
-const getVoucherUrl = `${api.route}/vouchers/`
 
 const voucherAPI = {
     async getListVoucher(token, getListVoucherHandler = () => {}, errHandler = api.errHandler) {

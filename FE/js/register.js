@@ -78,17 +78,8 @@ const app = {
         ),
       ],
       onSubmit: function (data) {
-        console.log(data);
 
         app.signUpHandler(data);
-        // Call Register API
-
-        // // Pop up modal
-        // notifyModal.init("Đăng ký thành công", () => {
-        //   header.renderHtml();
-        //   app.renderHtml();
-        // });
-        // notifyModal.showModal();
       },
     });
   },

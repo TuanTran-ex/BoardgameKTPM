@@ -164,7 +164,6 @@ const address = {
                 isDefault: null
             }
             await addressAPI.updateAddress(req, token, (res) => {
-                console.log(res);
                 if (res.success) {
                     if (req.isDefault) {
                         payment.addressList.forEach(item => {

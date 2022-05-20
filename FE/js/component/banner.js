@@ -1,22 +1,22 @@
 const products = [
     {
-        id: 0,
+        id: 86,
         image: "banner001.png",
-        name: "Thám tử lừng danh Conan - Hồi kết",
+        name: "Catan US",
         players: "5-10 người",
         time: "30-50 phút"
     },
     {
-        id: 1,
-        image: "banner001.png",
-        name: "Thám tử lừng danh Conan - Hồi kết",
+        id: 87,
+        image: "banner002.png",
+        name: "Mèo nổ",
         players: "5-10 người",
         time: "30-50 phút"
     },
     {
-        id: 2,
-        image: "banner001.png",
-        name: "Thám tử lừng danh Conan - Hồi kết",
+        id: 88,
+        image: "banner003.png",
+        name: "Bang! Bang! Bang!!!",
         players: "5-10 người",
         time: "30-50 phút"
     }
@@ -45,7 +45,7 @@ const banner = {
                                 </div>
                                 <div class="banner-item-time">
                                     <i class="fa-solid fa-clock"></i>
-                                    <span>${item.name}</span>
+                                    <span>${item.time}</span>
                                 </div>
                                 <div class="banner-item-link">
                                     <span>Xem thêm...</span>

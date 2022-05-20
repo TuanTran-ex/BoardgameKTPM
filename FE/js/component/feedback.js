@@ -1,6 +1,9 @@
 import userHistory from "./userHistory.js"
 import notifyModal from "./notifyModal.js"
-import header from "./header.js"
+
+import feedbackAPI from "../api/feedbackAPI.js"
+import utils from "../utils/utils.js";
+import api from "../api/api.js";
 
 let feedbackItems = [];
 let feedbackRateIcons = [];
@@ -9,6 +12,7 @@ let feedbackBackBtn;
 let feedbackSubmitBtn;
 let feedbackImageDeleteBtns;
 
+const token = utils.getCookie("token");
 
 const feedback = {
     order: {}, 
@@ -21,11 +25,11 @@ const feedback = {
             <ul class="feedback-list">
                 ${this.order.products.map((item, index) => {
                     return `
-                        <li class="feedback-item" data-id="${item.id}">
+                        <li class="feedback-item" data-id="${item.Id}">
                             <div class="feedback-product">
                                 <div class="feedback-product-info">
-                                    <img class="feedback-product-img" src="../img/${item.image}">
-                                    <span class="feedback-product-name">${item.name}</span>
+                                    <img class="feedback-product-img" src="${item.MainImage ? item.MainImage : `../img/pd001.png`}">
+                                    <span class="feedback-product-name">${item.Name}</span>
                                 </div>
                                 <div class="feedback-rate">
                                     <i class="feedback-rate-icon ${this.rate[index] >= 1 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
@@ -47,8 +51,8 @@ const feedback = {
                                             </li>
                                         `
                                     }).join("") : ``}
-                                    <label for="feedback-file-${item.id}" class="btn btn-white btn-small feedback-image-btn">Thêm ảnh</label>
-                                    <input type="file" id="feedback-file-${item.id}" name="feedback-file"  accept="image/png, image/gif, image/jpeg" multiple hidden> 
+                                    <label for="feedback-file-${item.Id}" class="btn btn-white btn-small feedback-image-btn">Thêm ảnh</label>
+                                    <input type="file" id="feedback-file-${item.Id}" name="feedback-file"  accept="image/png, image/gif, image/jpeg" multiple hidden> 
                                     </ul>
                                 </div>
                             </div>
@@ -69,11 +73,11 @@ const feedback = {
         feedbackImageBtns = [];
         feedbackItems.forEach(item => {
             feedbackRateIcons.push({
-                id: item.dataset.id,
+                Id: item.dataset.id,
                 icons: item.querySelectorAll(".feedback-rate-icon")
             });
             feedbackImageBtns.push({
-                id: item.dataset.id,
+                Id: item.dataset.id,
                 files: item.querySelector("input[name='feedback-file']")
             });
         })
@@ -91,7 +95,7 @@ const feedback = {
     feedbackRateHandler(e) {
         const feedbackItem = e.target.closest(".feedback-item");
         const iconItem = e.target.closest(".feedback-rate-icon");
-        const item = feedbackRateIcons.find(item => item.id == feedbackItem.dataset.id);
+        const item = feedbackRateIcons.find(item => item.Id == feedbackItem.dataset.id);
         const itemIndex = feedbackRateIcons.indexOf(item);
         const icon = Array.from(feedbackRateIcons[itemIndex].icons).find(item => item === iconItem);
         const iconIndex = Array.from(feedbackRateIcons[itemIndex].icons).indexOf(icon);
@@ -106,12 +110,13 @@ const feedback = {
     feedbackImageHandler(e) {
         const feedbackItem = e.target.closest(".feedback-item");
         const fileItem = e.target.closest("input[name='feedback-file']");
-        const item = feedbackImageBtns.find(item => item.id == feedbackItem.dataset.id);
+        const item = feedbackImageBtns.find(item => item.Id == feedbackItem.dataset.id);
         const itemIndex = feedbackImageBtns.indexOf(item);
         if (fileItem.files.length > 0) {
             if (feedback.virtualURL[itemIndex].files.length + fileItem.files.length <= 7) {
                 Array.from(fileItem.files).forEach(file => {
                     feedback.virtualURL[itemIndex].files.push(URL.createObjectURL(file));
+                    feedback.images[itemIndex].push(file);
                 })
                 feedback.getCommentValue();
                 feedback.renderHtml(feedback.order);
@@ -119,7 +124,6 @@ const feedback = {
                 notifyModal.init("Vui lòng chọn tối đa 7 ảnh", () => {}, 1);
                 notifyModal.showModal();
                 feedback.getCommentValue();
-                feedback.renderHtml();
             }
         }
     },
@@ -127,27 +131,62 @@ const feedback = {
         userHistory.isFeedback = false;
         userHistory.renderHtml();
     },
-    feedbackSubmitHandler() {
-        // Call create feedback API
-
-        const item = userHistory.orders.find(order => order.id = feedback.order.id);
-        item.feedbacked = true;
-
-        notifyModal.init("Đánh giá thành công", () => {
-            userHistory.isFeedback = false;
-            userHistory.renderHtml();
-            header.renderHtml();
-        });
-        notifyModal.showModal();
-        window.scrollTo(0, 0);
-        feedback.getCommentValue();
-        feedback.renderHtml();
+    async submitFeedback() {
+        const item = userHistory.orders.find(order => order.Id == feedback.order.Id);
+        let success = true;
+        if (item) {
+            feedback.getCommentValue();
+            item.products.forEach(async (product, index) => {
+                const form = new FormData();
+                form.append("orderId", item.Id);
+                form.append("productId", product.Id);
+                form.append("stars", feedback.rate[index]);
+                form.append("comment", feedback.comments[index]);
+                feedback.images[index].forEach(item => {
+                    form.append("listImage[]", item);
+                }) 
+    
+                await feedbackAPI.addFeedback(form, token, (res) => {
+                    if (res.success) {
+    
+                    } else {
+                        success = false;
+                        api.errHandler();
+                    }
+                }, () => {
+                    success = false;
+                    api.errHandler();
+                })
+            })
+        } else {
+            api.errHandler();
+            success = false;
+        }
+        return success;
+    },
+    async feedbackSubmitHandler() {
+        const success = await feedback.submitFeedback();
+        const item = userHistory.orders.find(order => order.Id == feedback.order.Id);
+        if (success) {
+            item.feedbacked = true;
+    
+            notifyModal.init("Đánh giá thành công", () => {
+                userHistory.isFeedback = false;
+                userHistory.renderHtml();
+            });
+            notifyModal.showModal();
+            window.scrollTo(0, 0);
+            feedback.renderHtml();
+        } 
     },
     feedbackImageDeleteHandler(e) {
         const imageItem = e.target.closest(".feedback-image-item").querySelector(".feedback-image-img");
         const productItem = e.target.closest(".feedback-item");
         const index = Array.from(feedbackItems).indexOf(productItem);
-        feedback.virtualURL[index].files = feedback.virtualURL[index].files.filter(item => item != imageItem.src);
+        const image = feedback.virtualURL[index].files.find(item => item === imageItem.src);
+        const index2 = feedback.virtualURL[index].files.indexOf(image);
+        feedback.virtualURL[index].files.splice(index2, 1);
+        feedback.images[index].splice(index2, 1);
         feedback.getCommentValue();
         feedback.renderHtml();
     },
@@ -202,20 +241,20 @@ const feedback = {
         }
     },
     init(order) {
-        if (order.status.id != 2 || order.feedbacked === true) {
+        if (order.Type != 3 || order.feedbacked === true) {
             userHistory.isFeedback = false;
             userHistory.renderHtml();
         } else {
             this.order = {...order};
             this.virtualURL = [];
-            this.order.products.map(item => {
+            this.order.products.forEach(item => {
                 this.virtualURL.push({
                     files: [],
                 })
+                this.images.push([]);
             })
             this.rate = [];
             this.comments = [];
-            this.images = [];
             this.renderHtml(order);
         }
     }

@@ -104,7 +104,6 @@ const userEdit = {
         form.append("avatar", userAvatarInput.files[0]);
         const token = utils.getCookie("token");
         await userAPI.updateUser(form, token, (res) => {
-            console.log(res)
             if (res.success) {
                 const user = utils.getSession("user");
 

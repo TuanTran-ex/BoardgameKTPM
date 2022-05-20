@@ -30,7 +30,6 @@ const productList = {
       pageSize: 10
     }
     await productAPI.getListProduct(req, (res) => {
-      console.log(res);
       if (res.success) {
           productList.productLst = [...res.data.products];
           productList.totalPage = res.data.count % req.pageSize 

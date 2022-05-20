@@ -12,69 +12,6 @@ const footerContainer = document.querySelector(".footer");
 
 const productId = new URL(window.location.href).searchParams.get("product-id");
 
-const feedbacks = [
-    {
-        id: 0,
-        user: {
-            avatar: null,
-            username: "BoardgameKTPM",
-        },
-        rate: 1,
-        date: "25/05/2022",
-        comment: "Game rất vui, hấp dẫn nên vote 1 sao",
-        images: [
-            {
-                id: 0,
-                path: "pd001.jpg"
-            },
-            {
-                id: 1,
-                path: "ava001.jpg"
-            }
-        ]
-    },
-    {
-        id: 1,
-        user: {
-            avatar: "ava001.jpg",
-            username: "BoardgameKTPM",
-        },
-        rate: 1,
-        date: "25/05/2022",
-        comment: "Game rất vui, hấp dẫn nên vote 1 sao",
-        images: [
-            {
-                id: 0,
-                path: "ava001.jpg"
-            },
-            {
-                id: 1,
-                path: "ava001.jpg"
-            }
-        ]
-    },
-    {
-        id: 2,
-        user: {
-            avatar: "ava001.jpg",
-            username: "BoardgameKTPM",
-        },
-        rate: 1,
-        date: "25/05/2022",
-        comment: "Game rất vui, hấp dẫn nên vote 1 sao",
-        images: [
-            {
-                id: 0,
-                path: "ava001.jpg"
-            },
-            {
-                id: 1,
-                path: "ava001.jpg"
-            }
-        ]
-    }
-]
-
 let cartAddBtn;
 let cartPageBtn;
 let cartProductDec;
@@ -184,31 +121,30 @@ const app = {
                     <span>Đánh giá sản phẩm</span>
                 </div>
                 <ul class="product-feedback-list">
-                     ${// this.product.feedback.map(feedback => {
-                        feedbacks.map(feedback => {
+                     ${this.product.feedback.map(feedback => {
                         return `
                             <li class="product-feedback-item">
-                                <img src="../img/${feedback.user.avatar ? feedback.user.avatar : "ava001.jpg"}" alt="" class="product-feedback-avatar">
+                                <img src="${feedback.Avatar ? feedback.Avatar : "../img/ava001.jpg"}" alt="" class="product-feedback-avatar">
                                 <div class="product-feedback-info">
                                     <div class="product-feedback-info-top">
-                                        <span class="product-feedback-name">${feedback.user.username}</span>
+                                        <span class="product-feedback-name">${feedback.Username}</span>
                                         <div class="product-feedback-rate">
-                                            <i class="product-feedback-rate-icon ${feedback.rate >= 1 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
-                                            <i class="product-feedback-rate-icon ${feedback.rate >= 2 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
-                                            <i class="product-feedback-rate-icon ${feedback.rate >= 3 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
-                                            <i class="product-feedback-rate-icon ${feedback.rate >= 4 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
-                                            <i class="product-feedback-rate-icon ${feedback.rate >= 5 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
+                                            <i class="product-feedback-rate-icon ${feedback.Stars >= 1 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
+                                            <i class="product-feedback-rate-icon ${feedback.Stars >= 2 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
+                                            <i class="product-feedback-rate-icon ${feedback.Stars >= 3 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
+                                            <i class="product-feedback-rate-icon ${feedback.Stars >= 4 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
+                                            <i class="product-feedback-rate-icon ${feedback.Stars >= 5 ? `active fa-solid fa-star` : `fa-regular fa-star`}"></i>
                                         </div>
-                                        <span class="product-feedback-date">${feedback.date}</span>
+                                        <span class="product-feedback-date">${utils.formatDate(feedback.Date)}</span>
                                     </div>
                                     <div class="product-feedback-info-bottom">
-                                        <span>${feedback.comment}</span>
+                                        <span>${feedback.Comment}</span>
                                     </div>
                                     <ul class="product-feedback-image-list">
                                         ${feedback.images.map(image => {
                                             return `
                                                 <li class="product-feedback-image-item">
-                                                    <img src="../img/${image.path}" class="product-feedback-image">
+                                                    <img src="${image.Path}" class="product-feedback-image">
                                                 </li>
                                             `
                                         }).join("")}
@@ -360,7 +296,6 @@ const app = {
         }
         await productAPI.getProduct(req, (res) => {
             if (res.success) {
-                console.log(res)
                 app.product = res.data.product;
             } else {
                 api.errHandler();

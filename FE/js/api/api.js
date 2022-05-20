@@ -33,13 +33,10 @@ const api = {
             body: file ? req : JSON.stringify(req),
         } : {}
 
-        console.log(url, method, headers, req);
-
         await fetch(url, obj)
         .then(res => res.json())
         .then(data => sucessHandler(data))
         .catch(err => {
-            console.log(err);
             errHandler(); 
         })
 
