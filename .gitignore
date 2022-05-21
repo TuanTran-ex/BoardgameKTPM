@@ -358,4 +358,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # Upload
-upload/
+api_nodejs/public/upload/
+
+# VScode
+.vscode
