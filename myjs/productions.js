@@ -1,43 +1,59 @@
 var productsApi = "http://localhost:3000/api/v1/products?page=1&pageSize=20";
 
-function start() {
-  getProductions(renderProducts);
+async function start() {
+  await getProductions(renderProducts);
   
-  handleAddForm();
-  handCreateProducts();
+  // handleAddForm();
+  // handCreateProducts();
 }
 
 let itemId;
 
 start();
 //function
-function getProductions(callback) {
-  fetch(productsApi)
-    .then(function (response) {
-      return response.json();
+async function getProductions(callback) {
+  console.log(1);
+  var option = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im5ndW9pZHVuZyIsImVtYWlsIjoiZW1haWxAZ21haWwuY29tIiwicm9sZSI6dHJ1ZX0sImlhdCI6MTY1Mjg3MTg0OCwiZXhwIjoxNjUyODc1NDQ4fQ.IgSru5VH-BgvLgcnQQ2ES0NSvt8JeAdkQcWQKb2tIW0"
+    },
+  };
+  fetch(productsApi, option)
+    .then(async function (response) {
+      return await response.json();
     })
-    .then(callback);
+    // .then((data) => {
+    //   console.log(data);
+    //   callback(data);
+    // })
+    .then(callback)
+    .catch(err => {
+      console.log(err);
+    })
 }
 
-function renderProducts(products) {
+function renderProducts(res) {
+  const products = res.data.products
   console.log(products);
   var listProductsBlock = document.querySelector("#list-products");
   var htmls = products
     .map(function (product) {
       return `
-        <tr class="product-item-${product.id}">
-        <td> ${product.name} </td>
-        <td>${product.category}</td>
-        <td>${product.source}</td>
-        <td>${product.Iprice}</td>
-        <td>${product.Eprice}</td>
+        <tr class="product-item-${product.Id}">
+        <td> ${product.Name} </td>
+        <td></td>
+        <td>${product.Origin}</td>
+        <td>${product.Price}</td>
+        <td>${product.Amount}</td>
                           <td>
                             <div>
                              <a href="./Production-editing.html"> 
                               <span class="fe fe-24 fe-edit"></span>
                               </a>
                               <a href="" data-toggle="modal" data-target="#deleteproduction">
-                                <span class="fe fe-24 fe-trash-2" onclick="setId(${product.id})"></span>
+                                <span class="fe fe-24 fe-trash-2" onclick="setId(${product.Id})"></span>
                               </a>
                             </div>  
                           </td>
@@ -94,7 +110,7 @@ function handleDeleteProducts() {
     });
 }
 
-start();
+
 
 function handleCreateProducts() {
   var createBtn = document.querySelector("#create");
