@@ -51,3 +51,7 @@ npm run dev
 
 Chạy file **index.html** ở folder FE với server.  
 Có thể sử dụng extension [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) của VSCode để chạy trên môi trường development
+
+### Client Admin
+
+Chạy file **Production.html** ở folder FE_Admin với server.
