@@ -91,7 +91,7 @@ const app = {
     // }
     // await userAPI.signIn(req, (res) => {
     //   if (res.success && !res.data.user.Role) {
-    //     window.location.href = `${window.origin}/FE/index.html`;
+    //     window.location.href = `${window.origin}/index.html`;
     //     utils.setCookie("token", res.data.token);
     //     utils.setSession("user", res.data.user);
     //     utils.setSession("cart", res.data.user.cart);

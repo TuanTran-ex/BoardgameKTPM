@@ -2,6 +2,7 @@ import notifyModal from "./notifyModal.js";
 import account from "../account.js";
 import userAPI from "../api/userAPI.js";
 import utils from "../utils/utils.js";
+import header from "./header.js";
 
 let userAvatarInput;
 let userAvatar;
@@ -123,6 +124,7 @@ const userEdit = {
                     account.init();
                 });
                 notifyModal.showModal();
+                header.renderHtml();
             } else {
                 userEdit.errHandler();
             }

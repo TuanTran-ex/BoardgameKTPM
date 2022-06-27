@@ -11,12 +11,13 @@ const product = {
 let cartBtn;
 let logoutBtn;
 
-let user = utils.getCookie("token") ? utils.getSession("user") : {};
+let user; 
 
 const header = {
   productList: [],
   renderHtml() {
     // Get cart from session
+    user = utils.getCookie("token") ? utils.getSession("user") : {};
     if (!utils.getSession("cart")) {
       utils.setSession("cart", []);
     } else {

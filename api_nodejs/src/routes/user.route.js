@@ -13,7 +13,7 @@ const {
   updateAddress,
   deleteAddress,
 } = require('../controllers/address.controller');
-const upload = multer({ dest: 'public/upload/avatar' });
+const upload = multer({ dest: 'src/public/upload/avatar' });
 const router = express.Router();
 
 router.get('/', checkAdmin, getAllUser);

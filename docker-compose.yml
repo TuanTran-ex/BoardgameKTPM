@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api_nodejs
+    ports:
+      - 3000:3000
+    environment:
+      - DB_URL=db
+    depends_on:
+      - db
+    volumes:
+      - api_docker:/app/api
+    restart: always
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SQLstrongPass123
+      - MSSQL_PID=Developer
+    user: root
+    ports:
+      - 1435:1433
+    volumes:
+      - ./DB/db:/var/opt/mssql
+      - ./DB:/home/scripts/
+    # restart: always
+    command: 
+      - /bin/bash
+      - -c 
+      - |
+        # Launch MSSQL and send to background
+        /opt/mssql/bin/sqlservr &
+        # Wait 30 seconds for it to be available
+        # (lame, I know, but there's no nc available to start prodding network ports)
+        sleep 30
+        # Run every script in /scripts
+        # TODO set a flag so that this is only done once on creation, 
+        #      and not every time the container runs
+        for foo in /home/scripts/*.sql
+          do /opt/mssql-tools/bin/sqlcmd -U sa -P $$SA_PASSWORD -l 30 -e -i $$foo
+        done
+        # So that the container doesn't shut down, sleep this thread
+        sleep infinity
+
+volumes:
+  api_docker:
+  db:

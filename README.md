@@ -9,15 +9,31 @@
 - NodeJS
 - MS SQL SERVER 2019
 - BOOTSTRAP 4 HTML JAVASCRIPT
+## Chạy bằng Docker
+1. Cài đặt Docker
+2. Build
+```
+docker-compose build
+```
+3. Run docker
+```
+docker-compose up -d
+```
+Lấy ly nước pha miếng trà và ngồi chờ trong 40s - 50s 😁 😁  
 
-## API Nodejs
+4. Mở trang web: [Link](http://localhost:3000)
 
-### Install NodeJS
+## Chạy trên môi trường development
+### Khởi tạo database
+Chạy file script trong thư mục **DB**  
+### API Nodejs
+
+#### Install NodeJS
 
 [Link](https://nodejs.org/en/)  
 Cài đặt bản 16.15.0 LTS
 
-### Run API
+#### Run API
 
 ```cmd
 cd api_nodejs
@@ -45,13 +61,11 @@ Tạo file .env trong thư mục api_nodejs
 npm run dev
 ```
 
-## Client
+### Client
 
-### Client Customer
+#### Client Customer
+Mở trang web: [Link](http://localhost:3000)
 
-Chạy file **index.html** ở folder FE với server.  
-Có thể sử dụng extension [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) của VSCode để chạy trên môi trường development
-
-### Client Admin
+#### Client Admin
 
 Chạy file **Production.html** ở folder FE_Admin với server.

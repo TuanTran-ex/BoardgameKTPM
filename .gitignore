@@ -363,3 +363,5 @@ api_nodejs/public/upload/
 # Vs code
 .vscode
 
+DB/db
+upload
